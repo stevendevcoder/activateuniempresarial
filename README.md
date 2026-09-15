@@ -142,24 +142,7 @@ Nunca se sube el `.env` al repositorio. Usa `.env.example` como plantilla.
 | `CORS_ORIGIN` | Origen permitido del frontend |
  
 ---
- 
-## Endpoints
- 
-| Método | Ruta | Descripción |
-|---|---|---|
-| POST | `/api/auth/login` | Inicia sesión y devuelve el token |
-| GET | `/api/auth/perfil` | Datos del usuario autenticado |
-| GET | `/api/pausas/mias` | Pausas programadas del trabajador |
-| POST | `/api/pausas` | Programa una pausa |
-| POST | `/api/pausas/:id/iniciar` | Abre el registro al arrancar la pausa |
-| PATCH | `/api/pausas/registros/:id/finalizar` | Cierra el registro con su estado |
-| GET | `/api/pausas/historial` | Historial del trabajador |
-| GET | `/api/pausas/cumplimiento` | Indicadores de cumplimiento |
-| GET | `/api/rutinas` | Catálogo de rutinas |
-| GET | `/api/rutinas/:id` | Rutina con sus ejercicios |
- 
----
- 
+
 ## Convenciones de trabajo
  
 ### Ramas
@@ -183,26 +166,7 @@ fix: corregir cálculo de duración real
 docs: actualizar README con comandos de Capacitor
 refactor: extraer lógica de notificación a un servicio
 ```
- 
-### Base de datos
- 
-Los cambios de esquema van en scripts numerados dentro de `db/`. No se modifica un script ya aplicado; se crea uno nuevo. Las reglas de negocio que se puedan expresar como restricción (CHECK, UNIQUE, NOT NULL) van en la base y no solo en el código.
- 
----
- 
-## Estado
- 
-| Módulo | Estado |
-|---|---|
-| Esquema de base de datos | Completo |
-| API de autenticación | Completo |
-| API de pausas y rutinas | Completo |
-| API de administración | Pendiente |
-| Scheduler de notificaciones | Pendiente |
-| Frontend Angular | En desarrollo |
-| App Android | Pendiente |
- 
----
+
  
 ## Equipo
  
