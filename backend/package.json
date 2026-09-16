@@ -1,0 +1,32 @@
+{
+  "name": "pausas-activas-backend",
+  "version": "1.0.0",
+  "description": "API REST de Pausas Activas - autenticación y gestión de usuarios",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --exec \"tsx src/index.ts\"",
+    "build": "tsc -p .",
+    "start": "node dist/index.js"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.9.2",
+    "nodemon": "^3.1.10",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "joi": "^18.2.9",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3",
+    "typeorm": "^0.3.31"
+  }
+}
