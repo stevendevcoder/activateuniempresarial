@@ -1,0 +1,196 @@
+.hero {
+  background: #1b2f8a;
+  color: #fff;
+  padding: 36px 20px 22px;
+}
+
+.hero h1 {
+  margin: 0 0 14px;
+  font-size: 26px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  height: 46px;
+  border-radius: 999px;
+  background: #fff;
+  color: #94a3b8;
+}
+
+.search input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.wrap {
+  padding: 16px;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.filters button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 16px;
+  background: #fff;
+  color: #64748b;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.filters .on {
+  background: #1b2f8a;
+  color: #fff;
+}
+
+.counts {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #eef2ff;
+  text-align: center;
+}
+
+.counts div {
+  padding: 12px;
+}
+
+.counts b {
+  display: block;
+  font-size: 22px;
+  color: #1b2f8a;
+}
+
+.counts .ok b {
+  color: #16a34a;
+}
+
+.counts .bad b {
+  color: #e11d48;
+}
+
+.counts span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.person {
+  padding: 16px;
+}
+
+.top {
+  display: flex;
+  gap: 12px;
+}
+
+.meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+small,
+em {
+  color: #94a3b8;
+  font-size: 12px;
+  font-style: normal;
+}
+
+.name span {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+span.ok {
+  background: #ecfdf3;
+  color: #16a34a;
+}
+
+span.pending {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.bar {
+  height: 8px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eef2ff;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  background: #1b2f8a;
+}
+
+.bar i.pending {
+  background: #e11d48;
+}
+
+em {
+  display: block;
+  margin-top: 4px;
+  text-align: right;
+  font-weight: 800;
+}
+
+.detail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 16px;
+  background: #eef2ff;
+  color: #1b2f8a;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    padding: 48px 40px 28px;
+  }
+
+  .wrap {
+    padding: 24px 40px 32px;
+  }
+
+  .list {
+    grid-template-columns: 1fr 1fr;
+  }
+}

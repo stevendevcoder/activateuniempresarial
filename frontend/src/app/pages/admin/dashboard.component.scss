@@ -1,0 +1,167 @@
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #1b2f8a;
+  color: #fff;
+  padding: 36px 20px 28px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.hero p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px;
+}
+
+.kpi {
+  padding: 16px;
+  border-radius: 24px;
+}
+
+.kpi span {
+  display: flex;
+  justify-content: space-between;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.kpi b {
+  display: block;
+  margin-top: 12px;
+  font-size: 32px;
+  line-height: 1;
+}
+
+.blue {
+  background: #eef2ff;
+  color: #1b2f8a;
+}
+
+.green {
+  background: #ecfdf3;
+  color: #16a34a;
+}
+
+.red {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.desk {
+  display: block;
+}
+
+.chart,
+.alerts {
+  margin: 0 16px 14px;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: 16px;
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.bars div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.bars i {
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+  background: #1b2f8a;
+}
+
+.bars small,
+.bars em {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.head b {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e11d48;
+  color: #fff;
+  font-size: 11px;
+}
+
+.alerts p {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 8px;
+  padding: 12px;
+  border-radius: 16px;
+  background: #fff1f2;
+  color: #e11d48;
+  font-size: 13px;
+}
+
+.action {
+  padding: 4px 16px 8px;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    padding: 48px 40px 36px;
+  }
+
+  .kpis {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 24px 40px 8px;
+    gap: 16px;
+  }
+
+  .desk {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 16px;
+    margin: 16px 40px 16px;
+  }
+
+  .chart,
+  .alerts {
+    margin: 0;
+  }
+
+  .action {
+    padding: 8px 40px 24px;
+  }
+
+  .action .btn-pill {
+    max-width: 320px;
+  }
+}

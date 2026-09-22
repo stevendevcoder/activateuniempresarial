@@ -1,0 +1,60 @@
+<section class="page">
+  <header class="hero">
+    <div>
+      <h1>Panel administrativo</h1>
+      <p>Resumen de pausas activas</p>
+    </div>
+    <app-logo [size]="52" />
+  </header>
+
+  <div class="kpis">
+    <article class="kpi blue">
+      <span>Cumplimiento <app-icon name="activity" [size]="16" /></span>
+      <b>{{ dash.summary.compliance }}%</b>
+    </article>
+    <article class="kpi blue">
+      <span>Programadas <app-icon name="calendar" [size]="16" /></span>
+      <b>{{ dash.summary.scheduled }}</b>
+    </article>
+    <article class="kpi green">
+      <span>Completadas <app-icon name="check" [size]="16" /></span>
+      <b>{{ dash.summary.completed }}</b>
+    </article>
+    <article class="kpi red">
+      <span>Pendientes <app-icon name="clock" [size]="16" /></span>
+      <b>{{ dash.summary.pending }}</b>
+    </article>
+  </div>
+
+  <div class="desk">
+    <article class="card chart">
+      <h2>Cumplimiento semanal</h2>
+      <div class="bars">
+        @for (point of dash.summary.weekly; track point.day) {
+          <div>
+            <small>{{ point.value }}%</small>
+            <i [style.height.px]="point.value * 0.9"></i>
+            <em>{{ point.day }}</em>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="card alerts">
+      <div class="head">
+        <h2>Alertas</h2>
+        <b>{{ dash.summary.alerts.length }}</b>
+      </div>
+      @for (alert of dash.summary.alerts; track alert) {
+        <p><app-icon name="alert" [size]="16" /> {{ alert }}</p>
+      }
+    </article>
+  </div>
+
+  <div class="action">
+    <a class="btn-pill" routerLink="/admin/seguimiento">
+      <app-icon name="bars" [size]="16" />
+      Ver seguimiento
+    </a>
+  </div>
+</section>

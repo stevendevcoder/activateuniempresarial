@@ -1,0 +1,66 @@
+<section class="page home">
+  <header class="hero">
+    <div>
+      <h1>{{ auth.greeting() }}, {{ auth.firstName() }}</h1>
+      <p>Es un buen momento para cuidar de ti.</p>
+    </div>
+    <a class="bell" routerLink="/app/notificaciones">
+      <app-icon name="bell" [size]="20" />
+      @if (pausas.unreadCount() > 0) {
+        <i></i>
+      }
+    </a>
+  </header>
+
+  <div class="sheet">
+    @if (pausas.nextPause(); as next) {
+      <article class="card">
+        <div class="next">
+          <div>
+            <p class="kicker">Próxima pausa</p>
+            <h2>{{ nextTitle(next) }}</h2>
+          </div>
+          <div class="time">
+            <b>{{ hour(next.time) }}</b>
+            <small>{{ meridiem(next.time) }}</small>
+          </div>
+        </div>
+        <div class="chips">
+          <span class="chip chip-muted">
+            <app-icon name="clock" [size]="14" />
+            {{ next.durationMin }} minutos
+          </span>
+          <span class="chip chip-ok">En unos minutos</span>
+        </div>
+        <a class="btn-pill" [routerLink]="['/app/pausas/ejecutar', next.routineId || 'pausas-activas']" [queryParams]="{ pauseId: next.id }">
+          <app-icon name="play" [size]="16" />
+          Ver pausa
+        </a>
+      </article>
+    } @else {
+      <article class="card">
+        <p class="done">Completaste las pausas programadas de hoy.</p>
+      </article>
+    }
+
+    <article class="card">
+      <h3>Mi progreso de hoy</h3>
+      <div class="progress">
+        <app-progress-ring [done]="pausas.goalsDone()" [total]="pausas.goals().length" />
+        <ul>
+          @for (goal of pausas.goals(); track goal.id) {
+            <li [class.on]="goal.done">
+              <span class="check" [class.on]="goal.done"><app-icon name="check" [size]="12" /></span>
+              {{ goal.label }}
+            </li>
+          }
+        </ul>
+      </div>
+    </article>
+
+    <article class="quote">
+      <div class="mascot"><app-mascot pose="idle" /></div>
+      <p>“¡Vas muy bien! Regálate unos minutos para continuar con energía.”</p>
+    </article>
+  </div>
+</section>

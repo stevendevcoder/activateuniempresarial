@@ -1,0 +1,53 @@
+<section class="page">
+  <header class="hero"><h1>Mi perfil</h1></header>
+
+  <div class="sheet">
+    <article class="card person">
+      <app-avatar [kind]="auth.user()?.avatar || 'sharit'" [size]="64" />
+      <div class="meta">
+        @if (editing()) {
+          <input class="input" [(ngModel)]="nameDraft" />
+        } @else {
+          <h2>{{ auth.user()?.name }}</h2>
+        }
+        <p><app-icon name="building" [size]="14" /> {{ auth.user()?.area }}</p>
+        <p><app-icon name="clock" [size]="14" /> {{ auth.user()?.jornada }}</p>
+      </div>
+      <button type="button" class="btn-ghost" (click)="toggleEdit()">
+        {{ editing() ? 'Guardar' : 'Editar' }}
+      </button>
+    </article>
+
+    <article class="card">
+      <p class="label">Preferencias</p>
+      @for (item of items; track item.key) {
+        <div class="pref">
+          <span class="ico"><app-icon [name]="item.icon" [size]="18" /></span>
+          <div>
+            <b>{{ item.label }}</b>
+            <small>{{ auth.preferences()[item.key] ? item.on : item.off }}</small>
+          </div>
+          <button type="button" class="toggle" [class.on]="auth.preferences()[item.key]" (click)="auth.setPreference(item.key, !auth.preferences()[item.key])">
+            <span></span>
+          </button>
+        </div>
+      }
+    </article>
+
+    <article class="dnd">
+      <div class="dnd-title">
+        <span class="ico white"><app-icon name="moon" [size]="18" /></span>
+        <b>Modo No Molestar</b>
+      </div>
+      <p>“Silencia temporalmente los recordatorios cuando necesites concentrarte.”</p>
+      <button type="button" class="btn-pill mini" (click)="auth.setPreference('dnd', !auth.preferences().dnd)">
+        {{ auth.preferences().dnd ? 'Desactivar ahora' : 'Editar preferencias' }}
+      </button>
+    </article>
+
+    <button type="button" class="logout" (click)="auth.logout()">
+      <app-icon name="logout" [size]="16" />
+      Cerrar sesión
+    </button>
+  </div>
+</section>

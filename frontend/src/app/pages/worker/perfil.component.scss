@@ -1,0 +1,131 @@
+.hero {
+  background: #1b2f8a;
+  color: #fff;
+  padding: 36px 20px 56px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.sheet {
+  margin-top: -36px;
+  padding: 0 16px 8px;
+  display: grid;
+  gap: 14px;
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.meta {
+  min-width: 0;
+  flex: 1;
+}
+
+h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.meta p,
+.pref small,
+.label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 3px 0 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.label {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.pref {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid #eef2f7;
+}
+
+.pref:first-of-type {
+  border-top: 0;
+}
+
+.pref > div {
+  flex: 1;
+}
+
+.ico {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #eef2ff;
+  color: #1b2f8a;
+}
+
+.dnd {
+  padding: 18px;
+  border-radius: 28px;
+  background: #eef2ff;
+  color: #1b2f8a;
+}
+
+.dnd-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.ico.white {
+  background: #fff;
+}
+
+.dnd p {
+  margin: 0 0 14px;
+  font-size: 14px;
+}
+
+.mini {
+  width: auto;
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  color: #e11d48;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    padding: 48px 40px 64px;
+  }
+
+  .sheet {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 40px 32px;
+  }
+}

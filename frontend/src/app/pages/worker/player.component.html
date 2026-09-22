@@ -1,0 +1,32 @@
+@if (routine(); as routine) {
+  <section class="player">
+    <header>
+      <a routerLink="/app/pausas" class="back"><app-icon name="arrow-left" [size]="20" /></a>
+      <div>
+        <h1>Pausa activa</h1>
+        <p>Es momento de moverte un poco.</p>
+      </div>
+      <span class="back ghost"></span>
+      <div class="meta">
+        <span>Ejercicio {{ index() + 1 }} de {{ routine.exercises.length }}</span>
+        <span>{{ progress() }}%</span>
+      </div>
+      <div class="bar"><i [style.width.%]="progress()"></i></div>
+    </header>
+
+    <div class="sheet">
+      <div class="mascot"><app-mascot [pose]="current().pose" /></div>
+      <h2>{{ current().name }}</h2>
+      <p class="quote">“{{ current().instruction }}”</p>
+      <div class="clock">{{ clock() }}</div>
+      <small>segundos restantes</small>
+      <div class="bar dark"><i [style.width.%]="exerciseProgress()"></i></div>
+      <p class="tip"><app-icon name="heart" [size]="16" /> {{ current().tip }}</p>
+      <div class="actions">
+        <button type="button" class="ghost" (click)="prev()" [disabled]="index() === 0">Anterior</button>
+        <button type="button" class="next" (click)="next()">{{ isLast() ? 'Finalizar' : 'Siguiente' }}</button>
+      </div>
+      <button type="button" class="end" (click)="finish()">Finalizar pausa</button>
+    </div>
+  </section>
+}

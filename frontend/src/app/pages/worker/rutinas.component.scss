@@ -1,0 +1,102 @@
+.hero {
+  background: #1b2f8a;
+  color: #fff;
+  padding: 36px 20px 28px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.hero p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+}
+
+.wrap {
+  padding: 16px;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 14px;
+}
+
+.filters button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 16px;
+  background: #fff;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.filters .on {
+  background: #1b2f8a;
+  color: #fff;
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+}
+
+.thumb {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: 22px;
+  padding: 6px;
+}
+
+.info {
+  min-width: 0;
+  flex: 1;
+}
+
+h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.info p,
+small {
+  margin: 2px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+small {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    padding: 48px 40px 32px;
+  }
+
+  .wrap {
+    padding: 24px 40px 32px;
+  }
+
+  .list {
+    grid-template-columns: 1fr 1fr;
+  }
+}

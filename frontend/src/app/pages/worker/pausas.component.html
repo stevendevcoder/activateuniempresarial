@@ -1,0 +1,52 @@
+<section class="page">
+  <header class="hero">
+    <h1>Mis pausas</h1>
+    <p>
+      <app-icon name="building" [size]="16" />
+      Jornada: {{ auth.user()?.jornada }}
+    </p>
+  </header>
+
+  <div class="wrap">
+    <article class="card summary">
+      <div>
+        <small>Cumplimiento de hoy</small>
+        <div class="row">
+          <b>{{ pausas.compliance() }}%</b>
+          <div class="bar"><i [style.width.%]="pausas.compliance()"></i></div>
+        </div>
+        <em>{{ pausas.completedCount() }} de {{ pausas.totalActive() }} pausas</em>
+      </div>
+      <a class="btn-ghost" routerLink="/app/pausas/historial">
+        <app-icon name="calendar" [size]="16" />
+        Historial
+      </a>
+    </article>
+
+    @for (period of periods; track period) {
+      <p class="period">{{ period }}</p>
+      <div class="timeline">
+        @for (pause of byPeriod(period); track pause.id) {
+          <article class="item" [class]="tone(pause)">
+            <span class="dot"></span>
+            <div class="content">
+              <div>
+                <small>{{ pause.time }}</small>
+                <h2>{{ pause.title }}</h2>
+                @if (pause.subtitle) {
+                  <p>{{ pause.subtitle }}</p>
+                }
+              </div>
+              <span class="badge">{{ badge(pause) }}</span>
+            </div>
+            @if ((pause.kind === 'active' || pause.kind === 'visual') && pause.status === 'pending') {
+              <a [routerLink]="['/app/pausas/ejecutar', pause.routineId || 'pausas-activas']" [queryParams]="{ pauseId: pause.id }">
+                Iniciar ahora
+              </a>
+            }
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>

@@ -1,0 +1,35 @@
+<section class="page">
+  <header class="hero">
+    <h1>Rutinas</h1>
+    <p>Encuentra una rutina para continuar cuidándote.</p>
+  </header>
+
+  <div class="wrap">
+    <div class="filters">
+      @for (cat of categories; track cat.id) {
+        <button type="button" [class.on]="filter() === cat.id" (click)="filter.set(cat.id)">
+          {{ cat.label }}
+        </button>
+      }
+    </div>
+
+    <div class="list">
+      @for (routine of rutinas.byCategory(filter()); track routine.id) {
+        <article class="card row">
+          <div class="thumb" [style.background]="routine.tint">
+            <app-mascot [pose]="routine.pose" />
+          </div>
+          <div class="info">
+            <h2>{{ routine.name }}</h2>
+            <p>{{ routine.description }}</p>
+            <small>
+              <app-icon name="clock" [size]="14" />
+              {{ routine.duration }}
+            </small>
+          </div>
+          <a class="btn-ghost" [routerLink]="['/app/rutinas', routine.id]">Ver</a>
+        </article>
+      }
+    </div>
+  </div>
+</section>
