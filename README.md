@@ -170,4 +170,4 @@ refactor: extraer lógica de notificación a un servicio
  
 ## Equipo
  
-Allison, Hector, Alvaro, Julian y Sharit — Promoción 16B.
+Allison, Hector, Bryan y Sharit — Promoción 16B.
