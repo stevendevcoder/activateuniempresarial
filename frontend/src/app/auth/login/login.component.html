@@ -1,30 +1,18 @@
-<main class="w-full max-w-6xl rounded-3xl overflow-hidden shadow-2xl border border-brand-soft-blue bg-white grid grid-cols-1 lg:grid-cols-12 min-h-[680px]">
+<main class="login-card w-full max-w-6xl rounded-3xl overflow-hidden shadow-2xl border border-brand-soft-blue bg-white grid grid-cols-1 lg:grid-cols-12 min-h-0">
 
   <!-- Panel Izquierdo: Branding y Bienestar -->
-  <section class="lg:col-span-5 custom-gradient text-white p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden">
+  <section class="hidden lg:flex lg:col-span-5 custom-gradient text-white p-6 lg:p-10 flex-col justify-between relative overflow-hidden">
     <div class="absolute -right-20 -top-20 w-72 h-72 rounded-full bg-brand-red opacity-15 blur-3xl pointer-events-none"></div>
     <div class="absolute -left-16 bottom-0 w-80 h-80 rounded-full bg-brand-blue-light opacity-25 blur-2xl pointer-events-none"></div>
 
     <div class="relative z-10">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-md">
-          <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
-            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-            <line x1="6" y1="1" x2="6" y2="4" />
-            <line x1="10" y1="1" x2="10" y2="4" />
-            <line x1="14" y1="1" x2="14" y2="4" />
-          </svg>
-        </div>
-        <div>
-          <span class="text-2xl font-extrabold tracking-tight text-white">FitCampus</span>
-          <div class="text-[11px] font-bold uppercase tracking-wider text-brand-red bg-white/10 px-2 py-0.5 rounded-full inline-block ml-1">
-            Uniempresarial
-          </div>
-        </div>
-      </div>
+      <img
+          src="https://uniempresarial.edu.co/wp-content/uploads/2024/05/logo-blanco-1024x158.png"
+          alt="Universidad Uniempresarial"
+          class="h-14 w-auto object-contain"
+        />
 
-      <div class="mt-8 space-y-2">
+      <div class="mt-6 lg:mt-4 space-y-2">
         <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-white/10 border border-white/15 text-blue-100">
           <i-lucide [img]="ic.ShieldCheck" class="w-3.5 h-3.5 text-emerald-400"></i-lucide>
           SG-SST &middot; Bienestar Universitario
@@ -38,7 +26,7 @@
       </div>
     </div>
 
-    <div class="relative z-10 my-8">
+    <div class="relative z-10 my-6 compact-hide">
       <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl floating-bubble shadow-lg">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-brand-red flex items-center justify-center text-white shrink-0 shadow-md">
@@ -54,23 +42,10 @@
         </div>
       </div>
     </div>
-
-    <div class="relative z-10 border-t border-white/10 pt-4">
-      <div class="flex items-center justify-between text-xs text-blue-200/70">
-        <div class="flex items-center gap-2">
-          <i-lucide [img]="ic.Lock" class="w-3.5 h-3.5 text-blue-300"></i-lucide>
-          <span>Cifrado JWT + Bcrypt (EP01)</span>
-        </div>
-        <span class="flex items-center gap-1 font-medium text-white/90">
-          <i-lucide [img]="ic.CheckCircle2" class="w-3.5 h-3.5 text-emerald-400"></i-lucide>
-          Ley 1581 Habeas Data
-        </span>
-      </div>
-    </div>
   </section>
 
   <!-- Panel Derecho: Formulario -->
-  <section class="lg:col-span-7 p-8 lg:p-14 flex flex-col justify-between bg-white">
+  <section class="lg:col-span-7 p-6 lg:p-10 flex flex-col justify-between bg-white min-h-0 overflow-y-auto overscroll-contain">
 
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-2">
@@ -99,13 +74,6 @@
           <p class="text-xs text-brand-red leading-relaxed font-medium">{{ errorMessage }}</p>
         </div>
       }
-
-      <div class="mb-6 p-3.5 rounded-xl bg-brand-soft-blue border border-brand-blue/15 flex items-start gap-3">
-        <i-lucide [img]="ic.Info" class="w-5 h-5 text-brand-blue shrink-0 mt-0.5"></i-lucide>
-        <p class="text-xs text-brand-blue leading-relaxed">
-          Ingreso habilitado para <strong>Trabajadores</strong> y <strong>Administradores</strong> de área. Tu sesión se mantendrá renovada automáticamente vía tokens seguros.
-        </p>
-      </div>
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="space-y-5">
 
@@ -202,35 +170,9 @@
             </svg>
             Iniciando sesión…
           } @else {
-            <span>Iniciar Sesión en FitCampus</span>
+            <span>Iniciar Sesión en UActive</span>
             <i-lucide [img]="ic.ArrowRight" class="w-4 h-4"></i-lucide>
           }
-        </button>
-
-        <div class="relative my-6">
-          <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-slate-200"></div>
-          </div>
-          <div class="relative flex justify-center text-xs uppercase">
-            <span class="bg-white px-3 text-slate-400 font-semibold tracking-wider">
-              Próxima Integración Institucional
-            </span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          disabled
-          class="w-full py-3 px-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-400 font-medium text-xs flex items-center justify-center gap-2.5 cursor-not-allowed transition-all"
-        >
-          <svg class="w-4 h-4" viewBox="0 0 21 21" fill="none">
-            <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
-            <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
-            <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
-            <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
-          </svg>
-          <span>Iniciar con Microsoft 365 (Fase 2 &middot; SSO Próximamente)</span>
-          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-600">EP01.5</span>
         </button>
 
       </form>
@@ -242,18 +184,6 @@
             Registrarme como colaborador
           </a>
         </p>
-      </div>
-    </div>
-
-    <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
-      <div class="flex items-center gap-2">
-        <span class="font-medium text-slate-600">FitCampus v2.025</span>
-        <span>&middot;</span>
-        <span>Angular 19 + Capacitor 7</span>
-      </div>
-      <div class="flex items-center gap-3">
-        <a href="#terminos" class="hover:text-slate-600 underline">Términos SG-SST</a>
-        <a href="#privacidad" class="hover:text-slate-600 underline">Política Ley 1581</a>
       </div>
     </div>
 

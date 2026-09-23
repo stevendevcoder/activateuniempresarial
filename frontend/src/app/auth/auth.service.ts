@@ -9,12 +9,22 @@ export interface LoginResponse {
   token: string;
 }
 
+export interface TokenPayload {
+  id: number;
+  email: string;
+  id_role: number;
+  idArea: number | null;
+  role: string;
+  permissions: string[];
+  exp: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly apiUrl = environment.apiUrl;
-  private readonly tokenKey = 'fitcampus_token';
+  private readonly tokenKey = 'uactive_token';
 
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http
@@ -41,6 +51,24 @@ export class AuthService {
     } catch {
       return false;
     }
+  }
+
+  getUser(): TokenPayload | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      return JSON.parse(atob(token.split('.')[1] ?? '')) as TokenPayload;
+    } catch {
+      return null;
+    }
+  }
+
+  getRole(): string {
+    return this.getUser()?.role ?? '';
+  }
+
+  isAdmin(): boolean {
+    return this.getRole() === 'Administrador';
   }
 
   logout(): void {

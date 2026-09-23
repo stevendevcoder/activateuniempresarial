@@ -85,7 +85,7 @@ export class LoginComponent {
       .login(email, password)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: () => this.router.navigate(['/inicio']),
+        next: () => this.router.navigate([this.auth.isAdmin() ? '/admin' : '/portal']),
         error: (err) => {
           const status = err?.status as number | undefined;
           this.errorMessage =

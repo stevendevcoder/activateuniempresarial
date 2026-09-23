@@ -1,0 +1,48 @@
+{
+  "name": "pausas-activas-backend",
+  "version": "1.0.0",
+  "description": "API REST de Pausas Activas - autenticación y gestión de usuarios",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --exec \"tsx src/index.ts\"",
+    "build": "tsc -p .",
+    "start": "node dist/index.js",
+    "migration:generate": "tsx src/config/data-source.ts migration:generate src/migrations/migration -d src/config/data-source.ts",
+    "migration:run": "tsx src/config/data-source.ts migration:run -d src/config/data-source.ts",
+    "migration:revert": "tsx src/config/data-source.ts migration:revert -d src/config/data-source.ts",
+    "migration:show": "tsx src/config/data-source.ts migration:show -d src/config/data-source.ts",
+    "test": "vitest run"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.2.0",
+    "@types/node": "^24.9.2",
+    "@types/pdfkit": "^0.17.6",
+    "@types/supertest": "^7.2.1",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.2.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.1"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "exceljs": "^4.4.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.7.0",
+    "joi": "^18.2.9",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.4.0",
+    "pdfkit": "^0.20.2",
+    "pg": "^8.16.3",
+    "pino": "^10.3.1",
+    "pino-http": "^11.0.0",
+    "typeorm": "^0.3.31"
+  }
+}

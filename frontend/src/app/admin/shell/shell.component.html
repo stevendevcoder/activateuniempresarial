@@ -1,0 +1,145 @@
+<div class="flex h-dvh overflow-hidden bg-brand-surface">
+  <!-- Sidebar Desktop -->
+  <aside class="hidden lg:flex lg:flex-col lg:w-64 bg-brand-blue text-white">
+    <div class="flex items-center px-6 py-5 border-b border-white/10">
+      <img
+        src="https://uniempresarial.edu.co/wp-content/uploads/2024/05/logo-blanco-1024x158.png"
+        alt="Universidad Uniempresarial"
+        class="h-8 w-auto object-contain"
+      />
+    </div>
+
+    <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+      <a routerLink="/admin/dashboard" routerLinkActive="bg-white/15"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors hover:bg-white/10">
+        <lucide-angular [img]="ic.Home" class="w-5 h-5"></lucide-angular>
+        Dashboard
+      </a>
+      <a routerLink="/admin/users" routerLinkActive="bg-white/15"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white">
+        <lucide-angular [img]="ic.Users" class="w-5 h-5"></lucide-angular>
+        Usuarios
+      </a>
+      <a routerLink="/admin/areas" routerLinkActive="bg-white/15"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white">
+        <lucide-angular [img]="ic.Building2" class="w-5 h-5"></lucide-angular>
+        Áreas
+      </a>
+      <a routerLink="/admin/routines" routerLinkActive="bg-white/15"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white">
+        <lucide-angular [img]="ic.Activity" class="w-5 h-5"></lucide-angular>
+        Rutinas
+      </a>
+      <a routerLink="/admin/pauses" routerLinkActive="bg-white/15"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white">
+        <lucide-angular [img]="ic.ClipboardList" class="w-5 h-5"></lucide-angular>
+        Pausas
+      </a>
+      <a routerLink="/admin/schedules" routerLinkActive="bg-white/15"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white">
+        <lucide-angular [img]="ic.CalendarClock" class="w-5 h-5"></lucide-angular>
+        Cronogramas
+      </a>
+      <a routerLink="/admin/config" routerLinkActive="bg-white/15"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white">
+        <lucide-angular [img]="ic.Settings" class="w-5 h-5"></lucide-angular>
+        Configuración
+      </a>
+      <a routerLink="/admin/privacy" routerLinkActive="bg-white/15"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white">
+        <lucide-angular [img]="ic.ShieldCheck" class="w-5 h-5"></lucide-angular>
+        Privacidad
+      </a>
+    </nav>
+
+    <div class="px-4 py-4 border-t border-white/10">
+      <button (click)="logout()"
+              class="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors">
+        <lucide-angular [img]="ic.LogOut" class="w-5 h-5"></lucide-angular>
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Sidebar Mobile Overlay -->
+  @if (sidebarOpen) {
+    <div class="fixed inset-0 z-40 lg:hidden">
+      <div class="absolute inset-0 bg-black/40" (click)="sidebarOpen = false"></div>
+      <aside class="absolute inset-y-0 left-0 w-64 bg-brand-blue text-white z-50 flex flex-col">
+        <div class="flex items-center px-6 py-5 border-b border-white/10">
+          <img
+            src="https://uniempresarial.edu.co/wp-content/uploads/2024/05/logo-blanco-1024x158.png"
+            alt="Universidad Uniempresarial"
+            class="h-8 w-auto object-contain"
+          />
+        </div>
+        <nav class="flex-1 py-4 px-3 space-y-1">
+          <a routerLink="/admin/dashboard" (click)="sidebarOpen = false" routerLinkActive="bg-white/15"
+             class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors hover:bg-white/10">
+            <lucide-angular [img]="ic.Home" class="w-5 h-5"></lucide-angular> Dashboard
+          </a>
+          <a routerLink="/admin/users" (click)="sidebarOpen = false" routerLinkActive="bg-white/15"
+             class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white">
+            <lucide-angular [img]="ic.Users" class="w-5 h-5"></lucide-angular> Usuarios
+          </a>
+          <a routerLink="/admin/areas" (click)="sidebarOpen = false" routerLinkActive="bg-white/15"
+             class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white">
+            <lucide-angular [img]="ic.Building2" class="w-5 h-5"></lucide-angular> Áreas
+          </a>
+          <a routerLink="/admin/routines" (click)="sidebarOpen = false" routerLinkActive="bg-white/15"
+             class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white">
+            <lucide-angular [img]="ic.Activity" class="w-5 h-5"></lucide-angular> Rutinas
+          </a>
+          <a routerLink="/admin/pauses" (click)="sidebarOpen = false" routerLinkActive="bg-white/15"
+             class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white">
+            <lucide-angular [img]="ic.ClipboardList" class="w-5 h-5"></lucide-angular> Pausas
+          </a>
+          <a routerLink="/admin/schedules" (click)="sidebarOpen = false" routerLinkActive="bg-white/15"
+             class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white">
+            <lucide-angular [img]="ic.CalendarClock" class="w-5 h-5"></lucide-angular> Cronogramas
+          </a>
+          <a routerLink="/admin/config" (click)="sidebarOpen = false" routerLinkActive="bg-white/15"
+             class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white">
+            <lucide-angular [img]="ic.Settings" class="w-5 h-5"></lucide-angular> Configuración
+          </a>
+          <a routerLink="/admin/privacy" (click)="sidebarOpen = false" routerLinkActive="bg-white/15"
+             class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white">
+            <lucide-angular [img]="ic.ShieldCheck" class="w-5 h-5"></lucide-angular> Privacidad
+          </a>
+        </nav>
+        <div class="px-4 py-4 border-t border-white/10">
+          <button (click)="logout()" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white">
+            <lucide-angular [img]="ic.LogOut" class="w-5 h-5"></lucide-angular> Cerrar sesión
+          </button>
+        </div>
+      </aside>
+    </div>
+  }
+
+  <!-- Main -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Header -->
+    <header class="flex items-center justify-between px-4 sm:px-6 py-3 bg-white border-b border-brand-soft-blue">
+      <div class="flex items-center gap-3">
+        <button (click)="sidebarOpen = true" class="lg:hidden p-2 rounded-lg hover:bg-brand-soft-blue transition-colors">
+          <lucide-angular [img]="ic.Menu" class="w-5 h-5 text-brand-blue"></lucide-angular>
+        </button>
+        <h2 class="text-sm font-bold text-slate-800">Panel Administrativo</h2>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <p class="text-sm font-bold text-slate-800 leading-tight">{{ userName }}</p>
+          <p class="text-xs text-slate-400">{{ userRole }}</p>
+        </div>
+        <div class="w-9 h-9 rounded-full bg-brand-blue text-white flex items-center justify-center text-sm font-bold shadow-sm">
+          {{ userName.charAt(0) | uppercase }}
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+      <router-outlet />
+    </main>
+  </div>
+</div>

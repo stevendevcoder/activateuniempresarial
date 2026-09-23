@@ -1,4 +1,4 @@
-# FitCampus Frontend (Angular 19)
+# UActive Frontend (Angular 19)
 
 Frontend de la plataforma de pausas activas y bienestar SG-SST para Uniempresarial.
 

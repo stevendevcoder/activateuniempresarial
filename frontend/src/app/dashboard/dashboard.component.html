@@ -1,0 +1,141 @@
+<div class="space-y-6">
+  <!-- Title + Export -->
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-2xl bg-brand-blue flex items-center justify-center text-white shadow-md">
+        <lucide-angular [img]="ic.BarChart3" class="w-6 h-6"></lucide-angular>
+      </div>
+      <div>
+        <h1 class="text-xl font-extrabold text-brand-blue tracking-tight">Dashboard</h1>
+        <p class="text-sm text-slate-500">Resumen general de pausas activas</p>
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <button (click)="downloadPdf()"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-brand-blue text-sm font-bold hover:bg-brand-soft-blue transition-colors">
+        <lucide-angular [img]="ic.Download" class="w-4 h-4"></lucide-angular>
+        PDF
+      </button>
+      <button (click)="downloadExcel()"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-blue text-white text-sm font-bold hover:bg-brand-blue-dark transition-colors shadow-sm">
+        <lucide-angular [img]="ic.Download" class="w-4 h-4"></lucide-angular>
+        Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Stat Cards -->
+  @if (summary(); as s) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <!-- Total -->
+      <div class="stat-card rounded-2xl border border-brand-soft-blue bg-white p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-brand-soft-blue flex items-center justify-center">
+            <lucide-angular [img]="ic.ClipboardList" class="w-5 h-5 text-brand-blue"></lucide-angular>
+          </div>
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total</span>
+        </div>
+        <p class="text-3xl font-extrabold text-brand-blue">{{ s.total | number }}</p>
+        <p class="text-xs text-slate-400 mt-1">Todas las pausas registradas</p>
+      </div>
+
+      <!-- Completadas -->
+      <div class="stat-card rounded-2xl border border-brand-soft-blue bg-white p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-brand-soft-blue flex items-center justify-center">
+            <lucide-angular [img]="ic.Activity" class="w-5 h-5 text-brand-blue"></lucide-angular>
+          </div>
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Completadas</span>
+        </div>
+        <p class="text-3xl font-extrabold text-brand-blue">{{ s.completadas | number }}</p>
+        <p class="text-xs text-slate-400 mt-1">Pausas finalizadas correctamente</p>
+      </div>
+
+      <!-- Cumplimiento -->
+      <div class="stat-card rounded-2xl border border-brand-soft-blue bg-white p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-brand-soft-red flex items-center justify-center">
+            <lucide-angular [img]="ic.TrendingUp" class="w-5 h-5 text-brand-red"></lucide-angular>
+          </div>
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Cumplimiento</span>
+        </div>
+        <p class="text-3xl font-extrabold text-brand-blue">{{ s.complianceRate | number:'1.1-1' }}%</p>
+        <p class="text-xs text-slate-400 mt-1">{{ s.completadas | number }} de {{ s.total | number }} programadas</p>
+      </div>
+
+      <!-- Colaboradores -->
+      <div class="stat-card rounded-2xl border border-brand-soft-blue bg-white p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-brand-soft-blue flex items-center justify-center">
+            <lucide-angular [img]="ic.Users" class="w-5 h-5 text-brand-blue"></lucide-angular>
+          </div>
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Colaboradores</span>
+        </div>
+        <p class="text-3xl font-extrabold text-brand-blue">{{ s.activeWorkers | number }}</p>
+        <p class="text-xs text-slate-400 mt-1">{{ s.activeAreas | number }} áreas activas</p>
+      </div>
+    </div>
+  }
+
+  <!-- Charts Row -->
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+    <!-- Timeline -->
+    <div class="rounded-2xl border border-brand-soft-blue bg-white p-5 shadow-sm">
+      <h3 class="text-sm font-bold text-slate-800 mb-4">Evolución temporal</h3>
+      <div class="h-72">
+        <canvas #timelineCanvas role="img" aria-label="Evolución temporal de las pausas activas"></canvas>
+      </div>
+    </div>
+
+    <!-- By Area -->
+    <div class="rounded-2xl border border-brand-soft-blue bg-white p-5 shadow-sm">
+      <h3 class="text-sm font-bold text-slate-800 mb-4">Cumplimiento por área</h3>
+      <div class="h-72">
+        <canvas #areaCanvas role="img" aria-label="Cumplimiento de pausas por área"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Area Table -->
+  @if (areas().length > 0) {
+    <div class="rounded-2xl border border-brand-soft-blue bg-white shadow-sm overflow-hidden">
+      <div class="px-5 py-4 border-b border-brand-soft-blue">
+        <h3 class="text-sm font-bold text-slate-800">Detalle por áreas</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-brand-soft-blue">
+              <th class="text-left px-5 py-3 font-semibold text-slate-500">Área</th>
+              <th class="text-right px-5 py-3 font-semibold text-slate-500">Total</th>
+              <th class="text-right px-5 py-3 font-semibold text-slate-500">Completadas</th>
+              <th class="text-right px-5 py-3 font-semibold text-slate-500">Canceladas</th>
+              <th class="text-right px-5 py-3 font-semibold text-slate-500">Trabajadores</th>
+              <th class="text-right px-5 py-3 font-semibold text-slate-500">Cumplimiento</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (area of areas(); track $index) {
+              <tr class="border-b border-brand-soft-blue/60 hover:bg-brand-surface/50 transition-colors">
+                <td class="px-5 py-3 font-semibold text-slate-800">{{ area.areaName }}</td>
+                <td class="text-right px-5 py-3 text-slate-600">{{ area.total | number }}</td>
+                <td class="text-right px-5 py-3">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-brand-soft-blue text-brand-blue">
+                    {{ area.completadas | number }}
+                  </span>
+                </td>
+                <td class="text-right px-5 py-3">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-brand-soft-red text-brand-red">
+                    {{ area.canceladas | number }}
+                  </span>
+                </td>
+                <td class="text-right px-5 py-3 text-slate-600">{{ area.workers | number }}</td>
+                <td class="text-right px-5 py-3 font-bold text-brand-blue">{{ area.complianceRate | number:'1.1-1' }}%</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
