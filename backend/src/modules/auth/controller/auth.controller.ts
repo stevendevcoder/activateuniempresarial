@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { AuthService } from "../service/auth.service";
 import { UserService } from "../service/user.service";
-import { UserRecord } from "../repository/user.repository";
+import { PublicUser, UserRecord } from "../repository/user.repository";
 import { loadUserData } from "../validation/user.validation";
 import { loadUpdateUserData } from "../validation/user-update.validation";
 import { loadEmail } from "../validation/email.validation";
@@ -13,6 +13,11 @@ export class AuthController {
     constructor(authService: AuthService, userService: UserService) {
         this.authService = authService;
         this.userService = userService;
+    }
+
+    private toPublicUser(user: UserRecord): PublicUser {
+        const { password: _password, ...publicUser } = user;
+        return publicUser;
     }
 
     async login(req: Request, res: Response): Promise<Response> {
@@ -88,7 +93,7 @@ export class AuthController {
             if (!user) {
                 return res.status(404).json({ error: "Usuario no encontrado" });
             }
-            return res.status(200).json(user);
+            return res.status(200).json(this.toPublicUser(user));
         } catch (error) {
             return res.status(500).json({ error: "Error interno del servidor" });
         }
@@ -101,7 +106,7 @@ export class AuthController {
             if (!user) {
                 return res.status(404).json({ error: "Usuario no encontrado" });
             }
-            return res.status(200).json(user);
+            return res.status(200).json(this.toPublicUser(user));
         } catch (error) {
             if (error instanceof Error) {
                 return res.status(400).json({ error: error.message });
@@ -113,7 +118,7 @@ export class AuthController {
     async getAllUsers(req: Request, res: Response): Promise<Response> {
         try {
             const users = await this.userService.getAllUsers();
-            return res.status(200).json(users);
+            return res.status(200).json(users.map((user) => this.toPublicUser(user)));
         } catch (error) {
             return res.status(500).json({ message: "Error al obtener usuarios" });
         }

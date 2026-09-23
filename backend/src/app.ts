@@ -13,7 +13,11 @@ class App {
     }
 
     private middlewares(): void {
-        this.app.use(cors({ origin: envs.CORS_ORIGIN.split(",").map((o) => o.trim()) }));
+        const corsOrigin = envs.CORS_ORIGIN.trim();
+        const origin = corsOrigin === "*"
+            ? "*"
+            : corsOrigin.split(",").map((o) => o.trim());
+        this.app.use(cors({ origin }));
         this.app.use(express.json());
     }
 

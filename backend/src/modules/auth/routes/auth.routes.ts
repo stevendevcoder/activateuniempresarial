@@ -14,7 +14,7 @@ const authController = new AuthController(authService, userService);
 
 router.post("/login", (req, res) => authController.login(req, res));
 
-router.post("/users", (req, res) => authController.createUser(req, res));
+router.post("/users", authenticateToken, (req, res) => authController.createUser(req, res));
 router.get("/users", authenticateToken, (req, res) => authController.getAllUsers(req, res));
 router.get("/users/email/:email", authenticateToken, (req, res) => authController.getUserByEmail(req, res));
 router.get("/users/:id", authenticateToken, (req, res) => authController.getUserById(req, res));

@@ -10,6 +10,8 @@ export interface UserRecord {
     status: number;
 }
 
+export type PublicUser = Omit<UserRecord, "password">;
+
 export interface IUserRepository {
     create(user: Omit<UserRecord, "id">): Promise<number>;
     update(id: number, user: Partial<UserRecord>): Promise<boolean>;
