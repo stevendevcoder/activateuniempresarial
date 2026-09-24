@@ -5,6 +5,8 @@ export type ReturnUpdateUserData = Partial<{
     email: string;
     password: string;
     status: number;
+    idRole: number | null;
+    idArea: number | null;
 }>;
 
 function validateUpdateUserData(data: any) {
@@ -37,9 +39,19 @@ function validateUpdateUserData(data: any) {
                 "any.only": "El estado debe ser 0 (inactivo) o 1 (activo)",
                 "number.base": "El estado debe ser numérico",
             }),
+
+            idRole: joi.number().integer().positive().allow(null).messages({
+                "number.base": "El rol debe ser un ID numérico",
+                "number.positive": "El rol debe ser un ID positivo",
+            }),
+
+            idArea: joi.number().integer().positive().allow(null).messages({
+                "number.base": "El área debe ser un ID numérico",
+                "number.positive": "El área debe ser un ID positivo",
+            }),
         })
         .unknown(false)
-        .or("name", "email", "password", "status");
+        .or("name", "email", "password", "status", "idRole", "idArea");
 
     return schema.validate(data, {
         abortEarly: false,

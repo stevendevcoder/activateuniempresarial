@@ -1,19 +1,28 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, catchError, map, of, switchMap, tap } from 'rxjs';
+import { Observable, map, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { DEMO_USERS, DEFAULT_PREFERENCES, roleFromUser } from '../mock-data';
-import { ApiUser, LoginResponse, Preferences, SessionUser } from '../models';
+import { LoginResponse, MeResponse, TokenPayload } from '../api.types';
+import { Preferences, SessionUser } from '../models';
 
 const TOKEN_KEY = 'activate_token';
 const USER_KEY = 'activate_user';
 const PREF_KEY = 'activate_preferences';
+const ADMIN_ROLE = 'Administrador';
+
+const DEFAULT_PREFERENCES: Preferences = {
+  notifications: true,
+  dnd: false,
+  reminders: true,
+  visualRest: true,
+};
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly api = environment.apiUrl;
 
   readonly user = signal<SessionUser | null>(this.readUser());
   readonly preferences = signal<Preferences>(this.readPreferences());
@@ -26,94 +35,34 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<SessionUser> {
-    const cleanEmail = email.trim();
-    const cleanPassword = password.trim();
-    const demo = this.matchDemo(cleanEmail, cleanPassword);
-
-    if (demo) {
-      return of(this.enterDemo(demo));
-    }
-
     return this.http
-      .post<LoginResponse>(`${environment.apiUrl}/api/login`, {
-        email: cleanEmail,
-        password: cleanPassword,
-      })
+      .post<LoginResponse>(`${this.api}/api/login`, { email: email.trim(), password })
       .pipe(
-        switchMap((res) => {
-          this.saveToken(res.token);
-          return this.loadProfile(cleanEmail, res.token);
-        }),
+        tap((res) => localStorage.setItem(TOKEN_KEY, res.token)),
+        switchMap(() => this.refreshProfile()),
       );
   }
 
-  private matchDemo(email: string, password: string) {
-    return DEMO_USERS.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password,
+  /** Recarga los datos del usuario autenticado desde GET /api/me. */
+  refreshProfile(): Observable<SessionUser> {
+    return this.http.get<MeResponse>(`${this.api}/api/me`).pipe(
+      map((me) => this.toSession(me)),
+      tap((session) => this.setUser(session)),
     );
   }
 
-  private enterDemo(demo: (typeof DEMO_USERS)[number]): SessionUser {
-    const { password: _password, ...session } = demo;
-    this.saveToken('demo-token');
-    this.setUser(session);
-    return session;
-  }
-
-  private loadProfile(email: string, token: string): Observable<SessionUser> {
+  updateProfile(data: { name?: string; password?: string; currentPassword?: string }): Observable<SessionUser> {
     return this.http
-      .get<ApiUser>(`${environment.apiUrl}/api/users/email/${encodeURIComponent(email)}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .pipe(
-        map((apiUser) => this.toSession(apiUser)),
-        tap((session) => this.setUser(session)),
-        catchError(() => {
-          const payload = this.decodeToken(token);
-          const session: SessionUser = {
-            id: Number(payload?.['id'] ?? 0),
-            name: email.split('@')[0].replace('.', ' '),
-            email,
-            role: roleFromUser('', email),
-            area: 'Uniempresarial',
-            jornada: '8:00 a.m. – 5:00 p.m.',
-            avatar: roleFromUser('', email) === 'administrador' ? 'admin' : 'sharit',
-            demo: false,
-          };
-          this.setUser(session);
-          return of(session);
-        }),
-      );
+      .put<{ message: string }>(`${this.api}/api/me/profile`, data)
+      .pipe(switchMap(() => this.refreshProfile()));
   }
 
-  private toSession(apiUser: ApiUser): SessionUser {
-    const role = roleFromUser(apiUser.name, apiUser.email);
-    const demoMatch = DEMO_USERS.find((u) => u.email.toLowerCase() === apiUser.email.toLowerCase());
-    return {
-      id: apiUser.id,
-      name: apiUser.name,
-      email: apiUser.email,
-      role,
-      area: demoMatch?.area ?? (role === 'administrador' ? 'Talento Humano' : 'Administrativa'),
-      jornada: demoMatch?.jornada ?? '8:00 a.m. – 5:00 p.m.',
-      avatar: demoMatch?.avatar ?? (role === 'administrador' ? 'admin' : 'sharit'),
-      demo: false,
-    };
-  }
-
-  updateProfile(name: string): Observable<boolean> {
-    const current = this.user();
-    if (!current) return of(false);
-    if (current.demo || this.getToken() === 'demo-token') {
-      this.setUser({ ...current, name });
-      return of(true);
-    }
-    return this.http.put(`${environment.apiUrl}/api/users/${current.id}`, { name }).pipe(
-      map(() => {
-        this.setUser({ ...current, name });
-        return true;
-      }),
-    );
+  uploadPhoto(file: File): Observable<SessionUser> {
+    const body = new FormData();
+    body.append('file', file);
+    return this.http
+      .post<{ photoUrl: string }>(`${this.api}/api/me/profile/photo`, body)
+      .pipe(switchMap(() => this.refreshProfile()));
   }
 
   setPreference<K extends keyof Preferences>(key: K, value: Preferences[K]): void {
@@ -130,21 +79,18 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    const token = this.getToken();
-    const user = this.user();
-    if (!token || !user) return false;
-    if (token === 'demo-token') return true;
-    try {
-      const payload = this.decodeToken(token);
-      const exp = Number(payload?.['exp'] ?? 0);
-      return exp * 1000 > Date.now();
-    } catch {
-      return false;
-    }
+    const payload = this.tokenPayload();
+    if (!payload || !this.user()) return false;
+    return Number(payload.exp ?? 0) * 1000 > Date.now();
   }
 
   isAdmin(): boolean {
     return this.user()?.role === 'administrador';
+  }
+
+  hasPermission(permission: string): boolean {
+    const perms = this.user()?.permissions ?? [];
+    return perms.includes('*') || perms.includes(permission);
   }
 
   getToken(): string | null {
@@ -156,20 +102,43 @@ export class AuthService {
     if (redirect) this.router.navigate(['/login']);
   }
 
+  private toSession(me: MeResponse): SessionUser {
+    const isAdmin = me.role === ADMIN_ROLE;
+    return {
+      id: me.id,
+      name: me.name,
+      email: me.email,
+      role: isAdmin ? 'administrador' : 'trabajador',
+      roleName: me.role ?? (isAdmin ? ADMIN_ROLE : 'Trabajador'),
+      area: me.area ?? 'Sin área asignada',
+      idArea: me.idArea,
+      photo: me.photo,
+      permissions: me.permissions ?? [],
+    };
+  }
+
+  private tokenPayload(): TokenPayload | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const base64 = (token.split('.')[1] ?? '').replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(atob(base64)) as TokenPayload;
+    } catch {
+      return null;
+    }
+  }
+
   private setUser(user: SessionUser): void {
     this.user.set(user);
     localStorage.setItem(USER_KEY, JSON.stringify(user));
-  }
-
-  private saveToken(token: string): void {
-    localStorage.setItem(TOKEN_KEY, token);
   }
 
   private readUser(): SessionUser | null {
     const raw = localStorage.getItem(USER_KEY);
     if (!raw) return null;
     try {
-      return JSON.parse(raw) as SessionUser;
+      const user = JSON.parse(raw) as SessionUser;
+      return Array.isArray(user.permissions) ? user : null;
     } catch {
       return null;
     }
@@ -189,13 +158,5 @@ export class AuthService {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     this.user.set(null);
-  }
-
-  private decodeToken(token: string): Record<string, unknown> | null {
-    try {
-      return JSON.parse(atob(token.split('.')[1] ?? '')) as Record<string, unknown>;
-    } catch {
-      return null;
-    }
   }
 }

@@ -5,6 +5,8 @@ export type ReturnUserData = {
     email: string;
     password: string;
     status: number;
+    idRole: number | null;
+    idArea: number | null;
 };
 
 function validateUserData(data: any) {
@@ -13,13 +15,13 @@ function validateUserData(data: any) {
             .string()
             .trim()
             .min(3)
-            .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)?$/)
+            .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)
             .required()
             .messages({
                 "string.base": "El nombre debe ser un texto",
                 "string.empty": "El nombre es requerido",
                 "string.min": "El nombre debe tener al menos 3 caracteres",
-                "string.pattern.base": "El nombre solo puede contener letras y un espacio",
+                "string.pattern.base": "El nombre solo puede contener letras y espacios",
             }),
         email: joi
             .string()
@@ -43,6 +45,14 @@ function validateUserData(data: any) {
             "number.base": "El estado debe ser numérico",
             "any.only": "El estado debe ser 0 o 1",
             "any.required": "El estado es obligatorio",
+        }),
+        idRole: joi.number().integer().positive().allow(null).default(null).messages({
+            "number.base": "El rol debe ser un ID numérico",
+            "number.positive": "El rol debe ser un ID positivo",
+        }),
+        idArea: joi.number().integer().positive().allow(null).default(null).messages({
+            "number.base": "El área debe ser un ID numérico",
+            "number.positive": "El área debe ser un ID positivo",
         }),
     }).unknown(false);
 

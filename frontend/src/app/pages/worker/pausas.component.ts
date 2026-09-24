@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DayPause } from '../../core/models';
-import { AuthService } from '../../core/services/auth.service';
 import { PausasService } from '../../core/services/pausas.service';
+import { toMeridiem } from '../../core/utils';
 import { IconComponent } from '../../shared/icon.component';
 
 @Component({
@@ -12,7 +12,6 @@ import { IconComponent } from '../../shared/icon.component';
   styleUrl: './pausas.component.scss',
 })
 export class PausasComponent {
-  readonly auth = inject(AuthService);
   readonly pausas = inject(PausasService);
   readonly periods = ['mañana', 'tarde'] as const;
 
@@ -20,15 +19,29 @@ export class PausasComponent {
     return this.pausas.pauses().filter((p) => p.period === period);
   }
 
+  time(value: string): string {
+    return toMeridiem(value);
+  }
+
   tone(pause: DayPause): string {
     if (pause.status === 'completed') return 'done';
-    if (pause.kind === 'lunch') return 'lunch';
+    if (pause.kind === 'lunch' || pause.kind === 'start') return 'lunch';
+    if (pause.status === 'cancelled') return 'cancelled';
     return 'pending';
   }
 
   badge(pause: DayPause): string {
-    if (pause.status === 'completed') return 'Completada';
     if (pause.kind === 'lunch') return 'Almuerzo';
-    return 'Pendiente';
+    if (pause.kind === 'start') return 'Jornada';
+    switch (pause.status) {
+      case 'completed':
+        return 'Completada';
+      case 'postponed':
+        return 'Aplazada';
+      case 'cancelled':
+        return 'Cancelada';
+      default:
+        return 'Pendiente';
+    }
   }
 }

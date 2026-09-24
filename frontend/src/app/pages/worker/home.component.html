@@ -4,7 +4,7 @@
       <h1>{{ auth.greeting() }}, {{ auth.firstName() }}</h1>
       <p>Es un buen momento para cuidar de ti.</p>
     </div>
-    <a class="bell" routerLink="/app/notificaciones">
+    <a class="bell" routerLink="/app/notificaciones" aria-label="Notificaciones">
       <app-icon name="bell" [size]="20" />
       @if (pausas.unreadCount() > 0) {
         <i></i>
@@ -13,6 +13,19 @@
   </header>
 
   <div class="sheet">
+    @if (pausas.consent(); as consent) {
+      @if (!consent.accepted) {
+        <article class="card consent">
+          <span class="ico"><app-icon name="shield" [size]="18" /></span>
+          <div>
+            <b>Consentimiento pendiente</b>
+            <p>Autoriza el tratamiento de tus datos de cumplimiento (Ley 1581 de 2012).</p>
+          </div>
+          <button type="button" class="btn-ghost" (click)="acceptConsent()">Aceptar</button>
+        </article>
+      }
+    }
+
     @if (pausas.nextPause(); as next) {
       <article class="card">
         <div class="next">
@@ -28,39 +41,61 @@
         <div class="chips">
           <span class="chip chip-muted">
             <app-icon name="clock" [size]="14" />
-            {{ next.durationMin }} minutos
+            {{ next.durationMin || 5 }} minutos
           </span>
-          <span class="chip chip-ok">En unos minutos</span>
+          <span class="chip" [class]="when(next).tone">{{ when(next).label }}</span>
         </div>
-        <a class="btn-pill" [routerLink]="['/app/pausas/ejecutar', next.routineId || 'pausas-activas']" [queryParams]="{ pauseId: next.id }">
+        <a
+          class="btn-pill"
+          [routerLink]="['/app/pausas/ejecutar', next.routineId ?? 'libre']"
+          [queryParams]="{ slot: next.scheduledAt, pausaId: next.pausaId }"
+        >
           <app-icon name="play" [size]="16" />
           Ver pausa
         </a>
       </article>
     } @else {
       <article class="card">
-        <p class="done">Completaste las pausas programadas de hoy.</p>
+        @if (!pausas.loaded()) {
+          <p class="done">Cargando tu jornada…</p>
+        } @else if (!pausas.schedule()) {
+          <p class="done">Tu área aún no tiene un cronograma de pausas para hoy.</p>
+          <a class="btn-pill free" routerLink="/app/rutinas">
+            <app-icon name="activity" [size]="16" />
+            Hacer una pausa libre
+          </a>
+        } @else {
+          <p class="done">Completaste las pausas programadas de hoy.</p>
+        }
       </article>
     }
 
     <article class="card">
       <h3>Mi progreso de hoy</h3>
       <div class="progress">
-        <app-progress-ring [done]="pausas.goalsDone()" [total]="pausas.goals().length" />
+        <app-progress-ring [done]="pausas.completedCount()" [total]="pausas.totalActive()" />
         <ul>
-          @for (goal of pausas.goals(); track goal.id) {
-            <li [class.on]="goal.done">
-              <span class="check" [class.on]="goal.done"><app-icon name="check" [size]="12" /></span>
-              {{ goal.label }}
+          @for (goal of goals(); track goal.id) {
+            <li [class.on]="goal.status === 'completed'">
+              <span class="check" [class.on]="goal.status === 'completed'"><app-icon name="check" [size]="12" /></span>
+              {{ goalLabel(goal) }}
             </li>
+          } @empty {
+            <li>Sin pausas programadas hoy</li>
           }
         </ul>
       </div>
+      @if (pausas.stats(); as stats) {
+        <div class="streak">
+          <span class="chip chip-warn"><app-icon name="flame" [size]="14" /> Racha: {{ stats.currentStreak }} días</span>
+          <span class="chip chip-info"><app-icon name="trophy" [size]="14" /> Mejor: {{ stats.bestStreak }}</span>
+        </div>
+      }
     </article>
 
     <article class="quote">
-      <div class="mascot"><app-mascot pose="idle" /></div>
-      <p>“¡Vas muy bien! Regálate unos minutos para continuar con energía.”</p>
+      <div class="mascot"><app-mascot [pose]="pausas.compliance() >= 100 ? 'arms-up' : 'idle'" /></div>
+      <p>“{{ motivation() }}”</p>
     </article>
   </div>
 </section>

@@ -3,7 +3,7 @@
     <h1>Seguimiento</h1>
     <div class="search">
       <app-icon name="search" [size]="16" />
-      <input placeholder="Buscar trabajador..." [value]="query()" (input)="query.set($any($event.target).value)" />
+      <input placeholder="Buscar trabajador o área..." [value]="query()" (input)="query.set($any($event.target).value)" />
     </div>
   </header>
 
@@ -20,28 +20,34 @@
       <div class="bad"><b>{{ counts().pending }}</b><span>Pendientes</span></div>
     </div>
 
+    @if (error()) {
+      <p class="alert alert-error">{{ error() }}</p>
+    }
+
     <div class="list">
-      @for (worker of filtered(); track worker.id) {
+      @for (worker of filtered(); track worker.idUser) {
         <article class="card person">
           <div class="top">
-            <app-avatar [kind]="worker.avatar" />
+            <app-avatar [kind]="kind(worker.idUser)" [photo]="worker.photo" />
             <div class="meta">
               <div class="name">
                 <div>
                   <h2>{{ worker.name }}</h2>
-                  <small>{{ worker.area }}</small>
+                  <small>{{ worker.areaName ?? 'Sin área' }} · Hoy {{ worker.todayCompleted }}/{{ worker.todayTotal }}</small>
                 </div>
-                <span [class]="worker.status">{{ worker.status === 'ok' ? 'Al día' : 'Pendiente' }}</span>
+                <span [class]="status(worker)">{{ status(worker) === 'ok' ? 'Al día' : 'Pendiente' }}</span>
               </div>
-              <div class="bar"><i [class]="worker.status" [style.width.%]="worker.compliance"></i></div>
-              <em>{{ worker.compliance }}%</em>
+              <div class="bar"><i [class]="status(worker)" [style.width.%]="worker.complianceRate"></i></div>
+              <em>{{ worker.complianceRate | number: '1.0-1' }}%</em>
             </div>
           </div>
-          <a class="detail" [routerLink]="['/admin/seguimiento', worker.id]">
+          <a class="detail" [routerLink]="['/admin/seguimiento', worker.idUser]">
             <app-icon name="eye" [size]="16" />
             Ver detalle
           </a>
         </article>
+      } @empty {
+        <p class="empty">{{ loading() ? 'Cargando seguimiento…' : 'No hay trabajadores para este filtro.' }}</p>
       }
     </div>
   </div>

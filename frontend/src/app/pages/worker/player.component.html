@@ -1,32 +1,91 @@
-@if (routine(); as routine) {
-  <section class="player">
-    <header>
-      <a routerLink="/app/pausas" class="back"><app-icon name="arrow-left" [size]="20" /></a>
-      <div>
-        <h1>Pausa activa</h1>
-        <p>Es momento de moverte un poco.</p>
-      </div>
-      <span class="back ghost"></span>
+<section class="player">
+  <header>
+    <a routerLink="/app/pausas" class="back" aria-label="Volver"><app-icon name="arrow-left" [size]="20" /></a>
+    <div>
+      <h1>{{ routine().name }}</h1>
+      <p>Es momento de moverte un poco.</p>
+    </div>
+    <span class="back ghost"></span>
+    @if (phase() === 'running') {
       <div class="meta">
-        <span>Ejercicio {{ index() + 1 }} de {{ routine.exercises.length }}</span>
+        <span>Ejercicio {{ index() + 1 }} de {{ routine().exercises.length }}</span>
         <span>{{ progress() }}%</span>
       </div>
       <div class="bar"><i [style.width.%]="progress()"></i></div>
-    </header>
+    }
+  </header>
 
-    <div class="sheet">
-      <div class="mascot"><app-mascot [pose]="current().pose" /></div>
-      <h2>{{ current().name }}</h2>
-      <p class="quote">“{{ current().instruction }}”</p>
-      <div class="clock">{{ clock() }}</div>
-      <small>segundos restantes</small>
-      <div class="bar dark"><i [style.width.%]="exerciseProgress()"></i></div>
-      <p class="tip"><app-icon name="heart" [size]="16" /> {{ current().tip }}</p>
-      <div class="actions">
-        <button type="button" class="ghost" (click)="prev()" [disabled]="index() === 0">Anterior</button>
-        <button type="button" class="next" (click)="next()">{{ isLast() ? 'Finalizar' : 'Siguiente' }}</button>
-      </div>
-      <button type="button" class="end" (click)="finish()">Finalizar pausa</button>
-    </div>
-  </section>
-}
+  <div class="sheet">
+    @switch (phase()) {
+      @case ('loading') {
+        <div class="mascot"><app-mascot pose="wave" /></div>
+        <h2>Preparando tu pausa…</h2>
+        <p class="quote">“Busca un espacio cómodo y respira profundo.”</p>
+      }
+
+      @case ('error') {
+        <div class="mascot"><app-mascot pose="idle" /></div>
+        <h2>No pudimos iniciar</h2>
+        <p class="alert alert-error">{{ error() }}</p>
+        <div class="actions single">
+          <button type="button" class="next" (click)="exit()">Volver a mis pausas</button>
+        </div>
+      }
+
+      @case ('done') {
+        <div class="mascot"><app-mascot pose="arms-up" /></div>
+        <h2>¡Pausa completada!</h2>
+        <p class="quote">“Buen trabajo. Tu cuerpo te lo agradece.”</p>
+        <p class="tip"><app-icon name="check-circle" [size]="16" /> Registramos tu cumplimiento correctamente.</p>
+        <div class="actions single">
+          <button type="button" class="next" (click)="exit()">Volver a mis pausas</button>
+        </div>
+      }
+
+      @case ('running') {
+        @if (videoUrl(); as url) {
+          <div class="video">
+            <video [src]="url" autoplay muted loop playsinline></video>
+          </div>
+        } @else {
+          <div class="mascot" [class.pulse]="loadingVideo()"><app-mascot [pose]="current().pose" /></div>
+        }
+        <h2>{{ current().name }}</h2>
+        <p class="quote">“{{ current().instruction }}”</p>
+        <div class="clock">{{ clock() }}</div>
+        <small>tiempo restante</small>
+        <div class="bar dark"><i [style.width.%]="exerciseProgress()"></i></div>
+        <p class="tip"><app-icon name="heart" [size]="16" /> {{ current().tip }}</p>
+
+        @if (actionError()) {
+          <p class="alert alert-error">{{ actionError() }}</p>
+        }
+
+        @if (cancelling()) {
+          <div class="cancel-box">
+            <label for="reason">¿Por qué cancelas esta pausa?</label>
+            <textarea id="reason" class="input" rows="2" [(ngModel)]="cancelReason" placeholder="Ej. Reunión en curso"></textarea>
+            <div class="actions">
+              <button type="button" class="ghost" (click)="cancelling.set(false)">Volver</button>
+              <button type="button" class="next danger" [disabled]="busy()" (click)="confirmCancel()">Cancelar pausa</button>
+            </div>
+          </div>
+        } @else {
+          <div class="actions">
+            <button type="button" class="ghost" (click)="prev()" [disabled]="index() === 0">Anterior</button>
+            <button type="button" class="next" [disabled]="busy()" (click)="next()">{{ isLast() ? 'Finalizar' : 'Siguiente' }}</button>
+          </div>
+          <div class="secondary">
+            <button type="button" (click)="postpone()" [disabled]="busy() || postponed() >= maxPostponements()">
+              Aplazar ({{ postponed() }}/{{ maxPostponements() }})
+            </button>
+            <span>·</span>
+            <button type="button" (click)="cancelling.set(true)" [disabled]="busy()">Cancelar</button>
+            <span>·</span>
+            <button type="button" (click)="finish()" [disabled]="busy()">Finalizar pausa</button>
+          </div>
+        }
+      }
+    }
+  </div>
+</section>

@@ -104,6 +104,63 @@ h2 {
   width: auto;
 }
 
+.photo {
+  position: relative;
+  flex-shrink: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cam {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #1b2f8a;
+  color: #fff;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  overflow: hidden;
+  border-radius: 24px;
+  background: #eef2ff;
+  text-align: center;
+}
+
+.stats div {
+  padding: 14px 8px;
+}
+
+.stats b {
+  display: block;
+  color: #1b2f8a;
+  font-size: 22px;
+}
+
+.stats span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.ico.danger {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.btn-ghost.danger {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
 .logout {
   display: flex;
   align-items: center;

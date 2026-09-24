@@ -4,11 +4,15 @@ node_modules/
 # Build
 dist/
 build/
+.angular/
 
 # Entorno (nunca subir archivos .env reales)
 .env
 .env.local
 .env.*.local
+
+# Archivos subidos
+uploads/
 
 # Logs
 *.log

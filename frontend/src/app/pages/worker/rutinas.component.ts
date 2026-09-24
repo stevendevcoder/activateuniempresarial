@@ -13,10 +13,4 @@ import { MascotComponent } from '../../shared/mascot.component';
 export class RutinasComponent {
   readonly rutinas = inject(RutinasService);
   readonly filter = signal('todas');
-  readonly categories = [
-    { id: 'todas', label: 'Todas' },
-    { id: 'estiramiento', label: 'Estiramiento' },
-    { id: 'visual', label: 'Visual' },
-    { id: 'respiracion', label: 'Respiración' },
-  ];
 }
