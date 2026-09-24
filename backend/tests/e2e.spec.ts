@@ -146,6 +146,17 @@ describe("EP08/EP09 — Analytics & Portal", () => {
         expect(res.body.length).toBeGreaterThanOrEqual(1);
     });
 
+    it("GET /analytics/users", async () => {
+        const res = await request(BASE)
+            .get("/api/analytics/users")
+            .set("Authorization", `Bearer ${adminToken}`);
+        expect(res.status).toBe(200);
+        const worker = res.body.find((u: { idUser: number }) => u.idUser === workerId);
+        expect(worker).toBeDefined();
+        expect(worker.total).toBeGreaterThanOrEqual(6);
+        expect(worker.password).toBeUndefined();
+    });
+
     it("GET /analytics/export/pdf", async () => {
         const res = await request(BASE)
             .get("/api/analytics/export/pdf")

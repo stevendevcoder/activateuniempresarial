@@ -1,6 +1,6 @@
 import PDFDocument from "pdfkit";
 import ExcelJS from "exceljs";
-import { AnalyticsFilters, AnalyticsSummary, AreaComplianceRow, PausaRepository, TimelinePoint } from "../../pausas/repository/pausa.repository";
+import { AnalyticsFilters, AnalyticsSummary, AreaComplianceRow, PausaRepository, TimelinePoint, UserComplianceRow } from "../../pausas/repository/pausa.repository";
 import { TimeGranularity } from "../validation/analytics.validation";
 
 export interface AnalyticsReportData {
@@ -52,6 +52,10 @@ export class AnalyticsService {
         const workerMap = new Map<number | null, number>(workers.map((w) => [w.idArea, w.count]));
 
         return rows.map((r) => ({ ...r, workers: workerMap.get(r.idArea) ?? 0 }));
+    }
+
+    async users(filters: AnalyticsFilters): Promise<UserComplianceRow[]> {
+        return this.pausaRepo.analyticsByUser(filters);
     }
 
     private async loadReportData(filters: AnalyticsFilters): Promise<AnalyticsReportData> {

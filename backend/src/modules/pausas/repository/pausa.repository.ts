@@ -6,6 +6,7 @@ import { User } from "../../auth/repository/user.entity";
 import { Area } from "../../areas/repository/area.entity";
 import { Role } from "../../roles/repository/role.entity";
 import { ADMIN_ROLE_NAME } from "../../../config/permissions";
+import { formatDateInTz, zonedDateTime } from "../../../utils/timezone";
 
 export const PAUSA_STATUS = {
     PROGRAMADA: 1,
@@ -93,6 +94,23 @@ export interface AreaComplianceRow {
     colaboradores: number;
     complianceRate: number;
     workers: number;
+}
+
+export interface UserComplianceRow {
+    idUser: number;
+    name: string;
+    email: string;
+    photo: string | null;
+    idArea: number | null;
+    areaName: string | null;
+    total: number;
+    completadas: number;
+    aplazadas: number;
+    canceladas: number;
+    todayTotal: number;
+    todayCompleted: number;
+    lastActivity: string | null;
+    complianceRate: number;
 }
 
 function toInt(value: string | number | null | undefined): number {
@@ -311,6 +329,84 @@ export class PausaRepository {
             complianceRate: toFloat(r.complianceRate),
             workers: 0,
         }));
+    }
+
+    async analyticsByUser(filters: AnalyticsFilters = {}): Promise<UserComplianceRow[]> {
+        const roleRepo = AppDataSource.getRepository(Role);
+        const adminRole = await roleRepo.findOne({ where: { name_role: ADMIN_ROLE_NAME } });
+        const adminRoleId = adminRole?.id_role ?? -1;
+
+        const tz = envs.APP_TIMEZONE;
+        const todayStart = zonedDateTime(formatDateInTz(new Date(), tz), "00:00", tz);
+        const todayEnd = new Date(todayStart.getTime() + 86400000);
+
+        const joinConditions = ["p.id_user = u.id_user"];
+        if (filters.start) joinConditions.push("p.scheduled_at >= :start");
+        if (filters.end) joinConditions.push("p.scheduled_at <= :end");
+
+        const qb = AppDataSource.getRepository(User)
+            .createQueryBuilder("u")
+            .leftJoin("u.area", "area")
+            .leftJoin(Pausa, "p", joinConditions.join(" AND "))
+            .select("u.id_user", "idUser")
+            .addSelect("u.name_user", "name")
+            .addSelect("u.email_user", "email")
+            .addSelect("u.photo_user", "photo")
+            .addSelect("u.id_area", "idArea")
+            .addSelect("area.name_area", "areaName")
+            .addSelect("COUNT(p.id_pausa)::int", "total")
+            .addSelect(`COUNT(p.id_pausa) FILTER (WHERE p.status_pausa = :completada)::int`, "completadas")
+            .addSelect(`COUNT(p.id_pausa) FILTER (WHERE p.status_pausa = :aplazada)::int`, "aplazadas")
+            .addSelect(`COUNT(p.id_pausa) FILTER (WHERE p.status_pausa = :cancelada)::int`, "canceladas")
+            .addSelect(
+                `COUNT(p.id_pausa) FILTER (WHERE p.scheduled_at >= :todayStart AND p.scheduled_at < :todayEnd)::int`,
+                "todayTotal"
+            )
+            .addSelect(
+                `COUNT(p.id_pausa) FILTER (WHERE p.status_pausa = :completada AND p.scheduled_at >= :todayStart AND p.scheduled_at < :todayEnd)::int`,
+                "todayCompleted"
+            )
+            .addSelect("MAX(p.scheduled_at)", "lastActivity")
+            .where("u.status_user = 1")
+            .andWhere("(u.id_role IS NULL OR u.id_role != :adminRoleId)", { adminRoleId })
+            .setParameters({
+                completada: PAUSA_STATUS.COMPLETADA,
+                aplazada: PAUSA_STATUS.APLAZADA,
+                cancelada: PAUSA_STATUS.CANCELADA,
+                todayStart,
+                todayEnd,
+            })
+            .groupBy("u.id_user")
+            .addGroupBy("area.name_area")
+            .orderBy("u.name_user", "ASC");
+
+        if (filters.areaId !== undefined) {
+            qb.andWhere("u.id_area = :areaId", { areaId: filters.areaId });
+        }
+        if (filters.start) qb.setParameter("start", filters.start);
+        if (filters.end) qb.setParameter("end", filters.end);
+
+        const rows = await qb.getRawMany();
+        return rows.map((r) => {
+            const total = toInt(r.total);
+            const completadas = toInt(r.completadas);
+            return {
+                idUser: toInt(r.idUser),
+                name: String(r.name ?? ""),
+                email: String(r.email ?? ""),
+                photo: r.photo ?? null,
+                idArea: r.idArea == null ? null : toInt(r.idArea),
+                areaName: r.areaName ?? null,
+                total,
+                completadas,
+                aplazadas: toInt(r.aplazadas),
+                canceladas: toInt(r.canceladas),
+                todayTotal: toInt(r.todayTotal),
+                todayCompleted: toInt(r.todayCompleted),
+                lastActivity: r.lastActivity ? toIso(r.lastActivity) : null,
+                complianceRate: total > 0 ? Math.round((1000 * completadas) / total) / 10 : 0,
+            };
+        });
     }
 
     async userStats(userId: number): Promise<{ programadas: number; completadas: number; aplazadas: number; canceladas: number }> {

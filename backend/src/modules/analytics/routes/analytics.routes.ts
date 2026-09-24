@@ -21,6 +21,9 @@ router.get("/timeline", authenticateToken, requirePermission(PERMISSIONS.analyti
 router.get("/areas", authenticateToken, requirePermission(PERMISSIONS.analytics.read), (req, res) =>
     analyticsController.getAreas(req, res)
 );
+router.get("/users", authenticateToken, requirePermission(PERMISSIONS.analytics.read), (req, res) =>
+    analyticsController.getUsers(req, res)
+);
 router.get("/export/pdf", authenticateToken, requirePermission(PERMISSIONS.analytics.export), (req, res) =>
     analyticsController.exportPdf(req, res)
 );

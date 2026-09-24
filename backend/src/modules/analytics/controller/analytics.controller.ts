@@ -47,6 +47,20 @@ export class AnalyticsController {
         }
     }
 
+    async getUsers(req: Request, res: Response): Promise<void> {
+        try {
+            const query = loadAnalyticsQuery(req.query);
+            const data = await this.analyticsService.users(query);
+            res.status(200).json(data);
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(400).json({ error: error.message });
+                return;
+            }
+            res.status(500).json({ error: "Error interno del servidor" });
+        }
+    }
+
     async exportPdf(req: Request, res: Response): Promise<void> {
         try {
             const query = loadAnalyticsQuery(req.query);
