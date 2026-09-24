@@ -1,11 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Response } from "express";
 import { AuthService } from "../modules/auth/service/auth.service";
+import { AuthenticatedRequest, AuthUserPayload } from "../types/auth";
 
-interface AuthRequest extends Request {
-    user?: string | object;
-}
-
-export function authenticateToken(req: AuthRequest, res: Response, next: NextFunction): void {
+export function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!token) {
@@ -14,7 +11,7 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
     }
 
     try {
-        const payload = AuthService.verifyToken(token);
+        const payload = AuthService.verifyToken(token) as AuthUserPayload;
         req.user = payload;
         next();
     } catch (error) {

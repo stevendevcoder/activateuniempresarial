@@ -13,6 +13,9 @@ dist/
 *.log
 npm-debug.log*
 
+# Repositorio multimedia (archivos subidos)
+uploads/
+
 # Sistema
 .DS_Store
 Thumbs.db

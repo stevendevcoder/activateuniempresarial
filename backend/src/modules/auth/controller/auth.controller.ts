@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import { AuthService } from "../service/auth.service";
 import { UserService } from "../service/user.service";
-import { PublicUser, UserRecord } from "../repository/user.repository";
+import { UserRecord, toPublicUser } from "../repository/user.repository";
 import { loadUserData } from "../validation/user.validation";
 import { loadUpdateUserData } from "../validation/user-update.validation";
 import { loadEmail } from "../validation/email.validation";
+import { AuthenticatedRequest } from "../../../types/auth";
 
 export class AuthController {
     private authService: AuthService;
@@ -13,11 +14,6 @@ export class AuthController {
     constructor(authService: AuthService, userService: UserService) {
         this.authService = authService;
         this.userService = userService;
-    }
-
-    private toPublicUser(user: UserRecord): PublicUser {
-        const { password: _password, ...publicUser } = user;
-        return publicUser;
     }
 
     async login(req: Request, res: Response): Promise<Response> {
@@ -36,18 +32,51 @@ export class AuthController {
         }
     }
 
+    async getMe(req: AuthenticatedRequest, res: Response): Promise<Response> {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ error: "Usuarios no autenticado" });
+            }
+
+            const user = await this.userService.getUserById(userId);
+            if (!user) {
+                return res.status(404).json({ error: "Usuario no encontrado" });
+            }
+
+            return res.status(200).json({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                status: user.status,
+                idRole: user.idRole,
+                role: user.roleName,
+                idArea: user.idArea,
+                area: user.areaName,
+                photo: user.photo,
+                permissions: req.user?.permissions ?? [],
+            });
+        } catch (error) {
+            return res.status(500).json({ error: "Error interno del servidor" });
+        }
+    }
+
     async createUser(req: Request, res: Response): Promise<Response> {
         try {
-            const { name, email, password, status } = loadUserData(req.body);
-            const user: Omit<UserRecord, "id"> = { name, email, password, status };
+            const { name, email, password, status, idRole, idArea } = loadUserData(req.body);
+            const user: UserRecord = { id: 0, name, email, password, status, idRole, idArea, roleName: null, areaName: null, photo: null };
             const userId = await this.userService.createUser(user);
             return res.status(201).json({ message: "Usuario creado con éxito", userId });
         } catch (error) {
-            if (error instanceof Error && error.message === "Este email ya está registrado") {
-                return res.status(409).json({ error: error.message });
-            }
             if (error instanceof Error) {
-                return res.status(400).json({ error: error.message });
+                const message = error.message;
+                if (message === "Este email ya está registrado") {
+                    return res.status(409).json({ error: message });
+                }
+                if (message.includes("rol indicado") || message.includes("área indicada")) {
+                    return res.status(400).json({ error: message });
+                }
+                return res.status(400).json({ error: message });
             }
             return res.status(500).json({ error: "Error interno del servidor" });
         }
@@ -76,6 +105,9 @@ export class AuthController {
                 if (message === "El email ya está en uso") {
                     return res.status(409).json({ error: message });
                 }
+                if (message.includes("rol indicado") || message.includes("área indicada")) {
+                    return res.status(400).json({ error: message });
+                }
                 return res.status(400).json({ error: message });
             }
             return res.status(500).json({ error: "Error interno del servidor" });
@@ -93,7 +125,7 @@ export class AuthController {
             if (!user) {
                 return res.status(404).json({ error: "Usuario no encontrado" });
             }
-            return res.status(200).json(this.toPublicUser(user));
+            return res.status(200).json(toPublicUser(user));
         } catch (error) {
             return res.status(500).json({ error: "Error interno del servidor" });
         }
@@ -106,7 +138,7 @@ export class AuthController {
             if (!user) {
                 return res.status(404).json({ error: "Usuario no encontrado" });
             }
-            return res.status(200).json(this.toPublicUser(user));
+            return res.status(200).json(toPublicUser(user));
         } catch (error) {
             if (error instanceof Error) {
                 return res.status(400).json({ error: error.message });
@@ -117,10 +149,14 @@ export class AuthController {
 
     async getAllUsers(req: Request, res: Response): Promise<Response> {
         try {
-            const users = await this.userService.getAllUsers();
-            return res.status(200).json(users.map((user) => this.toPublicUser(user)));
+            const name = typeof req.query.name === "string" ? req.query.name : undefined;
+            const status = req.query.status !== undefined ? Number(req.query.status) : undefined;
+            const area = req.query.area !== undefined ? Number(req.query.area) : undefined;
+
+            const users = await this.userService.getAllUsers({ ...(name && { name }), ...(status && { status }), ...(area && { area }) });
+            return res.status(200).json(users.map(toPublicUser));
         } catch (error) {
-            return res.status(500).json({ message: "Error al obtener usuarios" });
+            return res.status(500).json({ error: "Error al obtener usuarios" });
         }
     }
 
@@ -135,7 +171,7 @@ export class AuthController {
             if (!deleted) {
                 return res.status(404).json({ error: "Usuario no encontrado" });
             }
-            return res.status(200).json({ message: "Usuario eliminado con éxito" });
+            return res.status(200).json({ message: "Usuario desactivado con éxito" });
         } catch (error) {
             return res.status(500).json({ error: "Error interno del servidor" });
         }
