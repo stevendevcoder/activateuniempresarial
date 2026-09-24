@@ -1,5 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../core/services/auth.service';
+import { PausasService } from '../core/services/pausas.service';
+import { RutinasService } from '../core/services/rutinas.service';
 import { IconComponent } from '../shared/icon.component';
 
 @Component({
@@ -31,8 +34,20 @@ import { IconComponent } from '../shared/icon.component';
     </div>
   `,
 })
-export class WorkerShellComponent {
+export class WorkerShellComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
+  private readonly pausas = inject(PausasService);
+  private readonly rutinas = inject(RutinasService);
+
+  ngOnInit(): void {
+    this.rutinas.load();
+    // El área puede haber cambiado desde el último login: se refresca antes de armar la jornada.
+    this.auth.refreshProfile().subscribe({
+      next: () => this.pausas.load(),
+      error: () => this.pausas.load(),
+    });
+  }
 
   hideNav(): boolean {
     return this.router.url.includes('/pausas/ejecutar');

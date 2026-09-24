@@ -5,23 +5,11 @@ export interface SessionUser {
   name: string;
   email: string;
   role: UserRole;
+  roleName: string;
   area: string;
-  jornada: string;
-  avatar: string;
-  demo: boolean;
-}
-
-export interface ApiUser {
-  id: number;
-  name: string;
-  email: string;
-  password?: string;
-  status: number;
-}
-
-export interface LoginResponse {
-  message: string;
-  token: string;
+  idArea: number | null;
+  photo: string | null;
+  permissions: string[];
 }
 
 export interface Preferences {
@@ -31,11 +19,13 @@ export interface Preferences {
   visualRest: boolean;
 }
 
-export type PauseKind = 'start' | 'active' | 'lunch' | 'visual';
-export type PauseStatus = 'pending' | 'completed' | 'info';
+export type PauseKind = 'start' | 'active' | 'lunch';
+export type PauseStatus = 'pending' | 'completed' | 'postponed' | 'cancelled' | 'info';
 
+/** Elemento de la línea de tiempo del día del trabajador. */
 export interface DayPause {
   id: string;
+  /** HH:mm en hora local. */
   time: string;
   title: string;
   subtitle: string;
@@ -43,7 +33,11 @@ export interface DayPause {
   status: PauseStatus;
   durationMin: number;
   period: 'mañana' | 'tarde';
-  routineId?: string;
+  routineId: number | null;
+  /** Fecha ISO del cupo del cronograma o de la pausa registrada. */
+  scheduledAt: string | null;
+  /** Pausa registrada en el backend para este cupo, si existe. */
+  pausaId: number | null;
 }
 
 export interface HistoryDay {
@@ -53,6 +47,8 @@ export interface HistoryDay {
   total: number;
 }
 
+export type MascotPose = 'idle' | 'arms-up' | 'eyes' | 'wave' | 'breathe';
+
 export interface Exercise {
   id: string;
   name: string;
@@ -60,46 +56,18 @@ export interface Exercise {
   seconds: number;
   pose: MascotPose;
   tip: string;
+  videoId: number | null;
 }
 
-export type MascotPose = 'idle' | 'arms-up' | 'eyes' | 'wave' | 'breathe';
-
 export interface Routine {
-  id: string;
+  id: number;
   name: string;
   description: string;
-  category: 'estiramiento' | 'visual' | 'respiracion' | 'movilidad';
+  category: string;
   duration: string;
   pose: MascotPose;
   tint: string;
   exercises: Exercise[];
-}
-
-export interface WorkerTrack {
-  id: number;
-  name: string;
-  area: string;
-  avatar: string;
-  compliance: number;
-  status: 'ok' | 'pending';
-  email: string;
-  jornada: string;
-  completedToday: number;
-  totalToday: number;
-}
-
-export interface WeeklyPoint {
-  day: string;
-  value: number;
-}
-
-export interface AdminSummary {
-  compliance: number;
-  scheduled: number;
-  completed: number;
-  pending: number;
-  weekly: WeeklyPoint[];
-  alerts: string[];
 }
 
 export interface NotificationItem {

@@ -78,8 +78,41 @@ export const routes: Routes = [
           import('./pages/admin/trabajador-detalle.component').then((m) => m.TrabajadorDetalleComponent),
       },
       {
+        path: 'areas',
+        loadComponent: () => import('./pages/admin/areas.component').then((m) => m.AreasComponent),
+      },
+      {
+        path: 'rutinas',
+        loadComponent: () =>
+          import('./pages/admin/rutinas-admin.component').then((m) => m.RutinasAdminComponent),
+      },
+      {
+        path: 'cronogramas',
+        loadComponent: () =>
+          import('./pages/admin/cronogramas.component').then((m) => m.CronogramasComponent),
+      },
+      {
+        path: 'pausas',
+        loadComponent: () =>
+          import('./pages/admin/pausas-admin.component').then((m) => m.PausasAdminComponent),
+      },
+      {
+        path: 'configuracion',
+        loadComponent: () =>
+          import('./pages/admin/configuracion.component').then((m) => m.ConfiguracionComponent),
+      },
+      {
+        path: 'privacidad',
+        loadComponent: () =>
+          import('./pages/admin/privacidad.component').then((m) => m.PrivacidadComponent),
+      },
+      {
         path: 'perfil',
         loadComponent: () => import('./pages/admin/perfil.component').then((m) => m.AdminPerfilComponent),
+      },
+      {
+        path: 'mas',
+        loadComponent: () => import('./pages/admin/mas.component').then((m) => m.AdminMasComponent),
       },
     ],
   },

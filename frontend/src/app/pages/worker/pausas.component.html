@@ -3,7 +3,7 @@
     <h1>Mis pausas</h1>
     <p>
       <app-icon name="building" [size]="16" />
-      Jornada: {{ auth.user()?.jornada }}
+      Jornada: {{ pausas.jornada() }}
     </p>
   </header>
 
@@ -23,30 +23,49 @@
       </a>
     </article>
 
+    @if (pausas.error()) {
+      <p class="alert alert-error">{{ pausas.error() }}</p>
+    }
+
     @for (period of periods; track period) {
-      <p class="period">{{ period }}</p>
-      <div class="timeline">
-        @for (pause of byPeriod(period); track pause.id) {
-          <article class="item" [class]="tone(pause)">
-            <span class="dot"></span>
-            <div class="content">
-              <div>
-                <small>{{ pause.time }}</small>
-                <h2>{{ pause.title }}</h2>
-                @if (pause.subtitle) {
-                  <p>{{ pause.subtitle }}</p>
-                }
+      @if (byPeriod(period).length) {
+        <p class="period">{{ period }}</p>
+        <div class="timeline">
+          @for (pause of byPeriod(period); track pause.id) {
+            <article class="item" [class]="tone(pause)">
+              <span class="dot"></span>
+              <div class="content">
+                <div>
+                  <small>{{ time(pause.time) }}</small>
+                  <h2>{{ pause.title }}</h2>
+                  @if (pause.subtitle) {
+                    <p>{{ pause.subtitle }}</p>
+                  }
+                </div>
+                <span class="badge">{{ badge(pause) }}</span>
               </div>
-              <span class="badge">{{ badge(pause) }}</span>
-            </div>
-            @if ((pause.kind === 'active' || pause.kind === 'visual') && pause.status === 'pending') {
-              <a [routerLink]="['/app/pausas/ejecutar', pause.routineId || 'pausas-activas']" [queryParams]="{ pauseId: pause.id }">
-                Iniciar ahora
-              </a>
-            }
-          </article>
-        }
-      </div>
+              @if (pause.kind === 'active' && (pause.status === 'pending' || pause.status === 'postponed')) {
+                <a
+                  [routerLink]="['/app/pausas/ejecutar', pause.routineId ?? 'libre']"
+                  [queryParams]="{ slot: pause.scheduledAt, pausaId: pause.pausaId }"
+                >
+                  Iniciar ahora
+                </a>
+              }
+            </article>
+          }
+        </div>
+      }
+    }
+
+    @if (pausas.loaded() && !pausas.pauses().length) {
+      <article class="card empty-card">
+        <p>No tienes pausas programadas para hoy.</p>
+        <a class="btn-pill" routerLink="/app/rutinas">
+          <app-icon name="activity" [size]="16" />
+          Hacer una pausa libre
+        </a>
+      </article>
     }
   </div>
 </section>

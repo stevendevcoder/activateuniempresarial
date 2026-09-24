@@ -1,12 +1,12 @@
 # ACTIVATE — Frontend
 
-Aplicación web de **pausas activas** para Uniempresarial. Esta carpeta cubre solo el frontend (Angular 19), alineado con los mockups y con la API de autenticación del backend.
+Aplicación web de **pausas activas** para Uniempresarial (Angular 19 standalone + Tailwind v4). Todas las pantallas consumen la API REST del backend; no hay datos quemados ni modo demostración.
 
 ## Pantallas
 
-**Trabajador:** login, inicio, mis pausas, historial, ejecución guiada, rutinas, perfil y notificaciones.
+**Trabajador (`/app`):** login, inicio, mis pausas (jornada según el cronograma de su área), historial, ejecución guiada con video, rutinas, perfil (foto, contraseña, consentimiento Habeas Data) y notificaciones.
 
-**Administrador:** panel, trabajadores, seguimiento y detalle de cumplimiento.
+**Administrador (`/admin`):** panel con analítica y exportes PDF/Excel, trabajadores (CRUD), seguimiento y detalle de cumplimiento, áreas, rutinas y videos, cronogramas, pausas (telemetría), configuración global y festivos, privacidad y perfil.
 
 ## Cómo correrlo
 
@@ -15,29 +15,29 @@ npm install
 npm start
 ```
 
-Abre `http://localhost:4200`.
+Abre `http://localhost:4200`. El backend debe estar en `http://localhost:3000` (ver `src/environments/environment.ts`).
 
-El backend debe estar en `http://localhost:3000` (ver `src/environments/environment.ts`).
+## Cuenta inicial
 
-## Cuentas para probar
+El backend crea al arrancar el administrador `admin@pausas.com` / `admin123`. Los trabajadores se crean desde **Administrador → Trabajadores**, asignándoles un área; para que vean pausas en su jornada, el área debe tener un cronograma en **Cronogramas**.
 
-| Rol | Correo | Contraseña |
-|---|---|---|
-| Trabajadora | `sharit@uniempresarial.edu.co` | `Sharit1` |
-| Administrador | `admin@pausas.com` | `admin123` |
+## Estructura
 
-`admin@pausas.com / admin123` es el usuario de prueba del seed del backend. Si la API no está arriba, esas mismas cuentas entran en modo demostración para poder presentar la interfaz.
+```
+src/app/
+├── core/
+│   ├── api.types.ts      Contratos de la API
+│   ├── models.ts         Modelos de la interfaz
+│   ├── services/         auth, admin, analytics, portal, pausas, rutinas, dialog
+│   ├── guards/           authGuard, guestGuard, adminGuard, workerGuard
+│   └── interceptors/     token JWT y cierre de sesión al expirar
+├── layout/               Shells de trabajador y administrador
+├── pages/                worker/, admin/, login/
+└── shared/               Íconos, avatar, mascota, anillo de progreso, diálogo
+```
 
-## Qué consume del backend
-
-- `POST /api/login`
-- `GET /api/users/email/:email`
-- `GET /api/users`
-- `POST /api/users`
-- `PUT /api/users/:id`
-
-Pausas, rutinas y dashboards aún no existen en la API. El frontend los resuelve con datos de dominio listos para reemplazar cuando el grupo publique esos módulos.
+Los estilos compartidos (tarjetas, KPIs, formularios, modales, filtros) están en `src/styles.css`.
 
 ## Roles
 
-El backend todavía no envía un campo `role`. El frontend asigna **administrador** si el correo o el nombre contienen `admin` (incluye `admin@pausas.com`) y **trabajador** al resto.
+El rol sale de `GET /api/me` (`role: "Administrador"` → panel administrativo; cualquier otro → portal del trabajador).

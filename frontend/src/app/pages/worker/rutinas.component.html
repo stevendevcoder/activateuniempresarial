@@ -6,14 +6,29 @@
 
   <div class="wrap">
     <div class="filters">
-      @for (cat of categories; track cat.id) {
-        <button type="button" [class.on]="filter() === cat.id" (click)="filter.set(cat.id)">
-          {{ cat.label }}
-        </button>
+      <button type="button" [class.on]="filter() === 'todas'" (click)="filter.set('todas')">Todas</button>
+      @for (cat of rutinas.categories(); track cat) {
+        <button type="button" [class.on]="filter() === cat" (click)="filter.set(cat)">{{ cat }}</button>
       }
     </div>
 
+    @if (rutinas.error()) {
+      <p class="alert alert-error">{{ rutinas.error() }}</p>
+    }
+
     <div class="list">
+      <article class="card row">
+        <div class="thumb" style="background: #fef3c7">
+          <app-mascot pose="wave" />
+        </div>
+        <div class="info">
+          <h2>Pausa libre</h2>
+          <p>Ejercicios guiados rápidos, sin video</p>
+          <small><app-icon name="clock" [size]="14" /> 2 min</small>
+        </div>
+        <a class="btn-ghost" [routerLink]="['/app/pausas/ejecutar', 'libre']">Iniciar</a>
+      </article>
+
       @for (routine of rutinas.byCategory(filter()); track routine.id) {
         <article class="card row">
           <div class="thumb" [style.background]="routine.tint">
@@ -24,11 +39,15 @@
             <p>{{ routine.description }}</p>
             <small>
               <app-icon name="clock" [size]="14" />
-              {{ routine.duration }}
+              {{ routine.duration }} · {{ routine.category }}
             </small>
           </div>
           <a class="btn-ghost" [routerLink]="['/app/rutinas', routine.id]">Ver</a>
         </article>
+      } @empty {
+        @if (!rutinas.loading()) {
+          <p class="empty">Aún no hay rutinas publicadas en esta categoría.</p>
+        }
       }
     </div>
   </div>

@@ -151,7 +151,8 @@ describe("EP08/EP09 — Analytics & Portal", () => {
             .get("/api/analytics/users")
             .set("Authorization", `Bearer ${adminToken}`);
         expect(res.status).toBe(200);
-        const worker = res.body.find((u: { idUser: number }) => u.idUser === workerId);
+        const loggedWorkerId = JSON.parse(Buffer.from(workerToken.split(".")[1]!, "base64url").toString()).id;
+        const worker = res.body.find((u: { idUser: number }) => u.idUser === loggedWorkerId);
         expect(worker).toBeDefined();
         expect(worker.total).toBeGreaterThanOrEqual(6);
         expect(worker.password).toBeUndefined();

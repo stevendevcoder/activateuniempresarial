@@ -7,33 +7,44 @@
     <app-logo [size]="52" />
   </header>
 
+  @if (error()) {
+    <p class="alert alert-error notice">{{ error() }}</p>
+  }
+
   <div class="kpis">
     <article class="kpi blue">
       <span>Cumplimiento <app-icon name="activity" [size]="16" /></span>
-      <b>{{ dash.summary.compliance }}%</b>
+      <b>{{ summary()?.complianceRate ?? 0 | number: '1.0-1' }}%</b>
     </article>
     <article class="kpi blue">
       <span>Programadas <app-icon name="calendar" [size]="16" /></span>
-      <b>{{ dash.summary.scheduled }}</b>
+      <b>{{ summary()?.total ?? 0 }}</b>
     </article>
     <article class="kpi green">
       <span>Completadas <app-icon name="check" [size]="16" /></span>
-      <b>{{ dash.summary.completed }}</b>
+      <b>{{ summary()?.completadas ?? 0 }}</b>
     </article>
     <article class="kpi red">
       <span>Pendientes <app-icon name="clock" [size]="16" /></span>
-      <b>{{ dash.summary.pending }}</b>
+      <b>{{ pending() }}</b>
     </article>
+  </div>
+
+  <div class="chips-row">
+    <span class="chip chip-info"><app-icon name="users" [size]="14" /> {{ summary()?.activeWorkers ?? 0 }} trabajadores activos</span>
+    <span class="chip chip-info"><app-icon name="building" [size]="14" /> {{ summary()?.activeAreas ?? 0 }} áreas activas</span>
+    <span class="chip chip-amber"><app-icon name="clock" [size]="14" /> {{ summary()?.aplazadas ?? 0 }} aplazadas</span>
+    <span class="chip chip-warn"><app-icon name="x-circle" [size]="14" /> {{ summary()?.canceladas ?? 0 }} canceladas</span>
   </div>
 
   <div class="desk">
     <article class="card chart">
       <h2>Cumplimiento semanal</h2>
       <div class="bars">
-        @for (point of dash.summary.weekly; track point.day) {
+        @for (point of weekly(); track point.key) {
           <div>
             <small>{{ point.value }}%</small>
-            <i [style.height.px]="point.value * 0.9"></i>
+            <i [style.height.px]="point.value * 0.9 + 4" [class.empty]="!point.total"></i>
             <em>{{ point.day }}</em>
           </div>
         }
@@ -43,10 +54,30 @@
     <article class="card alerts">
       <div class="head">
         <h2>Alertas</h2>
-        <b>{{ dash.summary.alerts.length }}</b>
+        <b>{{ alerts().length }}</b>
       </div>
-      @for (alert of dash.summary.alerts; track alert) {
+      @for (alert of alerts(); track alert) {
         <p><app-icon name="alert" [size]="16" /> {{ alert }}</p>
+      } @empty {
+        <p class="ok"><app-icon name="check-circle" [size]="16" /> Todo en orden. Sin alertas por ahora.</p>
+      }
+    </article>
+  </div>
+
+  <div class="areas-wrap">
+    <article class="card">
+      <h2>Cumplimiento por área</h2>
+      @for (area of areas(); track area.areaName) {
+        <div class="area">
+          <div class="area-top">
+            <b>{{ area.areaName }}</b>
+            <span>{{ area.complianceRate | number: '1.0-1' }}%</span>
+          </div>
+          <div class="meter"><i [class.warn]="area.complianceRate < 60" [style.width.%]="area.complianceRate"></i></div>
+          <small>{{ area.completadas }} de {{ area.total }} pausas · {{ area.workers }} trabajadores</small>
+        </div>
+      } @empty {
+        <p class="empty">Aún no hay pausas registradas.</p>
       }
     </article>
   </div>
@@ -56,5 +87,11 @@
       <app-icon name="bars" [size]="16" />
       Ver seguimiento
     </a>
+    <button type="button" class="btn-outline" (click)="downloadPdf()" [disabled]="exporting()">
+      <app-icon name="download" [size]="16" /> PDF
+    </button>
+    <button type="button" class="btn-outline" (click)="downloadExcel()" [disabled]="exporting()">
+      <app-icon name="download" [size]="16" /> Excel
+    </button>
   </div>
 </section>

@@ -15,13 +15,13 @@ function validateUserData(data: any) {
             .string()
             .trim()
             .min(3)
-            .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)?$/)
+            .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)
             .required()
             .messages({
                 "string.base": "El nombre debe ser un texto",
                 "string.empty": "El nombre es requerido",
                 "string.min": "El nombre debe tener al menos 3 caracteres",
-                "string.pattern.base": "El nombre solo puede contener letras y un espacio",
+                "string.pattern.base": "El nombre solo puede contener letras y espacios",
             }),
         email: joi
             .string()

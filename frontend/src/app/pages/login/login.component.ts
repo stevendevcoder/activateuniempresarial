@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { apiError } from '../../core/utils';
 import { IconComponent } from '../../shared/icon.component';
 import { LogoComponent } from '../../shared/logo.component';
 
@@ -42,7 +43,9 @@ export class LoginComponent {
           this.errorMessage =
             err?.status === 401
               ? 'Credenciales inválidas. Verifica tu correo y contraseña.'
-              : 'No se pudo iniciar sesión. Revisa el backend o usa una cuenta de prueba.';
+              : err?.status === 429
+                ? 'Demasiados intentos. Espera unos minutos antes de volver a intentar.'
+                : apiError(err, 'No se pudo iniciar sesión. Inténtalo de nuevo.');
         },
       });
   }

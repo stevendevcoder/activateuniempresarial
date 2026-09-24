@@ -2,21 +2,40 @@
   <header class="hero"><h1>Mi perfil</h1></header>
 
   <div class="sheet">
+    @if (message()) {
+      <p class="alert alert-ok">{{ message() }}</p>
+    }
+    @if (error()) {
+      <p class="alert alert-error">{{ error() }}</p>
+    }
+
     <article class="card person">
-      <app-avatar [kind]="auth.user()?.avatar || 'sharit'" [size]="64" />
+      <button type="button" class="photo" (click)="photoInput.click()" [disabled]="uploading()" aria-label="Cambiar foto de perfil">
+        <app-avatar [kind]="kind()" [photo]="auth.user()?.photo" [size]="64" />
+        <span class="cam"><app-icon name="camera" [size]="12" /></span>
+      </button>
+      <input #photoInput type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onPhoto($event)" />
       <div class="meta">
         @if (editing()) {
-          <input class="input" [(ngModel)]="nameDraft" />
+          <input class="input" [(ngModel)]="nameDraft" aria-label="Nombre" />
         } @else {
           <h2>{{ auth.user()?.name }}</h2>
         }
         <p><app-icon name="building" [size]="14" /> {{ auth.user()?.area }}</p>
-        <p><app-icon name="clock" [size]="14" /> {{ auth.user()?.jornada }}</p>
+        <p><app-icon name="clock" [size]="14" /> {{ pausas.jornada() }}</p>
       </div>
-      <button type="button" class="btn-ghost" (click)="toggleEdit()">
+      <button type="button" class="btn-ghost" (click)="toggleEdit()" [disabled]="saving()">
         {{ editing() ? 'Guardar' : 'Editar' }}
       </button>
     </article>
+
+    @if (pausas.stats(); as stats) {
+      <div class="stats">
+        <div><b>{{ stats.completadas }}</b><span>Completadas</span></div>
+        <div><b>{{ stats.currentStreak }}</b><span>Racha actual</span></div>
+        <div><b>{{ stats.bestStreak }}</b><span>Mejor racha</span></div>
+      </div>
+    }
 
     <article class="card">
       <p class="label">Preferencias</p>
@@ -27,7 +46,7 @@
             <b>{{ item.label }}</b>
             <small>{{ auth.preferences()[item.key] ? item.on : item.off }}</small>
           </div>
-          <button type="button" class="toggle" [class.on]="auth.preferences()[item.key]" (click)="auth.setPreference(item.key, !auth.preferences()[item.key])">
+          <button type="button" class="toggle" [class.on]="auth.preferences()[item.key]" (click)="auth.setPreference(item.key, !auth.preferences()[item.key])" [attr.aria-label]="item.label">
             <span></span>
           </button>
         </div>
@@ -41,8 +60,67 @@
       </div>
       <p>“Silencia temporalmente los recordatorios cuando necesites concentrarte.”</p>
       <button type="button" class="btn-pill mini" (click)="auth.setPreference('dnd', !auth.preferences().dnd)">
-        {{ auth.preferences().dnd ? 'Desactivar ahora' : 'Editar preferencias' }}
+        {{ auth.preferences().dnd ? 'Desactivar ahora' : 'Activar ahora' }}
       </button>
+    </article>
+
+    <article class="card">
+      <p class="label">Seguridad</p>
+      @if (changingPassword()) {
+        <div class="form-grid">
+          <label class="form-field">
+            <span>Contraseña actual</span>
+            <input class="input" type="password" [(ngModel)]="currentPassword" autocomplete="current-password" />
+          </label>
+          <label class="form-field">
+            <span>Nueva contraseña</span>
+            <input class="input" type="password" [(ngModel)]="newPassword" autocomplete="new-password" placeholder="Mínimo 6 caracteres" />
+          </label>
+          <div class="form-actions">
+            <button type="button" class="btn-outline" (click)="changingPassword.set(false)">Cancelar</button>
+            <button type="button" class="btn-pill" (click)="savePassword()" [disabled]="saving()">Actualizar</button>
+          </div>
+        </div>
+      } @else {
+        <div class="pref">
+          <span class="ico"><app-icon name="key" [size]="18" /></span>
+          <div>
+            <b>Contraseña</b>
+            <small>Cámbiala periódicamente</small>
+          </div>
+          <button type="button" class="btn-ghost" (click)="changingPassword.set(true)">Cambiar</button>
+        </div>
+      }
+    </article>
+
+    <article class="card">
+      <p class="label">Privacidad y datos</p>
+      <div class="pref">
+        <span class="ico"><app-icon name="shield" [size]="18" /></span>
+        <div>
+          <b>Consentimiento informado</b>
+          <small>
+            @if (pausas.consent()?.accepted) {
+              Aceptado (v{{ pausas.consent()?.version }})
+            } @else {
+              Pendiente de aceptar
+            }
+          </small>
+        </div>
+        @if (pausas.consent()?.accepted) {
+          <button type="button" class="btn-ghost" (click)="revokeConsent()">Revocar</button>
+        } @else {
+          <button type="button" class="btn-ghost" (click)="acceptConsent()">Aceptar</button>
+        }
+      </div>
+      <div class="pref">
+        <span class="ico danger"><app-icon name="trash" [size]="18" /></span>
+        <div>
+          <b>Eliminar mis datos</b>
+          <small>Anonimiza tu información personal (Ley 1581)</small>
+        </div>
+        <button type="button" class="btn-ghost danger" (click)="requestDeletion()">Solicitar</button>
+      </div>
     </article>
 
     <button type="button" class="logout" (click)="auth.logout()">
