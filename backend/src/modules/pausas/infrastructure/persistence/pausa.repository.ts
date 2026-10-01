@@ -6,7 +6,7 @@ import { User } from "../../../auth/infrastructure/persistence/user.entity";
 import { Area } from "../../../areas/infrastructure/persistence/area.entity";
 import { Role } from "../../../roles/infrastructure/persistence/role.entity";
 import { ADMIN_ROLE_NAME } from "../../../../config/permissions";
-import { formatDateInTz, zonedDateTime } from "../../../utils/timezone";
+import { formatDateInTz, zonedDateTime } from "../../../../utils/timezone";
 
 export const PAUSA_STATUS = {
     PROGRAMADA: 1,

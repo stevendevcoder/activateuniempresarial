@@ -4,8 +4,8 @@ import { RoutineTypeRepository } from "../../../routine-types/infrastructure/per
 import { VideoRepository } from "../../../media/infrastructure/persistence/video.repository";
 import { RoutineService } from "../../application/routine.service";
 import { RoutineController } from "./routine.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 
 const router = Router();

@@ -77,7 +77,20 @@ VALUES (
     1,
     1,
     1
-);
+)
+ON CONFLICT (email_user) DO NOTHING;
+
+-- EP04: Trabajador de ejemplo para el portal: trabajador@pausas.com / demo123
+INSERT INTO users."user" (name_user, email_user, password_user, status_user, id_role, id_area)
+VALUES (
+    'Maria Rodriguez',
+    'trabajador@pausas.com',
+    '$2b$12$BY4bJl58jiu5ulHmizwKqOQj14F.lf6oZ2qMFKT4j7rd.FHVVV27G', -- hash bcrypt de demo123
+    1,
+    2,
+    1
+)
+ON CONFLICT (email_user) DO NOTHING;
 
 -- EP15: Configuración global inicial
 INSERT INTO users.global_config (id_config, lunch_start, lunch_end, max_postponements, dashboard_mode)
@@ -95,3 +108,8 @@ INSERT INTO users.holiday (holiday_date, name_holiday, recurring_holiday) VALUES
     ('2026-12-08', 'Inmaculada Concepción', TRUE),
     ('2026-12-25', 'Navidad', TRUE)
 ON CONFLICT DO NOTHING;
+
+-- EP12: Cronograma de pausas para la Facultad de Ingeniería (lunes a viernes, dos pausas: 10:00 y 16:00)
+INSERT INTO users.schedule (id_area, id_routine, start_time, end_time, frequency_minutes, duration_minutes, days_of_week)
+VALUES (1, NULL, '10:00', '17:00', 360, 5, '1,2,3,4,5')
+ON CONFLICT (id_area) DO NOTHING;

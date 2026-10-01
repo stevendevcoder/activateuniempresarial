@@ -5,9 +5,9 @@ import { AreaRepository } from "../../../areas/infrastructure/persistence/area.r
 import { AuthService } from "../../application/auth.service";
 import { UserService } from "../../application/user.service";
 import { AuthController } from "./auth.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
-import { loginLimiter } from "../../../middlewares/rate-limit.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
+import { loginLimiter } from "../../../../middlewares/rate-limit.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 
 const router = Router();

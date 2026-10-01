@@ -3,8 +3,8 @@ import { AreaRepository } from "../persistence/area.repository";
 import { UserRepository } from "../../../auth/infrastructure/persistence/user.repository";
 import { AreasService } from "../../application/areas.service";
 import { AreasController } from "./areas.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 
 const router = Router();

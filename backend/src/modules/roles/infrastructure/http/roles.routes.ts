@@ -3,8 +3,8 @@ import { RoleRepository } from "../persistence/role.repository";
 import { PermissionRepository } from "../persistence/permission.repository";
 import { RolesService } from "../../application/roles.service";
 import { RolesController } from "./roles.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 
 const router = Router();

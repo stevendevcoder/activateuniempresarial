@@ -2,8 +2,8 @@ import { Router } from "express";
 import { PausaRepository } from "../../../pausas/infrastructure/persistence/pausa.repository";
 import { AnalyticsService } from "../../application/analytics.service";
 import { AnalyticsController } from "./analytics.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 
 const router = Router();

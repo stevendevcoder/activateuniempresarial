@@ -63,8 +63,24 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   readonly maxPostponements = this.pausas.maxPostponements;
 
+  readonly ringCircumference = 2 * Math.PI * 52;
+
+  /** Piezas de confeti para la celebración al completar la pausa. */
+  readonly confetti = Array.from({ length: 16 }, () => ({
+    left: Math.round(Math.random() * 100),
+    delay: +(Math.random() * 0.6).toFixed(2),
+    duration: +(1.8 + Math.random() * 1.2).toFixed(2),
+  }));
+
   private pausa: PortalPause | null = null;
   private timer: ReturnType<typeof setInterval> | null = null;
+
+  /** Porción del anillo del temporizador que aún queda por consumir. */
+  ringOffset(): number {
+    const total = this.current().seconds;
+    const ratio = total ? this.remaining() / total : 0;
+    return this.ringCircumference * (1 - ratio);
+  }
 
   ngOnInit(): void {
     this.auth.setPreference('dnd', true);

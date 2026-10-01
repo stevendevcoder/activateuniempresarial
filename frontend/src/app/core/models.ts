@@ -40,11 +40,14 @@ export interface DayPause {
   pausaId: number | null;
 }
 
+export type DayMood = 'happy' | 'sad' | 'neutral' | 'pending';
+
 export interface HistoryDay {
   date: string;
   label: string;
   completed: number;
   total: number;
+  mood: DayMood;
 }
 
 export type MascotPose = 'idle' | 'arms-up' | 'eyes' | 'wave' | 'breathe';

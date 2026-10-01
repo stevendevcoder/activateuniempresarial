@@ -33,7 +33,12 @@
       }
 
       @case ('done') {
-        <div class="mascot"><app-mascot pose="arms-up" /></div>
+        <div class="confetti" aria-hidden="true">
+          @for (piece of confetti; track $index) {
+            <i [style.left.%]="piece.left" [style.animation-delay.s]="piece.delay" [style.animation-duration.s]="piece.duration"></i>
+          }
+        </div>
+        <div class="mascot celebrate"><app-mascot pose="arms-up" /></div>
         <h2>¡Pausa completada!</h2>
         <p class="quote">“Buen trabajo. Tu cuerpo te lo agradece.”</p>
         <p class="tip"><app-icon name="check-circle" [size]="16" /> Registramos tu cumplimiento correctamente.</p>
@@ -48,13 +53,28 @@
             <video [src]="url" autoplay muted loop playsinline></video>
           </div>
         } @else {
-          <div class="mascot" [class.pulse]="loadingVideo()"><app-mascot [pose]="current().pose" /></div>
+          <div class="mascot" [class.pulse]="loadingVideo()" [class.exercising]="!loadingVideo()"><app-mascot [pose]="current().pose" /></div>
         }
         <h2>{{ current().name }}</h2>
         <p class="quote">“{{ current().instruction }}”</p>
-        <div class="clock">{{ clock() }}</div>
-        <small>tiempo restante</small>
-        <div class="bar dark"><i [style.width.%]="exerciseProgress()"></i></div>
+        <div class="timer">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="track" cx="60" cy="60" r="52" />
+            <circle
+              class="progress"
+              cx="60"
+              cy="60"
+              r="52"
+              transform="rotate(-90 60 60)"
+              [attr.stroke-dasharray]="ringCircumference"
+              [attr.stroke-dashoffset]="ringOffset()"
+            />
+          </svg>
+          <div class="timer-label">
+            <b>{{ clock() }}</b>
+            <small>restante</small>
+          </div>
+        </div>
         <p class="tip"><app-icon name="heart" [size]="16" /> {{ current().tip }}</p>
 
         @if (actionError()) {

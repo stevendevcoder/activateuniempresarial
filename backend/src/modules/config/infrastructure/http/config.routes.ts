@@ -2,8 +2,8 @@ import { Router } from "express";
 import { ConfigRepository } from "../persistence/config.repository";
 import { ConfigService } from "../../application/config.service";
 import { ConfigController } from "./config.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 
 const router = Router();
@@ -30,3 +30,4 @@ router.delete("/holidays/:id", authenticateToken, requirePermission(PERMISSIONS.
 );
 
 export default router;
+

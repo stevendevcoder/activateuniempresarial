@@ -4,7 +4,7 @@ import { UserRepository } from "../../../auth/infrastructure/persistence/user.re
 import { RoutineRepository } from "../../../routines/infrastructure/persistence/routine.repository";
 import { PortalService } from "../../application/portal.service";
 import { PortalController } from "./portal.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
 import { uploadAvatarMiddleware } from "./middlewares/upload-avatar.middleware";
 
 const router = Router();

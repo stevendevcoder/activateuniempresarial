@@ -7,8 +7,8 @@ import { ConfigService } from "../../../config/application/config.service";
 import { ScheduleService } from "../../application/schedule.service";
 import { SchedulerService } from "../../application/scheduler.service";
 import { ScheduleController } from "./schedule.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 
 const router = Router();
@@ -53,3 +53,4 @@ router.patch("/:id/resume", authenticateToken, requirePermission(PERMISSIONS.sch
 );
 
 export default router;
+

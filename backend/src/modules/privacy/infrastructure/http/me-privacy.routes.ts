@@ -5,7 +5,7 @@ import { ConfigRepository } from "../../../config/infrastructure/persistence/con
 import { ConfigService } from "../../../config/application/config.service";
 import { PrivacyService } from "../../application/privacy.service";
 import { PrivacyController } from "./privacy.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
 
 const router = Router();
 
@@ -21,3 +21,4 @@ router.delete("/me/consent", authenticateToken, (req, res) => privacyController.
 router.post("/me/data-deletion", authenticateToken, (req, res) => privacyController.requestDeletion(req, res));
 
 export default router;
+

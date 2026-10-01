@@ -5,8 +5,8 @@ import { ConfigRepository } from "../../../config/infrastructure/persistence/con
 import { ConfigService } from "../../../config/application/config.service";
 import { PrivacyService } from "../../application/privacy.service";
 import { PrivacyController } from "./privacy.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 
 const router = Router();
@@ -28,3 +28,4 @@ router.post("/retention/run", authenticateToken, requirePermission(PERMISSIONS.p
 );
 
 export default router;
+

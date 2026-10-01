@@ -26,6 +26,16 @@
       }
     }
 
+    @if (yesterdayNote(); as note) {
+      <article class="card mood-note" [class.sad]="note.mood === 'sad'">
+        <span class="face"><app-mood [mood]="note.mood" /></span>
+        <div>
+          <b>{{ note.title }}</b>
+          <p>{{ note.text }}</p>
+        </div>
+      </article>
+    }
+
     @if (pausas.nextPause(); as next) {
       <article class="card">
         <div class="next">

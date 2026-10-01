@@ -7,11 +7,12 @@ import { PortalService } from '../../core/services/portal.service';
 import { minutesFromTime, toMeridiem } from '../../core/utils';
 import { IconComponent } from '../../shared/icon.component';
 import { MascotComponent } from '../../shared/mascot.component';
+import { MoodComponent } from '../../shared/mood.component';
 import { ProgressRingComponent } from '../../shared/progress-ring.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, IconComponent, MascotComponent, ProgressRingComponent],
+  imports: [RouterLink, IconComponent, MascotComponent, MoodComponent, ProgressRingComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -21,6 +22,24 @@ export class HomeComponent {
   private readonly portal = inject(PortalService);
 
   readonly goals = computed(() => this.pausas.activePauses().slice(0, 4));
+
+  /** Mensaje de ánimo según cómo le fue al trabajador el día anterior. */
+  readonly yesterdayNote = computed(() => {
+    const day = this.pausas.yesterday();
+    if (!day || day.total === 0) return null;
+    if (day.mood === 'happy') {
+      return {
+        mood: 'happy' as const,
+        title: '¡Bien hecho ayer!',
+        text: `Completaste tus ${day.total} pausa(s). Sigue cuidando tu bienestar.`,
+      };
+    }
+    return {
+      mood: 'sad' as const,
+      title: 'Ayer quedaste a mitad de camino',
+      text: `No completaste tus pausas de ayer (${day.completed}/${day.total}). Hoy es un nuevo día para intentarlo.`,
+    };
+  });
 
   readonly motivation = computed(() => {
     const compliance = this.pausas.compliance();

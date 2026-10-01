@@ -2,8 +2,8 @@ import { Router } from "express";
 import { RoutineTypeRepository } from "../persistence/routine-type.repository";
 import { RoutineTypeService } from "../../application/routine-type.service";
 import { RoutineTypeController } from "./routine-type.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 
 const router = Router();

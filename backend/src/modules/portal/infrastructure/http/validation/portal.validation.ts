@@ -1,5 +1,5 @@
 import joi from "joi";
-import { PAUSA_STATUS, PausaStatus } from "../../../pausas/infrastructure/persistence/pausa.repository";
+import { PAUSA_STATUS, PausaStatus } from "../../../../pausas/infrastructure/persistence/pausa.repository";
 
 export const STATUS_STRINGS = {
     programada: PAUSA_STATUS.PROGRAMADA,

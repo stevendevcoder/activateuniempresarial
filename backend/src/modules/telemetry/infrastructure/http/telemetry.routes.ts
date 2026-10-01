@@ -6,8 +6,8 @@ import { ConfigService } from "../../../config/application/config.service";
 import { TelemetryService } from "../../application/telemetry.service";
 import { TelemetryController } from "./telemetry.controller";
 import { ConsentRepository } from "../../../privacy/infrastructure/persistence/consent.repository";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 
 const router = Router();
@@ -39,3 +39,4 @@ router.get("/summary", authenticateToken, requirePermission(PERMISSIONS.telemetr
 );
 
 export default router;
+

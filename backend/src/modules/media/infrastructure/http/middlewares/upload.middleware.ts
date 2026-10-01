@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import multer from "multer";
 import crypto from "crypto";
-import { MEDIA_UPLOAD_DIR, MEDIA_MAX_FILE_SIZE, MEDIA_ALLOWED_MIME_TYPES, extensionForMime } from "../../../../config/media";
+import { MEDIA_UPLOAD_DIR, MEDIA_MAX_FILE_SIZE, MEDIA_ALLOWED_MIME_TYPES, extensionForMime } from "../../../../../config/media";
 
 const storage = multer.diskStorage({
     destination: MEDIA_UPLOAD_DIR,

@@ -8,7 +8,7 @@ import {
   PortalStats,
   Schedule,
 } from '../api.types';
-import { DayPause, HistoryDay, NotificationItem, PauseStatus } from '../models';
+import { DayMood, DayPause, HistoryDay, NotificationItem, PauseStatus } from '../models';
 import {
   isSameLocalDay,
   isWithinRange,
@@ -155,15 +155,26 @@ export class PausasService {
       day.setDate(day.getDate() - i);
       const registered = this.recent().filter((p) => isSameLocalDay(p.scheduledAt, day));
       const expected = schedule ? this.slotsFor(schedule, day.getDay()).length : 0;
+      const completed = registered.filter((p) => p.status === PAUSA_STATUS.COMPLETADA).length;
+      const total = Math.max(expected, registered.length);
+      let mood: DayMood;
+      if (total === 0) mood = 'neutral';
+      else if (completed >= total) mood = 'happy';
+      else if (i === 0) mood = 'pending';
+      else mood = 'sad';
       days.push({
         date: day.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }),
         label: i === 0 ? 'Hoy' : i === 1 ? 'Ayer' : DAY_LABELS[day.getDay()],
-        completed: registered.filter((p) => p.status === PAUSA_STATUS.COMPLETADA).length,
-        total: Math.max(expected, registered.length),
+        completed,
+        total,
+        mood,
       });
     }
     return days;
   });
+
+  /** Resumen del día anterior (para el saludo del inicio). */
+  readonly yesterday = computed<HistoryDay | null>(() => this.history()[1] ?? null);
 
   readonly notifications = computed<NotificationItem[]>(() => {
     const read = new Set(this.readIds());

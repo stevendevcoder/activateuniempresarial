@@ -2,8 +2,8 @@ import { Router } from "express";
 import { VideoRepository } from "../persistence/video.repository";
 import { MediaService } from "../../application/media.service";
 import { MediaController } from "./media.controller";
-import { authenticateToken } from "../../../middlewares/auth.middleware";
-import { requirePermission } from "../../../middlewares/rbac.middleware";
+import { authenticateToken } from "../../../../middlewares/auth.middleware";
+import { requirePermission } from "../../../../middlewares/rbac.middleware";
 import { uploadVideoMiddleware } from "./middlewares/upload.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
 

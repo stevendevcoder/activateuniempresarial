@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import multer from "multer";
 import crypto from "crypto";
-import { AVATAR_ALLOWED_MIME_TYPES, AVATAR_UPLOAD_DIR, MAX_AVATAR_FILE_SIZE, extensionForMime } from "../../../../config/media";
+import { AVATAR_ALLOWED_MIME_TYPES, AVATAR_UPLOAD_DIR, MAX_AVATAR_FILE_SIZE, extensionForMime } from "../../../../../config/media";
 
 const storage = multer.diskStorage({
     destination: AVATAR_UPLOAD_DIR,
