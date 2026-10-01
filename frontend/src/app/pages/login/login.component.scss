@@ -19,6 +19,22 @@
   padding: 48px 24px 58px;
 }
 
+.logo-badge {
+  width: fit-content;
+  margin: 0 auto;
+  padding: 14px;
+  background: #fff;
+  border-radius: 28px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.brand-logo {
+  display: block;
+  width: 150px;
+  max-width: 100%;
+  height: auto;
+}
+
 .hero h1 {
   margin: 14px 0 0;
   color: #fff;

@@ -28,7 +28,7 @@
 
     @if (yesterdayNote(); as note) {
       <article class="card mood-note" [class.sad]="note.mood === 'sad'">
-        <span class="face"><app-mood [mood]="note.mood" /></span>
+        <span class="face"><app-mascota [name]="note.mood === 'happy' ? 'feliz' : 'triste'" /></span>
         <div>
           <b>{{ note.title }}</b>
           <p>{{ note.text }}</p>
@@ -81,7 +81,10 @@
     }
 
     <article class="card">
-      <h3>Mi progreso de hoy</h3>
+      <div class="progress-head">
+        <span class="today-face"><app-mascota [name]="todayMascot()" [animate]="pausas.compliance() >= 50" /></span>
+        <h3>Mi progreso de hoy</h3>
+      </div>
       <div class="progress">
         <app-progress-ring [done]="pausas.completedCount()" [total]="pausas.totalActive()" />
         <ul>
@@ -112,7 +115,7 @@
     </article>
 
     <article class="quote">
-      <div class="mascot"><app-mascot [pose]="pausas.compliance() >= 100 ? 'arms-up' : 'idle'" /></div>
+      <div class="mascot"><app-mascota [name]="pausas.compliance() >= 100 ? 'feliz' : 'triste'" [animate]="true" /></div>
       <p>“{{ motivation() }}”</p>
     </article>
   </div>

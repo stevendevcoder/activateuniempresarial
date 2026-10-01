@@ -29,13 +29,13 @@
   <div class="sheet">
     @switch (phase()) {
       @case ('loading') {
-        <div class="mascot"><app-mascot pose="wave" /></div>
+        <div class="mascot"><app-mascota name="feliz" /></div>
         <h2>Preparando tu pausa…</h2>
         <p class="quote">“Busca un espacio cómodo y respira profundo.”</p>
       }
 
       @case ('error') {
-        <div class="mascot"><app-mascot pose="idle" /></div>
+        <div class="mascot"><app-mascota name="triste" /></div>
         <h2>No pudimos iniciar</h2>
         <p class="alert alert-error">{{ error() }}</p>
         <div class="actions single">
@@ -49,7 +49,7 @@
             <i [style.left.%]="piece.left" [style.animation-delay.s]="piece.delay" [style.animation-duration.s]="piece.duration"></i>
           }
         </div>
-        <div class="mascot celebrate"><app-mascot pose="arms-up" /></div>
+        <div class="mascot celebrate"><app-mascota name="feliz" [animate]="true" /></div>
         <h2>¡Pausa completada!</h2>
         <p class="quote">“Buen trabajo. Tu cuerpo te lo agradece.”</p>
         <p class="tip"><app-icon name="check-circle" [size]="16" /> Registramos tu cumplimiento correctamente.</p>
@@ -64,7 +64,7 @@
             <video [src]="url" autoplay muted loop playsinline></video>
           </div>
         } @else {
-          <div class="mascot" [class.pulse]="loadingVideo()" [class.exercising]="!loadingVideo()"><app-mascot [pose]="current().pose" /></div>
+          <div class="mascot" [class.pulse]="loadingVideo()"><app-mascota [name]="exerciseImage()" [animate]="true" /></div>
         }
         <h2>{{ current().name }}</h2>
         <p class="quote">“{{ current().instruction }}”</p>

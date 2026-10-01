@@ -5,11 +5,10 @@ import { finalize } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { apiError } from '../../core/utils';
 import { IconComponent } from '../../shared/icon.component';
-import { LogoComponent } from '../../shared/logo.component';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, IconComponent, LogoComponent],
+  imports: [ReactiveFormsModule, IconComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   host: { class: 'login-host' },

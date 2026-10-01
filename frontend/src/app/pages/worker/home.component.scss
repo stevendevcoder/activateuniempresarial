@@ -259,6 +259,22 @@ li.on {
   flex: none;
 }
 
+.progress-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-head h3 {
+  margin: 0;
+}
+
+.today-face {
+  width: 40px;
+  height: 40px;
+  flex: none;
+}
+
 .mood-note b {
   display: block;
   color: #10b981;

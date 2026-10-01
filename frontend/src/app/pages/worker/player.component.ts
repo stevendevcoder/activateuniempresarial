@@ -10,7 +10,7 @@ import { PortalService } from '../../core/services/portal.service';
 import { FREE_PAUSE_EXERCISES, RutinasService } from '../../core/services/rutinas.service';
 import { apiError } from '../../core/utils';
 import { IconComponent } from '../../shared/icon.component';
-import { MascotComponent } from '../../shared/mascot.component';
+import { MascotaComponent } from '../../shared/mascota.component';
 
 type Phase = 'loading' | 'running' | 'done' | 'error';
 
@@ -27,7 +27,7 @@ const FREE_ROUTINE: Routine = {
 
 @Component({
   selector: 'app-player',
-  imports: [RouterLink, FormsModule, IconComponent, MascotComponent],
+  imports: [RouterLink, FormsModule, IconComponent, MascotaComponent],
   templateUrl: './player.component.html',
   styleUrl: './player.component.scss',
 })
@@ -62,6 +62,18 @@ export class PlayerComponent implements OnInit, OnDestroy {
   });
 
   readonly maxPostponements = this.pausas.maxPostponements;
+
+  /** Imagen de la mascota según el tipo de movimiento del ejercicio actual. */
+  readonly exerciseImage = computed<string>(() => {
+    const map: Record<string, string> = {
+      'arms-up': 'ej5_brazos_arriba',
+      wave: 'ej3_hombros',
+      eyes: 'ej10_visual',
+      breathe: 'ej7_pecho',
+      idle: 'ej1_cuello_rot',
+    };
+    return map[this.current().pose] ?? 'ej4_brazos';
+  });
 
   readonly ringCircumference = 2 * Math.PI * 52;
 
