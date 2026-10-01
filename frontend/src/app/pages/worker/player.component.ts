@@ -65,6 +65,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   readonly ringCircumference = 2 * Math.PI * 52;
 
+  /** Guía por voz: narra la instrucción de cada ejercicio (Web Speech API). */
+  readonly voiceOn = signal(this.readVoicePref());
+
   /** Piezas de confeti para la celebración al completar la pausa. */
   readonly confetti = Array.from({ length: 16 }, () => ({
     left: Math.round(Math.random() * 100),
@@ -80,6 +83,42 @@ export class PlayerComponent implements OnInit, OnDestroy {
     const total = this.current().seconds;
     const ratio = total ? this.remaining() / total : 0;
     return this.ringCircumference * (1 - ratio);
+  }
+
+  toggleVoice(): void {
+    const on = !this.voiceOn();
+    this.voiceOn.set(on);
+    try {
+      localStorage.setItem('activate_voice', on ? '1' : '0');
+    } catch {
+      /* almacenamiento no disponible */
+    }
+    if (on && this.phase() === 'running') this.speak(this.current().instruction);
+    else this.stopSpeech();
+  }
+
+  private readVoicePref(): boolean {
+    try {
+      return localStorage.getItem('activate_voice') !== '0';
+    } catch {
+      return true;
+    }
+  }
+
+  private speak(text: string): void {
+    if (!this.voiceOn()) return;
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'es-ES';
+    utterance.rate = 0.95;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  private stopSpeech(): void {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
   }
 
   ngOnInit(): void {
@@ -112,6 +151,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopTimer();
+    this.stopSpeech();
     this.releaseVideo();
     this.auth.setPreference('dnd', false);
   }
@@ -217,6 +257,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   private startExercise(): void {
     this.remaining.set(this.current().seconds);
     this.loadVideo(this.current().videoId);
+    this.speak(this.current().instruction);
     this.startTimer();
   }
 

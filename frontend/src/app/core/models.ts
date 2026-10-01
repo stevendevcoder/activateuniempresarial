@@ -42,6 +42,14 @@ export interface DayPause {
 
 export type DayMood = 'happy' | 'sad' | 'neutral' | 'pending';
 
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+}
+
 export interface HistoryDay {
   date: string;
   label: string;

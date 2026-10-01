@@ -182,6 +182,15 @@ import { Component, Input } from '@angular/core';
         @case ('menu') {
           <path d="M4 7h16M4 12h16M4 17h16" />
         }
+        @case ('volume') {
+          <path d="M4 9v6h4l5 4V5L8 9H4z" />
+          <path d="M16.5 9a3.5 3.5 0 0 1 0 6" />
+          <path d="M19 6.5a7 7 0 0 1 0 11" />
+        }
+        @case ('volume-x') {
+          <path d="M4 9v6h4l5 4V5L8 9H4z" />
+          <path d="M22 9.5l-5 5M17 9.5l5 5" />
+        }
       }
     </svg>
   `,

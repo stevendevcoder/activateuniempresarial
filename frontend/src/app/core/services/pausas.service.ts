@@ -8,7 +8,7 @@ import {
   PortalStats,
   Schedule,
 } from '../api.types';
-import { DayMood, DayPause, HistoryDay, NotificationItem, PauseStatus } from '../models';
+import { Achievement, DayMood, DayPause, HistoryDay, NotificationItem, PauseStatus } from '../models';
 import {
   isSameLocalDay,
   isWithinRange,
@@ -175,6 +175,24 @@ export class PausasService {
 
   /** Resumen del día anterior (para el saludo del inicio). */
   readonly yesterday = computed<HistoryDay | null>(() => this.history()[1] ?? null);
+
+  /** Logros desbloqueados según el histórico de cumplimiento del trabajador. */
+  readonly achievements = computed<Achievement[]>(() => {
+    const s = this.stats();
+    const completed = s?.completadas ?? 0;
+    const bestStreak = s?.bestStreak ?? 0;
+    const week = s?.weeklyCompleted ?? 0;
+    return [
+      { id: 'first', title: 'Primer paso', description: 'Completa tu primera pausa', icon: 'check-circle', unlocked: completed >= 1 },
+      { id: 'streak3', title: 'En racha', description: '3 días seguidos', icon: 'flame', unlocked: bestStreak >= 3 },
+      { id: 'streak7', title: 'Imparable', description: '7 días seguidos', icon: 'zap', unlocked: bestStreak >= 7 },
+      { id: 'week5', title: 'Semana activa', description: '5 pausas en una semana', icon: 'calendar', unlocked: week >= 5 },
+      { id: 'c25', title: 'Comprometido', description: '25 pausas completadas', icon: 'heart', unlocked: completed >= 25 },
+      { id: 'c50', title: 'Veterano', description: '50 pausas completadas', icon: 'trophy', unlocked: completed >= 50 },
+    ];
+  });
+
+  readonly unlockedCount = computed(() => this.achievements().filter((a) => a.unlocked).length);
 
   readonly notifications = computed<NotificationItem[]>(() => {
     const read = new Set(this.readIds());

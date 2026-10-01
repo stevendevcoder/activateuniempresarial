@@ -24,6 +24,16 @@ header {
   background: transparent;
 }
 
+.voice {
+  border: 0;
+  cursor: pointer;
+}
+
+header > .voice {
+  grid-column: 3;
+  grid-row: 1;
+}
+
 header > div:nth-child(2) {
   margin-top: -40px;
   text-align: center;

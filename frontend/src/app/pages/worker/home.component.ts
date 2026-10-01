@@ -5,6 +5,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { PausasService } from '../../core/services/pausas.service';
 import { PortalService } from '../../core/services/portal.service';
 import { minutesFromTime, toMeridiem } from '../../core/utils';
+import { AchievementsComponent } from '../../shared/achievements.component';
 import { IconComponent } from '../../shared/icon.component';
 import { MascotComponent } from '../../shared/mascot.component';
 import { MoodComponent } from '../../shared/mood.component';
@@ -12,7 +13,7 @@ import { ProgressRingComponent } from '../../shared/progress-ring.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, IconComponent, MascotComponent, MoodComponent, ProgressRingComponent],
+  imports: [RouterLink, IconComponent, MascotComponent, MoodComponent, ProgressRingComponent, AchievementsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
