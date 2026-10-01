@@ -176,11 +176,18 @@ label {
 }
 
 .forgot {
+  display: block;
+  width: 100%;
   margin: 18px 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
   text-align: center;
   color: #1b2f8a;
   font-size: 14px;
   font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .hint {
@@ -189,6 +196,22 @@ label {
   color: #94a3b8;
   font-size: 11px;
   line-height: 1.5;
+}
+
+.hint.ok {
+  color: #16a34a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.forgot-box {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.forgot-box .submit {
+  margin-top: 2px;
 }
 
 .bars {

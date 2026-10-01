@@ -72,6 +72,9 @@ type StatusFilter = 'all' | 'active' | 'inactive';
                 <button type="button" class="icon-btn" (click)="openEdit(user)" title="Editar">
                   <app-icon name="edit" [size]="16" />
                 </button>
+                <button type="button" class="icon-btn" (click)="resetPassword(user)" title="Restablecer contraseña">
+                  <app-icon name="key" [size]="16" />
+                </button>
                 @if (user.status === 1) {
                   <button type="button" class="icon-btn danger" (click)="deactivate(user)" title="Desactivar">
                     <app-icon name="power" [size]="16" />
@@ -282,6 +285,36 @@ export class TrabajadoresComponent implements OnInit {
         this.formError.set(apiError(err, 'No se pudo guardar el usuario.'));
       },
     });
+  }
+
+  resetPassword(user: AdminUser): void {
+    this.dialog
+      .confirm({
+        title: 'Restablecer contraseña',
+        message: `Se generará una contraseña temporal para ${user.name}. Tendrás que comunicársela y deberá cambiarla desde su perfil.`,
+        confirmLabel: 'Generar',
+      })
+      .subscribe((ok) => {
+        if (!ok) return;
+        const temp = this.generateTempPassword();
+        this.admin.updateUser(user.id, { password: temp }).subscribe({
+          next: () =>
+            this.dialog.alert({
+              title: 'Contraseña restablecida',
+              message: `Nueva contraseña temporal de ${user.name}:\n\n${temp}\n\nEntrégasela al usuario. Podrá cambiarla luego desde su perfil.`,
+            }),
+          error: (err) => this.error.set(apiError(err, 'No se pudo restablecer la contraseña.')),
+        });
+      });
+  }
+
+  private generateTempPassword(): string {
+    const letters = 'abcdefghijkmnpqrstuvwxyz';
+    const digits = '23456789';
+    let pass = 'UE';
+    for (let i = 0; i < 4; i++) pass += letters[Math.floor(Math.random() * letters.length)];
+    for (let i = 0; i < 3; i++) pass += digits[Math.floor(Math.random() * digits.length)];
+    return pass;
   }
 
   deactivate(user: AdminUser): void {

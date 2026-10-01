@@ -55,8 +55,25 @@
       </button>
     </form>
 
-    <p class="forgot">¿Olvidaste tu contraseña?</p>
-    <p class="hint">Si no recuerdas tu contraseña, solicita el restablecimiento a Talento Humano.</p>
+    <button type="button" class="forgot" (click)="toggleForgot()">¿Olvidaste tu contraseña?</button>
+
+    @if (showForgot()) {
+      @if (forgotSent()) {
+        <p class="hint ok">Tu solicitud fue registrada. Talento Humano restablecerá tu contraseña y te la comunicará.</p>
+      } @else {
+        <div class="forgot-box">
+          <p class="hint">Escribe tu correo institucional y Talento Humano te ayudará a restablecerla.</p>
+          <div class="field">
+            <app-icon class="lead" name="mail" />
+            <input type="email" [(ngModel)]="forgotEmail" placeholder="usuario@uniempresarial.edu.co" autocomplete="username" />
+          </div>
+          @if (forgotError()) {
+            <p class="error">{{ forgotError() }}</p>
+          }
+          <button type="button" class="submit" (click)="sendForgot()">Enviar solicitud</button>
+        </div>
+      }
+    }
   </section>
 
   <div class="bars" aria-hidden="true">
