@@ -163,9 +163,15 @@ import { MascotComponent } from '../../shared/mascot.component';
     .upload-filename { margin: 0; font-size: 12px; overflow-wrap: anywhere; }
     .hint { margin: 0; font-size: 12px; }
     .video-rows { display: grid; gap: 8px; }
-    .video-row { display: grid; grid-template-columns: 24px 1fr 90px 36px; align-items: center; gap: 8px; }
+    .video-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) 90px 36px; align-items: center; gap: 8px; }
+    .video-row .input { min-width: 0; }
     .num { color: #94a3b8; font-size: 12px; font-weight: 800; text-align: center; }
     .secs { padding: 14px 10px; }
+    @media (max-width: 480px) {
+      .video-row { grid-template-columns: 20px minmax(0, 1fr) 68px 32px; gap: 6px; }
+      .video-row .icon-btn { width: 32px; }
+      .video-row .secs { padding: 12px 6px; }
+    }
   `,
 })
 export class RutinasAdminComponent implements OnInit {
