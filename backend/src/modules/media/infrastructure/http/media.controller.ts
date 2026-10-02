@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
+import crypto from "crypto";
 import { MediaService } from "../../application/media.service";
+import { extensionForMime } from "../../../../config/media";
 import { loadVideoData } from "./validation/video.validation";
 
 export class MediaController {
@@ -20,12 +22,13 @@ export class MediaController {
             const videoId = await this.mediaService.createVideo({
                 title,
                 description,
-                fileName: file.filename,
-                filePath: file.path,
+                fileName: `${Date.now()}-${crypto.randomUUID()}${extensionForMime(file.mimetype)}`,
+                filePath: "",
                 mimeType: file.mimetype,
                 size: file.size,
                 durationSeconds,
                 status,
+                data: file.buffer,
             });
 
             return res.status(201).json({ message: "Video subido con éxito", videoId });
@@ -71,14 +74,13 @@ export class MediaController {
                 return;
             }
 
-            const file = await this.mediaService.getFilePath(id);
+            const file = await this.mediaService.getVideoFile(id);
             if (!file) {
                 res.status(404).json({ error: "Video no encontrado" });
                 return;
             }
 
-            res.type(file.mimeType);
-            res.sendFile(file.filePath);
+            res.type(file.mimeType).set("Content-Length", String(file.data.length)).send(file.data);
         } catch (error) {
             res.status(500).json({ error: "Error interno del servidor" });
         }
@@ -122,10 +124,11 @@ export class MediaController {
             }
 
             const replaced = await this.mediaService.replaceFile(id, {
-                fileName: file.filename,
-                filePath: file.path,
+                fileName: `${Date.now()}-${crypto.randomUUID()}${extensionForMime(file.mimetype)}`,
+                filePath: "",
                 mimeType: file.mimetype,
                 size: file.size,
+                data: file.buffer,
             });
 
             if (!replaced) {

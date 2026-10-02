@@ -1,8 +1,9 @@
 import fs from "fs/promises";
+import path from "path";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../../config/data-base";
 import { RoutineVideo } from "../../routines/infrastructure/persistence/routine-video.entity";
-import { IVideoRepository, VideoInput, VideoRecord, VideoUpdateInput } from "../infrastructure/persistence/video.repository";
+import { IVideoRepository, VideoRecord, VideoUpdateInput, VideoUploadInput } from "../infrastructure/persistence/video.repository";
 import { MEDIA_UPLOAD_DIR } from "../../../config/media";
 
 export class MediaService {
@@ -14,7 +15,7 @@ export class MediaService {
         this.routineVideoRepo = AppDataSource.getRepository(RoutineVideo);
     }
 
-    async createVideo(video: VideoInput): Promise<number> {
+    async createVideo(video: VideoUploadInput): Promise<number> {
         return this.videoRepo.create(video);
     }
 
@@ -26,7 +27,7 @@ export class MediaService {
         return this.videoRepo.update(id, data);
     }
 
-    async replaceFile(id: number, file: { fileName: string; filePath: string; mimeType: string; size: number }): Promise<boolean> {
+    async replaceFile(id: number, file: { fileName: string; filePath: string; mimeType: string; size: number; data: Buffer }): Promise<boolean> {
         const existing = await this.videoRepo.findById(id);
         if (!existing) {
             throw new Error("Video no encontrado");
@@ -42,6 +43,7 @@ export class MediaService {
             filePath: file.filePath,
             mimeType: file.mimeType,
             size: file.size,
+            data: file.data,
         });
     }
 
@@ -70,14 +72,19 @@ export class MediaService {
         return this.videoRepo.findById(id);
     }
 
-    async getFilePath(id: number): Promise<{ filePath: string; mimeType: string } | null> {
-        const video = await this.videoRepo.findById(id);
+    async getVideoFile(id: number): Promise<{ data: Buffer; mimeType: string } | null> {
+        const video = await this.videoRepo.findFileById(id);
         if (!video) return null;
+
+        if (video.data) return { data: video.data, mimeType: video.mimeType };
 
         const filePath = this.buildFilePath(video.filePath);
         if (!filePath) return null;
-
-        return { filePath, mimeType: video.mimeType };
+        try {
+            return { data: await fs.readFile(filePath), mimeType: video.mimeType };
+        } catch {
+            return null;
+        }
     }
 
     async getAllVideos(): Promise<VideoRecord[]> {
@@ -85,14 +92,11 @@ export class MediaService {
     }
 
     private buildFilePath(storedPath: string): string | null {
-        const base = MEDIA_UPLOAD_DIR.replace(/\/+$/, "");
-        const cleaned = storedPath.startsWith("/") ? storedPath : `/${storedPath}`;
-        if (cleaned.startsWith(base)) {
-            return cleaned;
-        }
-        if (cleaned.includes("..")) {
-            return null;
-        }
-        return `${base}${cleaned}`;
+        if (!storedPath) return null;
+        const base = path.resolve(MEDIA_UPLOAD_DIR);
+        const resolved = path.resolve(path.isAbsolute(storedPath) ? storedPath : path.join(base, storedPath));
+        const relative = path.relative(base, resolved);
+        if (relative.startsWith("..") || path.isAbsolute(relative)) return null;
+        return resolved;
     }
 }

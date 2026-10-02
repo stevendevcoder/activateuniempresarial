@@ -63,18 +63,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   readonly maxPostponements = this.pausas.maxPostponements;
 
-  /** Imagen de la mascota según el tipo de movimiento del ejercicio actual. */
-  readonly exerciseImage = computed<string>(() => {
-    const map: Record<string, string> = {
-      'arms-up': 'ej5_brazos_arriba',
-      wave: 'ej3_hombros',
-      eyes: 'ej10_visual',
-      breathe: 'ej7_pecho',
-      idle: 'ej1_cuello_rot',
-    };
-    return map[this.current().pose] ?? 'ej4_brazos';
-  });
-
   readonly ringCircumference = 2 * Math.PI * 52;
 
   /** Guía por voz: narra la instrucción de cada ejercicio (Web Speech API). */

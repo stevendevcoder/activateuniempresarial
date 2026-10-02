@@ -63,11 +63,24 @@
           <div class="video">
             <video [src]="url" autoplay muted loop playsinline></video>
           </div>
+        } @else if (current().videoId) {
+          <div class="video-placeholder" aria-live="polite">
+            @if (loadingVideo()) {
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Cargando video…</span>
+            } @else {
+              <app-icon name="film" [size]="22" />
+              <span>No se pudo cargar el video.</span>
+            }
+          </div>
         } @else {
-          <div class="mascot" [class.pulse]="loadingVideo()"><app-mascota [name]="exerciseImage()" [animate]="true" /></div>
+          <div class="video-placeholder" aria-label="Espacio reservado para el video del ejercicio">
+            <app-icon name="activity" [size]="24" />
+            <span>Sigue la instrucción del ejercicio.</span>
+          </div>
         }
-        <h2>{{ current().name }}</h2>
-        <p class="quote">“{{ current().instruction }}”</p>
+        <h2 class="video-title">{{ routine().name }}</h2>
+        <p class="video-description">{{ current().instruction }}</p>
         <div class="timer">
           <svg viewBox="0 0 120 120" aria-hidden="true">
             <circle class="track" cx="60" cy="60" r="52" />

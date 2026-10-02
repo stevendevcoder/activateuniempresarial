@@ -82,6 +82,7 @@ export interface RoutineVideo {
   idRoutine: number;
   idVideo: number;
   videoTitle: string | null;
+  videoDescription: string | null;
   videoDuration: number;
   position: number;
 }
