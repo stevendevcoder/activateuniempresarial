@@ -54,6 +54,7 @@ import { IconComponent } from '../../shared/icon.component';
   `,
   styles: `
     .person { display: flex; align-items: center; gap: 12px; }
+    .sheet { margin-top: 16px; }
     h2 { margin: 0 0 4px; }
     p, small { margin: 0; color: #64748b; font-size: 13px; }
     .label { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }

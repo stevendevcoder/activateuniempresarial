@@ -26,7 +26,7 @@
     }
   </header>
 
-  <div class="sheet">
+  <div class="sheet" [class.running]="phase() === 'running'">
     @switch (phase()) {
       @case ('loading') {
         <div class="mascot"><app-mascota name="feliz" /></div>

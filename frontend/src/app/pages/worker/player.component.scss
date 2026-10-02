@@ -97,6 +97,7 @@ header > div:nth-child(2) {
 .sheet {
   position: relative;
   flex: 1;
+  margin: 0;
   padding: 20px;
   border-radius: 32px 32px 0 0;
   background: #fff;
@@ -401,12 +402,49 @@ small {
 
 @media (min-width: 900px) {
   .player {
-    max-width: 720px;
-    min-height: auto;
-    margin: 32px auto;
+    max-width: 1200px;
+    min-height: calc(100dvh - 48px);
+    margin: 0 auto;
     border-radius: 32px;
     overflow: hidden;
     box-shadow: 0 24px 60px rgba(27, 47, 138, 0.2);
+  }
+
+  header {
+    padding: 28px 48px 24px;
+  }
+
+  .sheet.running {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+    grid-auto-rows: min-content;
+    align-content: center;
+    align-items: center;
+    column-gap: clamp(32px, 5vw, 72px);
+    padding: 32px clamp(32px, 5vw, 72px);
+  }
+
+  .sheet.running > .video,
+  .sheet.running > .video-placeholder {
+    grid-column: 1;
+    grid-row: 1 / span 7;
+    align-self: center;
+    width: min(100%, 330px, calc(58dvh * 9 / 16));
+  }
+
+  .sheet.running > .video-title,
+  .sheet.running > .video-description,
+  .sheet.running > .timer,
+  .sheet.running > .tip,
+  .sheet.running > .alert,
+  .sheet.running > .cancel-box,
+  .sheet.running > .actions,
+  .sheet.running > .secondary {
+    grid-column: 2;
+  }
+
+  .sheet.running > .video-title {
+    margin-top: 0;
   }
 
   :host {
