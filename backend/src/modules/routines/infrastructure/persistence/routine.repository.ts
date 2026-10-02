@@ -8,6 +8,7 @@ export interface RoutineVideoRecord {
     idRoutine: number;
     idVideo: number;
     videoTitle: string | null;
+    videoDescription: string | null;
     videoDuration: number;
     position: number;
 }
@@ -16,7 +17,7 @@ export interface RoutineRecord {
     id: number;
     name: string;
     description: string;
-    idRoutineType: number;
+    idRoutineType: number | null;
     routineTypeName: string | null;
     status: number;
     totalDurationSeconds: number;
@@ -31,7 +32,7 @@ export interface RoutineVideoInput {
 export interface RoutineCreateInput {
     name: string;
     description: string;
-    idRoutineType: number;
+    idRoutineType?: number | null;
     status: number;
     videos: RoutineVideoInput[];
 }
@@ -39,7 +40,7 @@ export interface RoutineCreateInput {
 export type RoutineUpdateInput = Partial<
     Omit<RoutineCreateInput, "idRoutineType" | "status" | "videos">
 > & {
-    idRoutineType?: number;
+    idRoutineType?: number | null;
     status?: number;
     videos?: RoutineVideoInput[];
 };
@@ -68,6 +69,7 @@ export class RoutineRepository implements IRoutineRepository {
             idRoutine: item.id_routine,
             idVideo: item.id_video,
             videoTitle: item.video?.title_video ?? null,
+            videoDescription: item.video?.description_video ?? null,
             videoDuration: item.duration_seconds,
             position: item.position,
         };
@@ -92,7 +94,7 @@ export class RoutineRepository implements IRoutineRepository {
             const routine = new Routine();
             routine.name_routine = input.name;
             routine.description_routine = input.description;
-            routine.id_routine_type = input.idRoutineType;
+            routine.id_routine_type = input.idRoutineType ?? null;
             routine.status_routine = input.status;
             const saved = await manager.save(Routine, routine);
 
@@ -118,7 +120,7 @@ export class RoutineRepository implements IRoutineRepository {
             Object.assign(routine, {
                 name_routine: input.name ?? routine.name_routine,
                 description_routine: input.description ?? routine.description_routine,
-                id_routine_type: input.idRoutineType ?? routine.id_routine_type,
+                id_routine_type: input.idRoutineType !== undefined ? input.idRoutineType : routine.id_routine_type,
                 status_routine: input.status ?? routine.status_routine,
             });
             await manager.save(Routine, routine);
@@ -168,7 +170,8 @@ export class RoutineRepository implements IRoutineRepository {
 
         const videos = await this.routineVideoRepo
             .createQueryBuilder("item")
-            .leftJoinAndSelect("item.video", "video")
+            .leftJoin("item.video", "video")
+            .addSelect(["video.id_video", "video.title_video", "video.description_video"])
             .where("item.id_routine = :id", { id })
             .orderBy("item.position", "ASC")
             .getMany();
@@ -186,7 +189,8 @@ export class RoutineRepository implements IRoutineRepository {
         const routineIds = routines.map((r) => r.id_routine);
         const items = await this.routineVideoRepo
             .createQueryBuilder("item")
-            .leftJoinAndSelect("item.video", "video")
+            .leftJoin("item.video", "video")
+            .addSelect(["video.id_video", "video.title_video", "video.description_video"])
             .where("item.id_routine IN (:...ids)", { ids: routineIds })
             .orderBy("item.id_routine", "ASC")
             .addOrderBy("item.position", "ASC")
