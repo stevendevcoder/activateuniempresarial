@@ -1,0 +1,469 @@
+<!DOCTYPE html><html class="h-full bg-slate-50" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Trabajadores | ACTIVATE Pausas Saludables</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN with forms and container-queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef4ff',
+              100: '#e0ebff',
+              500: '#2563eb',
+              600: '#1d4ed8',
+              700: '#1e40af',
+              800: '#1e3a8a',
+              900: '#172554',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="base-styling">
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    /* Custom scrollbar for seamless desktop feel */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="h-full flex overflow-hidden text-slate-800 antialiased selection:bg-blue-500 selection:text-white">
+<!-- BEGIN: Sidebar Navigation -->
+<aside class="w-72 bg-white border-r border-slate-200/90 flex flex-col justify-between flex-shrink-0 z-20 select-none shadow-[2px_0_8px_rgba(0,0,0,0.02)]" data-purpose="main-sidebar">
+<!-- Top Branding & Navigation Links -->
+<div class="flex flex-col h-full overflow-y-auto">
+<!-- Brand Logo Header -->
+<div class="px-6 py-6 border-b border-slate-100 flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20 ring-2 ring-blue-100 flex-shrink-0">
+<!-- Stylized ACTIVATE Icon -->
+<svg class="w-6 h-6 transform -rotate-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+<line x1="12" x2="12" y1="2" y2="12"></line>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="text-base font-extrabold tracking-tight text-slate-900 leading-none flex items-center gap-1.5">
+            ACTIVATE
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+</span>
+<span class="text-[11px] font-semibold text-blue-600 tracking-wider uppercase mt-1">Pausas Saludables</span>
+</div>
+</div>
+<!-- Main Navigation Menu -->
+<nav aria-label="Navegación principal" class="flex-1 px-4 py-5 space-y-1">
+<!-- Inicio -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-slate-100/80 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<rect height="7" rx="1.5" width="7" x="3" y="3"></rect>
+<rect height="7" rx="1.5" width="7" x="14" y="3"></rect>
+<rect height="7" rx="1.5" width="7" x="14" y="14"></rect>
+<rect height="7" rx="1.5" width="7" x="3" y="14"></rect>
+</svg>
+          Inicio
+        </a>
+<!-- Trabajadores (ACTIVE STATE) -->
+<a class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold text-blue-700 bg-blue-50/80 ring-1 ring-blue-100/80 transition-colors group shadow-sm" href="#">
+<div class="flex items-center gap-3.5">
+<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Trabajadores
+          </div>
+<span class="w-2 h-2 rounded-full bg-blue-600 ring-4 ring-blue-100"></span>
+</a>
+<!-- Seguimiento -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-slate-100/80 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Seguimiento
+        </a>
+<!-- Áreas -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-slate-100/80 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Áreas
+        </a>
+<!-- Rutinas -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-slate-100/80 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Rutinas
+        </a>
+<!-- Cronogramas -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-slate-100/80 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+          Cronogramas
+        </a>
+<!-- Pausas -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-slate-100/80 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          Pausas
+        </a>
+<!-- Section Divider: Sistema -->
+<div class="pt-5 pb-2">
+<p class="px-3.5 text-[11px] font-bold tracking-wider text-slate-400 uppercase">Sistema</p>
+</div>
+<!-- Configuración -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-slate-100/80 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Configuración
+        </a>
+<!-- Privacidad -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-slate-100/80 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Privacidad
+        </a>
+<!-- Perfil -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-slate-100/80 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Perfil
+        </a>
+</nav>
+<!-- Bottom Profile Summary Card -->
+<div class="p-4 border-t border-slate-100 bg-slate-50/50 mt-auto">
+<div class="flex items-center gap-3 p-2 rounded-xl bg-white border border-slate-200/80 shadow-sm hover:border-blue-200 transition-colors">
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow">
+              AP
+            </div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white"></span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="text-xs font-semibold text-slate-900 truncate">Admin Pausas</span>
+<span class="text-[11px] text-slate-500 truncate">admin@pausas.com</span>
+</div>
+<button aria-label="Cerrar sesión" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</div>
+</aside>
+<!-- END: Sidebar Navigation -->
+<!-- BEGIN: Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-slate-50">
+<!-- BEGIN: Top Deep Blue Header Banner -->
+<header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-lg relative overflow-hidden" data-purpose="page-hero-banner">
+<!-- Decorative light orb -->
+<div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"></div>
+<div class="absolute right-1/3 -bottom-12 w-64 h-64 rounded-full bg-indigo-500/15 blur-2xl pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-6 lg:px-10 py-8 lg:py-10 relative z-10">
+<!-- Breadcrumb & Top Indicator -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs font-medium text-blue-200/90">
+<span class="hover:text-white transition-colors cursor-pointer">Panel General</span>
+<svg class="w-3.5 h-3.5 text-blue-400/80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-white font-semibold">Trabajadores</span>
+</nav>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-200 border border-blue-400/30 backdrop-blur-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Superadministrador
+          </div>
+</div>
+<!-- Title, Description & Action Controls -->
+<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+<div class="space-y-1.5">
+<h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-white">Trabajadores</h1>
+<p class="text-sm lg:text-base text-blue-100/80 font-normal">
+              Gestión centralizada de usuarios, roles institucionales y asignación de áreas.
+            </p>
+</div>
+<!-- Quick Action Buttons inside Header -->
+<div class="flex items-center gap-3">
+<button class="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] border border-white cursor-pointer select-none" type="button">
+<svg class="w-4 h-4 text-blue-600 stroke-[2.5]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+<path d="M12 4v16m8-8H4"></path>
+</svg>
+<span class="tracking-tight font-bold text-slate-900">Nuevo Trabajador</span>
+</button>
+</div>
+</div>
+<!-- Search Bar integrated within Hero Header -->
+<div class="mt-8 max-w-3xl">
+<div class="relative flex items-center">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+<svg class="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<input class="w-full pl-11 pr-4 py-3 bg-white/95 backdrop-blur-md rounded-2xl text-slate-800 placeholder-slate-400 text-sm font-medium border-0 ring-1 ring-white/40 shadow-xl shadow-slate-950/20 focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all outline-none" placeholder="Buscar por nombre, correo electrónico o área..." type="text">
+<div class="absolute inset-y-0 right-0 pr-2.5 flex items-center">
+<span class="text-[11px] font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">
+                ⌘K
+              </span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: Top Deep Blue Header Banner -->
+<!-- BEGIN: Main Directory Body -->
+<div class="max-w-7xl mx-auto px-6 lg:px-10 py-8 w-full flex-1 flex flex-col justify-between">
+<div>
+<!-- Filter Controls & Actions Bar -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
+<!-- Segmented Filter Pills -->
+<div class="flex items-center gap-1.5 p-1 bg-white border border-slate-200 rounded-xl shadow-sm">
+<button class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-slate-900 shadow-sm transition-all" type="button">
+              Activos (2)
+            </button>
+<button class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" type="button">
+              Inactivos (0)
+            </button>
+<button class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" type="button">
+              Todos (2)
+            </button>
+</div>
+<!-- Secondary Filters & Sort Dropdowns -->
+<div class="flex items-center gap-2.5">
+<div class="relative inline-block text-left">
+<select class="bg-white border border-slate-200 text-slate-700 text-xs font-medium rounded-xl px-3 py-2 pr-8 shadow-sm hover:border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer">
+<option selected="">Todas las Áreas / Facultades</option>
+<option>Facultad de Ingeniería</option>
+<option>Facultad de Ciencias de la Salud</option>
+<option>Administración Central</option>
+</select>
+</div>
+<div class="relative inline-block text-left">
+<select class="bg-white border border-slate-200 text-slate-700 text-xs font-medium rounded-xl px-3 py-2 pr-8 shadow-sm hover:border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer">
+<option selected="">Ordenar: Nombre (A-Z)</option>
+<option>Ordenar: Recientes</option>
+<option>Ordenar: Área</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Worker Cards Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6" data-purpose="workers-grid">
+<!-- WORKER CARD 1: Admin Pausas Activas -->
+<article class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200 p-6 flex flex-col justify-between group">
+<div class="flex items-start gap-4">
+<!-- Custom Avatar matching design -->
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 flex items-center justify-center text-white shadow-md shadow-slate-900/10 ring-4 ring-slate-100 group-hover:ring-blue-50 transition-all">
+<!-- User Portrait Silhouette Icon -->
+<svg class="w-8 h-8 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+<circle cx="12" cy="7" r="4.5"></circle>
+<path d="M4 19.5C4 15.5 7.5 13 12 13s8 2.5 8 6.5V21H4v-1.5z"></path>
+</svg>
+</div>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center shadow-xs">
+<span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+</span>
+</div>
+<!-- Name & Email Info -->
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="text-base font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors">
+                    Admin Pausas Activas
+                  </h3>
+<span class="text-[11px] font-medium text-slate-400 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
+                    ID #001
+                  </span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5 flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                  admin@pausas.com
+                </p>
+<!-- Status & Attributes Tags -->
+<div class="flex flex-wrap items-center gap-2 mt-3.5">
+<!-- Role Badge -->
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                    Administrador
+                  </span>
+<!-- Department / Area Badge -->
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+<svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                    Facultad de Ingeniería
+                  </span>
+<!-- Status Active Badge -->
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    Activo
+                  </span>
+</div>
+</div>
+</div>
+<!-- Card Bottom Divider & Action Toolbar -->
+<div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+<span class="text-[11px] text-slate-400">
+                Última actividad: <strong class="font-medium text-slate-600">Hoy, 10:45 AM</strong>
+</span>
+<div class="flex items-center gap-1">
+<!-- Action: View details -->
+<button class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all" title="Ver detalles y pausas" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Action: Edit worker -->
+<button class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all" title="Editar trabajador" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Action: Power Toggle / Desactivar -->
+<button class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all" title="Desactivar acceso" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 4.243a9 9 0 01-2.828-9.9M9.879 9.879a5 5 0 00-1.414 4.95" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- WORKER CARD 2: Maria Rodriguez -->
+<article class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200 p-6 flex flex-col justify-between group">
+<div class="flex items-start gap-4">
+<!-- Custom Avatar matching design -->
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-2xl bg-gradient-to-b from-slate-800 to-indigo-950 flex items-center justify-center text-white shadow-md shadow-slate-900/10 ring-4 ring-slate-100 group-hover:ring-blue-50 transition-all">
+<!-- Female / User Portrait Silhouette -->
+<svg class="w-8 h-8 text-indigo-200" fill="currentColor" viewBox="0 0 24 24">
+<circle cx="12" cy="7" r="4.5"></circle>
+<path d="M4 19.5C4 15.5 7.5 13 12 13s8 2.5 8 6.5V21H4v-1.5z"></path>
+</svg>
+</div>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center shadow-xs">
+<span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+</span>
+</div>
+<!-- Name & Email Info -->
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="text-base font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors">
+                    Maria Rodriguez
+                  </h3>
+<span class="text-[11px] font-medium text-slate-400 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
+                    ID #002
+                  </span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5 flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                  trabajador@pausas.com
+                </p>
+<!-- Status & Attributes Tags -->
+<div class="flex flex-wrap items-center gap-2 mt-3.5">
+<!-- Role Badge -->
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                    Trabajador
+                  </span>
+<!-- Department / Area Badge -->
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+<svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                    Facultad de Ingeniería
+                  </span>
+<!-- Status Active Badge -->
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    Activo
+                  </span>
+</div>
+</div>
+</div>
+<!-- Card Bottom Divider & Action Toolbar -->
+<div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+<span class="text-[11px] text-slate-400">
+                Última pausa: <strong class="font-medium text-emerald-600">Ayer, 03:15 PM</strong>
+</span>
+<div class="flex items-center gap-1">
+<!-- Action: View details -->
+<button class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all" title="Ver perfil y estadísticas" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Action: Edit worker -->
+<button class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all" title="Editar trabajador" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Action: Power Toggle / Desactivar -->
+<button class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all" title="Desactivar acceso" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+</div>
+</div>
+<!-- BEGIN: Directory Pagination & Footer Info -->
+<footer class="mt-12 pt-6 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500" data-purpose="directory-footer">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-blue-600"></span>
+<span class="">Mostrando <strong>2</strong> de <strong>2</strong> trabajadores registrados</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-slate-400">© 2025 ACTIVATE Pausas Saludables • Sistema Integrado de Bienestar</span>
+</div>
+</footer>
+<!-- END: Directory Pagination & Footer Info -->
+</div>
+<!-- END: Main Directory Body -->
+</main>
+<!-- END: Main Content Area -->
+
+
+</body></html>

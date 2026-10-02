@@ -1,0 +1,506 @@
+<!DOCTYPE html><html class="h-full bg-slate-50" lang="es" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Cronogramas | ACTIVATE Pausas Saludables</title>
+<!-- Tailwind CSS v3 with Forms and Container Queries Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans / Inter style -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef4ff',
+              100: '#d9e6ff',
+              200: '#bcd4ff',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+              950: '#172554',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom CSS for subtle scrollbars and micro-interactions -->
+<style data-purpose="custom-enhancements">
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="h-full text-slate-800 antialiased flex bg-slate-50 font-sans selection:bg-brand-100 selection:text-brand-900">
+<!-- BEGIN: Sidebar -->
+<aside class="w-72 shrink-0 bg-white border-r border-slate-200/90 flex flex-col justify-between z-20 hidden lg:flex" data-purpose="main-sidebar">
+<!-- Top Area: Brand & Navigation -->
+<div class="p-6">
+<!-- Logo Container -->
+<div class="flex items-center gap-3 px-2 py-1 mb-8" data-purpose="brand-logo">
+<div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-brand-900 via-blue-700 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-brand-900/20 ring-2 ring-blue-100">
+<!-- Circular wellness pulse wave icon -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+</svg>
+</div>
+<div>
+<span class="text-xl font-extrabold tracking-tight text-slate-900 flex items-center gap-1">
+            ACTIVATE
+            <span class="inline-block w-2 h-2 rounded-full bg-rose-500"></span>
+</span>
+<span class="text-[11px] font-semibold text-slate-400 tracking-wider uppercase block">Pausas Saludables</span>
+</div>
+</div>
+<!-- Main Navigation Menu -->
+<nav class="space-y-1" data-purpose="primary-navigation">
+<!-- Inicio -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect height="9" rx="1" width="7" x="3" y="3"></rect><rect height="5" rx="1" width="7" x="14" y="3"></rect><rect height="9" rx="1" width="7" x="14" y="12"></rect><rect height="5" rx="1" width="7" x="3" y="16"></rect>
+</svg>
+          Inicio
+        </a>
+<!-- Trabajadores -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+</svg>
+          Trabajadores
+        </a>
+<!-- Seguimiento -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path>
+</svg>
+          Seguimiento
+        </a>
+<!-- Áreas -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+          Áreas
+        </a>
+<!-- Rutinas -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+</svg>
+          Rutinas
+        </a>
+<!-- Cronogramas (ACTIVE ITEM) -->
+<a class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold text-brand-900 bg-brand-50 border border-brand-200/70 shadow-sm transition-all group" href="#">
+<div class="flex items-center gap-3.5">
+<svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+<span class="">Cronogramas</span>
+</div>
+<span class="inline-block w-1.5 h-4 rounded-full bg-brand-600"></span>
+</a>
+<!-- Pausas -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          Pausas
+        </a>
+</nav>
+<!-- System Configuration Menu -->
+<div class="mt-8 pt-6 border-t border-slate-100">
+<span class="px-3.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 block">Sistema</span>
+<nav class="space-y-1">
+<!-- Configuración -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle>
+</svg>
+            Configuración
+          </a>
+<!-- Privacidad -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+</svg>
+            Privacidad
+          </a>
+<!-- Perfil -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
+</svg>
+            Perfil
+          </a>
+</nav>
+</div>
+</div>
+<!-- Sidebar Bottom: User Profile & Logout -->
+<div class="p-4 m-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between" data-purpose="user-footer">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-brand-800 to-indigo-600 flex items-center justify-center font-bold text-white text-xs shadow-sm ring-2 ring-white">
+          AP
+        </div>
+<div class="overflow-hidden">
+<h4 class="text-xs font-bold text-slate-900 truncate">Admin Pausas</h4>
+<p class="text-[11px] text-slate-500 truncate">admin@activate.pe</p>
+</div>
+</div>
+<button class="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Cerrar sesión" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line>
+</svg>
+</button>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-y-auto" data-purpose="primary-workspace">
+<!-- BEGIN: Header / Institutional Hero Banner -->
+<div class="px-8 lg:px-12 pt-6"><div class="flex items-center justify-between text-xs font-medium text-slate-500 mb-5"><div class="flex items-center gap-2"><span class="uppercase tracking-wider font-semibold text-slate-400">ACTIVATE</span><span class="text-slate-300">&gt;</span><span class="text-brand-600 font-semibold">Cronogramas</span></div><div class="flex items-center gap-3"><div class="relative hidden md:block"><input type="text" placeholder="Buscar en el sistema... ⌘K" class="w-64 bg-white border border-slate-200 rounded-lg text-xs py-1.5 pl-8 pr-3 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand-600"><svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div><button class="relative p-1.5 text-slate-400 hover:text-slate-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span></button></div></div><header class="relative bg-[#173a8a] text-white p-8 md:p-10 rounded-3xl overflow-hidden shadow-lg border border-blue-900/30" data-purpose="hero-banner"><div class="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6"><div class="max-w-2xl"><div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-emerald-300 border border-white/10 mb-3"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>SUPERADMINISTRADOR • Vigencia 2025</div><h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-2">Cronogramas</h1><p class="text-sm md:text-base text-blue-100/80 font-normal leading-relaxed">Franjas y frecuencia de pausas por área y turnos de colaboradores.</p></div><div class="flex items-center gap-3 shrink-0 self-start md:self-center"><button class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white hover:bg-blue-50 text-slate-900 text-sm font-bold shadow-md hover:shadow-lg transition active:scale-95" type="button"><span class="w-5 h-5 rounded-md bg-blue-100 text-brand-600 flex items-center justify-center font-bold text-sm leading-none">+</span>Nuevo Cronograma</button></div></div><div class="relative z-10 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center gap-3"><div class="relative flex-1 w-full"><svg class="w-4 h-4 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg><input class="w-full bg-white text-slate-900 text-sm pl-11 pr-4 py-3 rounded-2xl border-0 focus:ring-2 focus:ring-brand-600 shadow-sm placeholder-slate-400 font-normal" placeholder="Buscar cronograma por área, facultad o franja horaria... ⌘K" type="text"></div><div class="flex items-center gap-2.5 w-full md:w-auto shrink-0"><button class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-sm font-semibold text-white transition active:scale-95 shadow-sm flex-1 md:flex-none" type="button"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>Filtros</button><button class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-sm font-semibold text-white transition active:scale-95 shadow-sm flex-1 md:flex-none" type="button"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>Exportar</button></div></div></header></div>
+<!-- END: Header / Institutional Hero Banner -->
+<!-- BEGIN: Search Bar Overlay & KPI Cards Section -->
+<div class="px-8 lg:px-12 relative z-10 space-y-6 mt-6" data-purpose="metrics-and-filters">
+<!-- White Floating Search and Filter Toolbar -->
+
+<!-- Quick Status Navigation Tabs -->
+<div class="flex items-center justify-between border-b border-slate-200 pb-3">
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-900 text-white shadow-sm transition" type="button">
+            Todos los cronogramas (2)
+          </button>
+<button class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:bg-slate-100 transition" type="button">
+            Activos (2)
+          </button>
+<button class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:bg-slate-100 transition" type="button">
+            En pausa (0)
+          </button>
+</div>
+<span class="text-xs text-slate-400 font-medium hidden sm:inline-block">2 áreas con franjas sincronizadas</span>
+</div>
+<!-- KPI Summary Cards -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4" data-purpose="kpi-grid">
+<!-- Metric 1 -->
+<div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
+<div class="p-2.5 rounded-xl bg-blue-50 text-brand-700">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+</div>
+<div>
+<div class="text-[11px] font-semibold uppercase text-slate-400 tracking-wider">Total Cronogramas</div>
+<div class="text-base font-bold text-slate-900 leading-tight">2 registrados</div>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
+<div class="p-2.5 rounded-xl bg-emerald-50 text-emerald-600">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+</div>
+<div>
+<div class="text-[11px] font-semibold uppercase text-slate-400 tracking-wider">Horario Promedio</div>
+<div class="text-base font-bold text-slate-900 leading-tight">08:00 a.m. - 05:00 p.m.</div>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
+<div class="p-2.5 rounded-xl bg-amber-50 text-amber-600">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="m17 2 4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="m7 22-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path>
+</svg>
+</div>
+<div>
+<div class="text-[11px] font-semibold uppercase text-slate-400 tracking-wider">Frecuencia Promedio</div>
+<div class="text-base font-bold text-slate-900 leading-tight">Cada 300 - 360 min</div>
+</div>
+</div>
+<!-- Metric 4 -->
+<div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
+<div class="p-2.5 rounded-xl bg-purple-50 text-purple-600">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+</svg>
+</div>
+<div>
+<div class="text-[11px] font-semibold uppercase text-slate-400 tracking-wider">Pausas por Turno</div>
+<div class="text-base font-bold text-slate-900 leading-tight">5 - 7 min duración</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END: Search Bar Overlay & KPI Cards Section -->
+<!-- BEGIN: Main Grid of Schedules Cards -->
+<section class="px-8 lg:px-12 pt-8 pb-4" data-purpose="schedules-card-grid">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- CARD 1: Facultad de Ingeniería (Representing requested layout) -->
+<article class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group" data-purpose="schedule-card">
+<div>
+<!-- Header of Card: Title & Status -->
+<div class="flex items-start justify-between gap-4 mb-4">
+<div>
+<h3 class="text-xl font-bold text-slate-900 group-hover:text-brand-900 transition-colors">
+                  Facultad de Ingeniería
+                </h3>
+<p class="text-sm font-medium text-slate-400 mt-0.5">
+                  Sin rutina asignada • <span class="text-slate-500">Pausa libre sugerida</span>
+</p>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 border border-emerald-200/60 text-emerald-700">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Activo
+              </span>
+</div>
+<!-- Time & Frequency Specs -->
+<div class="space-y-2.5 my-6 py-4 px-4 rounded-2xl bg-slate-50/80 border border-slate-100">
+<!-- Horario -->
+<div class="flex items-center gap-2.5 text-sm font-medium text-slate-700">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span class="">Horario laboral: <strong class="text-slate-900 font-semibold">10:00 a.m. - 05:00 p.m.</strong></span>
+</div>
+<!-- Frecuencia -->
+<div class="flex items-center gap-2.5 text-sm font-medium text-slate-700">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="m17 2 4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="m7 22-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path>
+</svg>
+<span class="">Frecuencia: <strong class="text-slate-900 font-semibold">Cada 360 min</strong> (6 hrs) · <span class="text-brand-700 font-medium">5 min de pausa</span></span>
+</div>
+</div>
+<!-- Days of Week Selector Indicator -->
+<div class="mb-4">
+<label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">Días programados</label>
+<div class="flex items-center gap-2">
+<!-- Lunes (Active) -->
+<span class="w-8 h-8 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-bold text-xs flex items-center justify-center shadow-xs">L</span>
+<!-- Martes (Active) -->
+<span class="w-8 h-8 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-bold text-xs flex items-center justify-center shadow-xs">M</span>
+<!-- Miércoles (Active) -->
+<span class="w-8 h-8 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-bold text-xs flex items-center justify-center shadow-xs">M</span>
+<!-- Jueves (Active) -->
+<span class="w-8 h-8 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-bold text-xs flex items-center justify-center shadow-xs">J</span>
+<!-- Viernes (Active) -->
+<span class="w-8 h-8 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-bold text-xs flex items-center justify-center shadow-xs">V</span>
+<!-- Sábado (Inactive) -->
+<span class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 font-semibold text-xs flex items-center justify-center">S</span>
+<!-- Domingo (Inactive) -->
+<span class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 font-semibold text-xs flex items-center justify-center">D</span>
+</div>
+</div>
+</div>
+<!-- Bottom Actions Toolbar -->
+<div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
+<span class="text-xs text-slate-400 font-medium">Próxima pausa: Hoy, 4:00 p.m.</span>
+<div class="flex items-center gap-1">
+<!-- Botón Pausar/Reanudar -->
+<button class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition" title="Pausar emisión" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect height="16" width="4" x="6" y="4"></rect><rect height="16" width="4" x="14" y="4"></rect>
+</svg>
+</button>
+<!-- Botón Editar -->
+<button class="p-2 rounded-xl text-slate-400 hover:text-brand-700 hover:bg-brand-50 transition" title="Editar cronograma" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+</svg>
+</button>
+<!-- Botón Eliminar -->
+<button class="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" title="Eliminar cronograma" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- CARD 2: Administración Central (Balanced companion card) -->
+<article class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group" data-purpose="schedule-card">
+<div>
+<!-- Header of Card -->
+<div class="flex items-start justify-between gap-4 mb-4">
+<div>
+<h3 class="text-xl font-bold text-slate-900 group-hover:text-brand-900 transition-colors">
+                  Administración Central
+                </h3>
+<p class="text-sm font-medium text-slate-400 mt-0.5">
+                  Rutina asignada: <span class="font-semibold text-brand-700">Pausa Ergo-Visual</span>
+</p>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 border border-emerald-200/60 text-emerald-700">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Activo
+              </span>
+</div>
+<!-- Time & Frequency Specs -->
+<div class="space-y-2.5 my-6 py-4 px-4 rounded-2xl bg-slate-50/80 border border-slate-100">
+<!-- Horario -->
+<div class="flex items-center gap-2.5 text-sm font-medium text-slate-700">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span class="">Horario laboral: <strong class="text-slate-900 font-semibold">08:00 a.m. - 04:00 p.m.</strong></span>
+</div>
+<!-- Frecuencia -->
+<div class="flex items-center gap-2.5 text-sm font-medium text-slate-700">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="m17 2 4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="m7 22-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path>
+</svg>
+<span class="">Frecuencia: <strong class="text-slate-900 font-semibold">Cada 240 min</strong> (4 hrs) · <span class="text-brand-700 font-medium">7 min de pausa</span></span>
+</div>
+</div>
+<!-- Days of Week Selector Indicator -->
+<div class="mb-4">
+<label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">Días programados</label>
+<div class="flex items-center gap-2">
+<!-- Lunes -->
+<span class="w-8 h-8 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-bold text-xs flex items-center justify-center shadow-xs">L</span>
+<!-- Martes -->
+<span class="w-8 h-8 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-bold text-xs flex items-center justify-center shadow-xs">M</span>
+<!-- Miércoles -->
+<span class="w-8 h-8 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-bold text-xs flex items-center justify-center shadow-xs">M</span>
+<!-- Jueves -->
+<span class="w-8 h-8 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-bold text-xs flex items-center justify-center shadow-xs">J</span>
+<!-- Viernes -->
+<span class="w-8 h-8 rounded-full bg-brand-50 border border-brand-200 text-brand-900 font-bold text-xs flex items-center justify-center shadow-xs">V</span>
+<!-- Sábado -->
+<span class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 font-semibold text-xs flex items-center justify-center">S</span>
+<!-- Domingo -->
+<span class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 font-semibold text-xs flex items-center justify-center">D</span>
+</div>
+</div>
+</div>
+<!-- Bottom Actions Toolbar -->
+<div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
+<span class="text-xs text-slate-400 font-medium">Próxima pausa: Mañana, 11:30 a.m.</span>
+<div class="flex items-center gap-1">
+<!-- Botón Pausar/Reanudar -->
+<button class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition" title="Pausar emisión" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect height="16" width="4" x="6" y="4"></rect><rect height="16" width="4" x="14" y="4"></rect>
+</svg>
+</button>
+<!-- Botón Editar -->
+<button class="p-2 rounded-xl text-slate-400 hover:text-brand-700 hover:bg-brand-50 transition" title="Editar cronograma" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+</svg>
+</button>
+<!-- Botón Eliminar -->
+<button class="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" title="Eliminar cronograma" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- END: Main Grid of Schedules Cards -->
+<!-- BEGIN: Recent Broadcast Events Section -->
+<section class="px-8 lg:px-12 py-6" data-purpose="recent-events-log">
+<div class="bg-white rounded-3xl p-6 lg:p-7 border border-slate-200/90 shadow-sm">
+<!-- Header of Audit Events Card -->
+<div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+<div class="flex items-center gap-3">
+<div class="p-2.5 rounded-xl bg-blue-50 text-brand-800">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+</svg>
+</div>
+<div>
+<h2 class="text-lg font-bold text-slate-900 tracking-tight">Últimos eventos emitidos</h2>
+<p class="text-xs text-slate-400 font-medium">Registro de auditoría y despachos automáticos en tiempo real</p>
+</div>
+</div>
+<a class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 hover:text-brand-900 hover:underline" href="#">
+            Ver historial completo
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+</a>
+</div>
+<!-- Event Rows -->
+<div class="space-y-3">
+<!-- Event 1 (Corresponding to Original image snapshot) -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-slate-50/70 border border-slate-100 hover:bg-slate-50 transition-colors gap-3">
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1.5 sm:mt-0 ring-4 ring-emerald-100"></div>
+<div>
+<h4 class="text-sm font-bold text-slate-900">Facultad de Ingeniería</h4>
+<p class="text-xs font-medium text-slate-500">Pausa libre · Notificación push enviada a 12 participantes activos</p>
+</div>
+</div>
+<div class="flex items-center gap-3 self-end sm:self-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 border border-blue-100 text-brand-800">
+<svg class="w-3 h-3 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                1/10/26, 4:00 p. m.
+              </span>
+<span class="text-xs font-semibold text-emerald-600 hidden md:inline-flex items-center gap-1">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Emitido con éxito
+              </span>
+</div>
+</div>
+<!-- Event 2 -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-slate-50/70 border border-slate-100 hover:bg-slate-50 transition-colors gap-3">
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="w-2.5 h-2.5 rounded-full bg-blue-500 mt-1.5 sm:mt-0 ring-4 ring-blue-100"></div>
+<div>
+<h4 class="text-sm font-bold text-slate-900">Administración Central</h4>
+<p class="text-xs font-medium text-slate-500">Pausa Ergo-Visual · Completada por el 88% del personal de área</p>
+</div>
+</div>
+<div class="flex items-center gap-3 self-end sm:self-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 border border-blue-100 text-brand-800">
+<svg class="w-3 h-3 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Hoy, 11:30 a. m.
+              </span>
+<span class="text-xs font-semibold text-brand-700 hidden md:inline-flex items-center gap-1">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Completado
+              </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Recent Broadcast Events Section -->
+<!-- BEGIN: Footer -->
+<footer class="mt-auto px-8 lg:px-12 py-6 border-t border-slate-200/80 bg-white flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-slate-400" data-purpose="dashboard-footer">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="">Mostrando 2 cronogramas configurados institucionalmente</span>
+</div>
+<p class="">© 2025 ACTIVATE Pausas Saludables • Sistema Integrado de Bienestar Institucional</p>
+</footer>
+<!-- END: Footer -->
+</main>
+<!-- END: Main Content Area -->
+
+
+
+
+
+
+</body></html>

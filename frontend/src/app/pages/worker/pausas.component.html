@@ -1,71 +1,115 @@
-<section class="page">
-  <header class="hero">
-    <h1>Mis pausas</h1>
-    <p>
-      <app-icon name="building" [size]="16" />
-      Jornada: {{ pausas.jornada() }}
-    </p>
+<main class="w-full">
+
+  <!-- ══ BANNER ══ -->
+  <header class="relative overflow-hidden bg-gradient-to-br from-brand-navy via-brand-900 to-brand-800 text-white px-5 lg:px-8 pt-7 pb-16 lg:pt-9 lg:pb-20">
+    <div class="absolute -right-16 -top-24 w-72 h-72 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-12 bottom-0 w-56 h-56 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="max-w-2xl lg:max-w-6xl mx-auto relative z-10">
+      <h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight">Mis pausas</h1>
+      <p class="mt-2 text-sm text-blue-100/85 flex items-center gap-1.5">
+        <svg class="w-4 h-4 text-blue-300/70 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+        Jornada: {{ pausas.jornada() }}
+      </p>
+    </div>
   </header>
 
-  <div class="wrap">
-    <article class="card summary">
-      <div>
-        <small>Cumplimiento de hoy</small>
-        <div class="row">
-          <b>{{ pausas.compliance() }}%</b>
-          <div class="bar"><i [style.width.%]="pausas.compliance()"></i></div>
-        </div>
-        <em>{{ pausas.completedCount() }} de {{ pausas.totalActive() }} pausas</em>
+  <!-- ══ CUERPO ══ -->
+  <div class="max-w-2xl lg:max-w-6xl mx-auto px-5 lg:px-8 -mt-8 space-y-4 relative z-10 pb-4 lg:pb-10">
+
+    <!-- Cumplimiento de hoy -->
+    <div class="flex items-center gap-4 rounded-2xl bg-white border border-slate-100 p-5 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+      <div class="shrink-0 text-center">
+        <p class="text-3xl font-extrabold text-brand-800 leading-none">{{ pausas.compliance() }}%</p>
+        <p class="text-[11px] font-semibold text-slate-500 mt-1.5">cumplido</p>
       </div>
-      <a class="btn-ghost" routerLink="/app/pausas/historial">
-        <app-icon name="calendar" [size]="16" />
+      <div class="flex-1 min-w-0">
+        <div class="h-2.5 rounded-full bg-brand-50 overflow-hidden ring-1 ring-brand-100">
+          <div class="h-full rounded-full bg-gradient-to-r from-brand-600 to-brand-800 transition-all duration-500"
+            [style.width.%]="pausas.compliance()"></div>
+        </div>
+        <p class="mt-2 text-xs text-slate-500">
+          {{ pausas.completedCount() }} de {{ pausas.totalActive() }} pausas completadas hoy
+        </p>
+      </div>
+      <a routerLink="/app/pausas/historial"
+        class="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-50 text-brand-700 ring-1 ring-brand-100 text-xs font-bold hover:bg-brand-100 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M8 2v3M16 2v3M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
         Historial
       </a>
-    </article>
+    </div>
 
     @if (pausas.error()) {
-      <p class="alert alert-error">{{ pausas.error() }}</p>
+      <p class="rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-sm font-semibold px-4 py-3">
+        {{ pausas.error() }}
+      </p>
     }
 
+    <!-- Línea de tiempo: en escritorio los periodos se reparten en dos columnas -->
+    <div class="grid gap-4 lg:grid-cols-2 lg:items-start lg:gap-6">
     @for (period of periods; track period) {
       @if (byPeriod(period).length) {
-        <p class="period">{{ period }}</p>
-        <div class="timeline">
+        <p class="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 pt-2">{{ period }}</p>
+        <div class="timeline space-y-3">
           @for (pause of byPeriod(period); track pause.id) {
-            <article class="item" [class]="tone(pause)">
-              <span class="dot"></span>
-              <div class="content">
-                <div>
-                  <small>{{ time(pause.time) }}</small>
-                  <h2>{{ pause.title }}</h2>
-                  @if (pause.subtitle) {
-                    <p>{{ pause.subtitle }}</p>
-                  }
+            <article class="timeline-item relative pl-7" [class]="tone(pause)">
+              <span class="timeline-dot absolute left-0 top-5 w-3.5 h-3.5 rounded-full border-2"></span>
+
+              <div class="tl-card rounded-2xl border p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <p class="text-[11px] font-bold text-slate-400">{{ time(pause.time) }}</p>
+                    <h2 class="mt-0.5 text-base font-extrabold text-slate-900 tracking-tight leading-tight">
+                      {{ pause.title }}
+                    </h2>
+                    @if (pause.subtitle) {
+                      <p class="mt-1 text-xs text-slate-500 leading-relaxed">{{ pause.subtitle }}</p>
+                    }
+                  </div>
+                  <span class="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1" [class]="badgeTone(pause)">
+                    {{ badge(pause) }}
+                  </span>
                 </div>
-                <span class="badge">{{ badge(pause) }}</span>
+
+                @if (pause.kind === 'active' && (pause.status === 'pending' || pause.status === 'postponed')) {
+                  <a [routerLink]="['/app/pausas/ejecutar', pause.routineId ?? 'libre']"
+                    [queryParams]="{ slot: pause.scheduledAt, pausaId: pause.pausaId }"
+                    class="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand-800 hover:bg-brand-900 text-white text-xs font-bold transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M6.3 3.4A1 1 0 005 4.2v11.6a1 1 0 001.5.9l9.2-5.8a1 1 0 000-1.7L6.3 3.4z"></path>
+                    </svg>
+                    Iniciar ahora
+                  </a>
+                }
               </div>
-              @if (pause.kind === 'active' && (pause.status === 'pending' || pause.status === 'postponed')) {
-                <a
-                  [routerLink]="['/app/pausas/ejecutar', pause.routineId ?? 'libre']"
-                  [queryParams]="{ slot: pause.scheduledAt, pausaId: pause.pausaId }"
-                >
-                  Iniciar ahora
-                </a>
-              }
             </article>
           }
         </div>
       }
     }
+    </div>
 
     @if (pausas.loaded() && !pausas.pauses().length) {
-      <article class="card empty-card">
-        <p>No tienes pausas programadas para hoy.</p>
-        <a class="btn-pill" routerLink="/app/rutinas">
-          <app-icon name="activity" [size]="16" />
+      <div class="rounded-2xl bg-white border border-slate-100 p-6 text-center shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)] max-w-xl mx-auto">
+        <span class="inline-grid place-items-center w-14 h-14 rounded-2xl bg-brand-50 text-brand-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M8 2v3M16 2v3M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+          </svg>
+        </span>
+        <p class="mt-3 text-sm font-bold text-slate-900">No tienes pausas programadas para hoy.</p>
+        <p class="mt-1 text-xs text-slate-500">Puedes hacer una pausa libre en cualquier momento.</p>
+        <a routerLink="/app/rutinas"
+          class="mt-4 inline-flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl bg-brand-800 hover:bg-brand-900 text-white text-sm font-bold transition-colors shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+          </svg>
           Hacer una pausa libre
         </a>
-      </article>
+      </div>
     }
   </div>
-</section>
+</main>

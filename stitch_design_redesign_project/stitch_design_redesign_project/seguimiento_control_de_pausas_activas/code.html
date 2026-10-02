@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-50" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Seguimiento - ACTIVATE Pausas Saludables</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              850: '#172554',
+              900: '#1e3a8a',
+              950: '#0f172a',
+            },
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom CSS for specific subtle styling and scrollbar polish -->
+<style data-purpose="custom-enhancements">
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .smooth-shadow {
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+    }
+  </style>
+</head>
+<body class="h-full flex overflow-hidden text-slate-800 antialiased font-sans">
+<!-- BEGIN: Sidebar -->
+<aside class="w-64 bg-white border-r border-slate-200/80 flex flex-col flex-shrink-0 z-30 transition-all duration-300">
+<!-- Brand / Logo Area -->
+<div class="h-20 flex items-center px-6 border-b border-slate-100 gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-sky-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+<!-- Stylized Power / Activate Icon -->
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 2v10M18.4 6.6a9 9 0 11-12.8 0" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="text-base font-extrabold tracking-tight text-slate-900 leading-tight">ACTIVATE</span>
+<span class="text-[10px] font-semibold tracking-wider text-blue-600 uppercase">Pausas Saludables</span>
+</div>
+</div>
+<!-- Navigation Items -->
+<div class="flex-1 overflow-y-auto px-4 py-5 space-y-6">
+<!-- Section: Operaciones -->
+<div>
+<span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Menú Principal</span>
+<nav class="mt-2 space-y-1">
+<!-- Inicio -->
+<a class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-5 h-5 mr-3 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Inicio
+          </a>
+<!-- Trabajadores -->
+<a class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-5 h-5 mr-3 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Trabajadores
+          </a>
+<!-- Seguimiento (ACTIVE ITEM) -->
+<a class="group flex items-center px-3 py-2.5 text-sm font-semibold rounded-xl text-blue-700 bg-blue-50/90 shadow-sm border border-blue-100/60 transition-all" href="#">
+<svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Seguimiento
+          </a>
+<!-- Áreas -->
+<a class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-5 h-5 mr-3 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Áreas
+          </a>
+<!-- Rutinas -->
+<a class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-5 h-5 mr-3 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Rutinas
+          </a>
+<!-- Cronogramas -->
+<a class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-5 h-5 mr-3 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Cronogramas
+          </a>
+<!-- Pausas -->
+<a class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-5 h-5 mr-3 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Pausas
+          </a>
+</nav>
+</div>
+<!-- Section: Sistema -->
+<div>
+<span class="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sistema</span>
+<nav class="mt-2 space-y-1">
+<!-- Configuración -->
+<a class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-5 h-5 mr-3 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Configuración
+          </a>
+<!-- Privacidad -->
+<a class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-5 h-5 mr-3 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Privacidad
+          </a>
+<!-- Perfil -->
+<a class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-5 h-5 mr-3 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Perfil
+          </a>
+</nav>
+</div>
+</div>
+<!-- Sidebar Bottom: Admin Profile -->
+<div class="p-4 border-t border-slate-100 bg-slate-50/50">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="relative w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-inner">
+            AP
+            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white"></span>
+</div>
+<div class="flex flex-col truncate">
+<span class="text-xs font-bold text-slate-900 truncate">Admin Pausas</span>
+<span class="text-[11px] text-slate-500 truncate">admin@pausas.com</span>
+</div>
+</div>
+<button class="text-slate-400 hover:text-rose-600 transition-colors p-1.5 rounded-lg hover:bg-white" title="Cerrar Sesión">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: Main Area -->
+<div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+<!-- BEGIN: Header Institutional Banner -->
+<header class="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 text-white pt-7 pb-10 px-8 relative shadow-lg">
+<div class="max-w-7xl mx-auto flex flex-col gap-6">
+<!-- Top row: Breadcrumb and System Status -->
+<div class="flex items-center justify-between">
+<nav class="flex items-center space-x-2 text-xs font-medium text-blue-200/80">
+<a class="hover:text-white transition-colors" href="#">Panel General</a>
+<svg class="w-3.5 h-3.5 text-blue-300/60" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-white font-semibold">Seguimiento</span>
+</nav>
+<!-- Status badge -->
+<div class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-xs font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span>Superadministrador</span>
+</div>
+</div>
+<!-- Title & Search Bar Area -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-5">
+<div>
+<h1 class="text-3xl font-extrabold tracking-tight text-white">Seguimiento</h1>
+<p class="mt-1 text-sm text-blue-100/80 max-w-xl">
+              Supervisión en tiempo real del cumplimiento de pausas activas por colaborador y área institucional.
+            </p>
+</div>
+<!-- Quick Action Buttons: Export -->
+<div class="flex items-center gap-3">
+<button class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm border border-white/15 transition-all">
+<svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Exportar Reporte
+            </button>
+</div>
+</div>
+<!-- Integrated Search Bar -->
+<div class="mt-2 relative max-w-3xl">
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<input class="w-full pl-11 pr-20 py-3.5 bg-white rounded-2xl text-slate-900 placeholder-slate-400 text-sm font-medium shadow-xl shadow-black/10 focus:outline-none focus:ring-4 focus:ring-blue-400/30 transition-all border-none" placeholder="Buscar trabajador o área..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+<kbd class="inline-flex items-center border border-slate-200 rounded-lg px-2 py-0.5 text-[11px] font-semibold text-slate-400 bg-slate-50">
+                ⌘K
+              </kbd>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: Header Institutional Banner -->
+<!-- BEGIN: Main Body Content -->
+<main class="flex-1 px-8 py-8 max-w-7xl w-full mx-auto space-y-6">
+<!-- Navigation Pills & Quick Filter Controls -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+<!-- Pills -->
+<div class="inline-flex p-1 bg-slate-200/70 rounded-xl space-x-1" data-purpose="tab-filter-container">
+<button class="px-4 py-1.5 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition-all flex items-center gap-1.5">
+            Todos
+            <span class="bg-blue-100 text-blue-700 px-1.5 py-0.2 rounded-full text-[10px]">1</span>
+</button>
+<button class="px-4 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5">
+            Al día
+            <span class="bg-slate-300/60 text-slate-600 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+</button>
+<button class="px-4 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5">
+            Pendientes
+            <span class="bg-rose-100 text-rose-700 px-1.5 py-0.2 rounded-full text-[10px]">1</span>
+</button>
+</div>
+<!-- Filter by date or department indicator -->
+<div class="flex items-center gap-2 text-xs text-slate-500 font-medium bg-white px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-xs">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span>Jornada de hoy: <strong class="text-slate-700">Facultad de Ingeniería</strong></span>
+</div>
+</div>
+<!-- BEGIN: Metric Summary Cards -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-4" data-purpose="metrics-summary">
+<!-- Total Card -->
+<div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:border-blue-200 transition-all">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Colaboradores</span>
+<span class="p-2 rounded-xl bg-blue-50 text-blue-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="text-3xl font-extrabold text-slate-900 tracking-tight">1</span>
+<span class="text-xs text-slate-500 font-medium">Asignados activos</span>
+</div>
+</div>
+<!-- Al Día Card -->
+<div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:border-emerald-200 transition-all">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Completadas (Al día)</span>
+<span class="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="text-3xl font-extrabold text-slate-900 tracking-tight">0</span>
+<span class="text-xs text-slate-400 font-medium">0% meta diaria</span>
+</div>
+</div>
+<!-- Pendientes Card -->
+<div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:border-rose-200 transition-all">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Pausas Pendientes</span>
+<span class="p-2 rounded-xl bg-rose-50 text-rose-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="text-3xl font-extrabold text-rose-600 tracking-tight">1</span>
+<span class="text-xs text-rose-500 font-medium">Requiere seguimiento</span>
+</div>
+</div>
+</section>
+<!-- END: Metric Summary Cards -->
+<!-- BEGIN: Worker Card Grid / List -->
+<section class="space-y-4" data-purpose="workers-list-container">
+<!-- Worker Card 1 (Maria Rodriguez) -->
+<article class="bg-white rounded-2xl border border-slate-200/90 p-6 smooth-shadow hover:shadow-md transition-shadow relative overflow-hidden">
+<!-- Left color accent bar for status -->
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-rose-500"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<!-- Left Info: Avatar + Details -->
+<div class="flex items-center gap-4">
+<!-- Avatar Circle -->
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-slate-800 to-slate-700 flex items-center justify-center text-white shadow-sm ring-4 ring-slate-50">
+<svg class="w-8 h-8 text-slate-200" fill="currentColor" viewbox="0 0 24 24">
+<path clip-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 bg-rose-500 border-2 border-white rounded-full flex items-center justify-center" title="Pendiente"></span>
+</div>
+<!-- Name & Meta -->
+<div>
+<div class="flex items-center gap-3">
+<h3 class="text-base font-bold text-slate-900 tracking-tight">Maria Rodriguez</h3>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-100">
+                    Pendiente
+                  </span>
+</div>
+<p class="text-xs font-medium text-slate-500 mt-1 flex items-center gap-2">
+<span class="text-slate-700 font-semibold">Facultad de Ingeniería</span>
+<span>•</span>
+<span>Hoy 0/0 completadas</span>
+</p>
+</div>
+</div>
+<!-- Middle: Visual Progress Bar -->
+<div class="flex-1 max-w-md w-full px-0 md:px-6">
+<div class="flex items-center justify-between text-xs font-semibold mb-1.5">
+<span class="text-slate-500">Progreso del día</span>
+<span class="text-slate-800 font-bold">0%</span>
+</div>
+<div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+<div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+</div>
+</div>
+<!-- Right: Action Button -->
+<div class="flex items-center justify-end">
+<button class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-50/70 hover:bg-blue-100/80 text-blue-700 text-xs font-bold rounded-xl border border-blue-200/60 shadow-xs transition-all duration-200 active:scale-95" type="button">
+<svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                Ver detalle
+              </button>
+</div>
+</div>
+</article>
+</section>
+<!-- END: Worker Card Grid / List -->
+</main>
+<!-- END: Main Body Content -->
+<!-- BEGIN: Footer -->
+<footer class="mt-auto border-t border-slate-200/80 bg-white py-4 px-8 text-xs text-slate-500">
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 font-medium">
+<div class="flex items-center gap-2 text-slate-600">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Mostrando <strong>1</strong> de <strong>1</strong> trabajadores registrados</span>
+</div>
+<div class="text-slate-400">
+          © 2025 <span class="text-slate-600 font-semibold">ACTIVATE Pausas Saludables</span> • Sistema Integrado de Bienestar
+        </div>
+</div>
+</footer>
+<!-- END: Footer -->
+</div>
+<!-- END: Main Area -->
+</body></html>

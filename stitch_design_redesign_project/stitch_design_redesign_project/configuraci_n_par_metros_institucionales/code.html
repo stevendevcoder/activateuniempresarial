@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#f4f6fc]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Configuración - ACTIVATE Pausas Saludables</title>
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN with Forms Plugin -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Manrope', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef3ff',
+              100: '#dce6ff',
+              200: '#bfd2fe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#162f6d',
+              950: '#0f1f4b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="custom-scrollbars">
+    /* Custom sleek scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="h-full font-sans text-slate-800 antialiased flex overflow-hidden">
+<!-- BEGIN: Sidebar -->
+<aside class="w-64 bg-white border-r border-slate-200/80 flex flex-col justify-between shrink-0 select-none z-20">
+<div class="p-5 flex flex-col h-full overflow-y-auto">
+<!-- Logo ACTIVATE -->
+<div class="flex items-center gap-3 px-2 py-1 mb-6">
+<div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-900 via-brand-700 to-blue-500 flex items-center justify-center shadow-md shadow-brand-900/15">
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-brand-900 font-extrabold text-base tracking-tight">ACTIVATE</span>
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+</div>
+<p class="text-[10px] font-semibold text-slate-400 tracking-wider uppercase">Pausas Saludables</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="space-y-1 text-sm font-medium">
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-brand-900 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="7" rx="1" width="7" x="3" y="3"></rect><rect height="7" rx="1" width="7" x="14" y="3"></rect><rect height="7" rx="1" width="7" x="14" y="14"></rect><rect height="7" rx="1" width="7" x="3" y="14"></rect></svg>
+<span>Inicio</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-brand-900 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+<span>Trabajadores</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-brand-900 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 20V10"></path><path d="M18 20V4"></path><path d="M6 20v-4"></path></svg>
+<span>Seguimiento</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-brand-900 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+<span>Áreas</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-brand-900 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="m12 12 4 10 1.7-4.3L22 16Z"></path></svg>
+<span>Rutinas</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-brand-900 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+<span>Cronogramas</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-brand-900 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+<span>Pausas</span>
+</a>
+<!-- Section Label -->
+<div class="pt-5 pb-2 px-3">
+<p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Sistema</p>
+</div>
+<!-- Active Item: Configuración -->
+<a class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-brand-50/90 text-brand-900 font-bold border border-brand-100 shadow-sm transition-colors" href="#">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4 text-brand-700" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+<span>Configuración</span>
+</div>
+<span class="w-1.5 h-4 rounded-full bg-brand-700"></span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-brand-900 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path></svg>
+<span>Privacidad</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-brand-900 hover:bg-slate-50 transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 1 0-16 0"></path></svg>
+<span>Perfil</span>
+</a>
+</nav>
+<!-- Sidebar User Profile Footer Card -->
+<div class="mt-auto pt-4">
+<div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between gap-3">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-brand-900 text-white font-bold flex items-center justify-center shrink-0 text-xs shadow-inner">
+              AP
+            </div>
+<div class="min-w-0">
+<p class="text-xs font-bold text-slate-800 truncate leading-tight">Admin Pausas</p>
+<p class="text-[11px] text-slate-400 truncate leading-tight mt-0.5">admin@activate.pe</p>
+</div>
+</div>
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-white transition-colors" title="Cerrar sesión">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
+</button>
+</div>
+</div>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: Main Area -->
+<div class="flex-1 flex flex-col h-full overflow-hidden bg-[#f8f9ff]">
+<!-- BEGIN: TopBar Header -->
+<header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/70 px-8 flex items-center justify-between shrink-0 z-10">
+<!-- Breadcrumb -->
+<div class="flex items-center gap-2 text-xs font-semibold text-slate-400 tracking-wide uppercase">
+<span class="hover:text-slate-600 transition-colors cursor-pointer">ACTIVATE</span>
+<svg class="w-3.5 h-3.5 text-slate-300" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+<span class="text-brand-900 font-bold">Configuración</span>
+</div>
+<!-- Quick Search & Notification Area -->
+<div class="flex items-center gap-4">
+<!-- Search bar -->
+<div class="relative w-80">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+</div>
+<input class="w-full pl-9 pr-12 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all text-slate-700 placeholder-slate-400" placeholder="Buscar en el sistema..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+<kbd class="px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-white border border-slate-200 rounded shadow-xs">⌘K</kbd>
+</div>
+</div>
+<!-- Notification bell with online indicator -->
+<div class="flex items-center gap-3 pl-2 border-l border-slate-200">
+<button class="relative p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-white"></span>
+</button>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="text-[11px] font-semibold text-emerald-700">En línea</span>
+</div>
+</div>
+</div>
+</header>
+<!-- END: TopBar Header -->
+<!-- BEGIN: Scrollable Content Container -->
+<main class="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+<!-- BEGIN: Hero Banner Section -->
+<section class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#162f6d] via-[#1a3882] to-[#1e40af] p-8 text-white shadow-xl shadow-brand-900/10">
+<!-- Abstract circular background deco lines -->
+<div class="absolute -right-16 -top-16 w-80 h-80 rounded-full border border-white/10 pointer-events-none"></div>
+<div class="absolute -right-32 -top-32 w-112 h-112 rounded-full border border-white/5 pointer-events-none"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="space-y-2">
+<!-- Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold tracking-wide">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              SUPERADMINISTRADOR • Vigencia 2025
+            </div>
+<h1 class="text-3xl font-extrabold tracking-tight text-white drop-shadow-sm">
+              Configuración
+            </h1>
+<p class="text-blue-100/90 text-sm max-w-2xl font-normal leading-relaxed">
+              Parámetros institucionales del programa, horarios de pausas y calendario de días no laborales.
+            </p>
+</div>
+<!-- Hero Action Buttons -->
+<div class="flex items-center gap-3 shrink-0">
+<button class="flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold border border-white/15 backdrop-blur-sm transition-all shadow-sm">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 21h5v-5"></path></svg>
+<span>Restaurar Valores</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2.5 bg-white text-brand-900 hover:bg-blue-50 rounded-xl text-xs font-extrabold transition-all shadow-lg shadow-black/10">
+<svg class="w-4 h-4 text-brand-700" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+<span>Nueva Regla Institucional</span>
+</button>
+</div>
+</div>
+</section>
+<!-- END: Hero Banner Section -->
+<!-- BEGIN: Settings Dual Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pb-8">
+<!-- BEGIN: Left Column - Parámetros Generales -->
+<section class="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-sm relative flex flex-col justify-between">
+<div>
+<!-- Card Header -->
+<div class="flex items-start justify-between mb-6">
+<div>
+<h2 class="text-lg font-extrabold text-slate-800 tracking-tight">Parámetros generales</h2>
+<p class="text-xs text-slate-400 font-medium mt-0.5">Aplican a todas las áreas e instalaciones del programa</p>
+</div>
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-brand-700 flex items-center justify-center shrink-0">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+<circle cx="12" cy="12" r="3"></circle>
+</svg>
+</div>
+</div>
+<!-- Form Content -->
+<form class="space-y-5" onsubmit="event.preventDefault();">
+<!-- Lunch Break Interval Row -->
+<div>
+<label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Franja de Almuerzo Oficial</label>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<!-- Start Lunch -->
+<div>
+<span class="block text-xs text-slate-500 font-medium mb-1">Inicio almuerzo</span>
+<div class="relative">
+<input class="w-full text-xs font-semibold text-slate-800 bg-slate-50/70 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all pr-9" type="text" value="12 : 00  PM"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+</div>
+</div>
+</div>
+<!-- End Lunch -->
+<div>
+<span class="block text-xs text-slate-500 font-medium mb-1">Fin almuerzo</span>
+<div class="relative">
+<input class="w-full text-xs font-semibold text-slate-800 bg-slate-50/70 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all pr-9" type="text" value="02 : 00  PM"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-[11px] text-brand-700 bg-brand-50/70 px-3 py-1.5 rounded-lg border border-brand-100/70">
+<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="16" y2="12"></line><line x1="12" x2="12.01" y1="8" y2="8"></line></svg>
+<span>Durante este intervalo (2 horas) quedan deshabilitadas las notificaciones sonoras.</span>
+</div>
+</div>
+<!-- Max Postpones Field -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-xs font-bold text-slate-700">Máximo de aplazamientos por pausa</label>
+<span class="text-[11px] text-slate-400 font-medium">10 min por aplazamiento</span>
+</div>
+<div class="relative">
+<input class="w-full text-xs font-semibold text-slate-800 bg-slate-50/70 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all" max="5" min="0" type="number" value="2"/>
+</div>
+</div>
+<!-- Dashboard Mode Select -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1.5">Modo del dashboard</label>
+<div class="relative">
+<select class="w-full text-xs font-semibold text-slate-800 bg-slate-50/70 border border-slate-200 rounded-xl px-3.5 py-2.5 appearance-none focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all cursor-pointer">
+<option selected="">Tiempo real (Sincronización activa)</option>
+<option>Modo Ahorro de Recursos (Cada 5 min)</option>
+<option>Manual (Solo a petición del usuario)</option>
+</select>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+</div>
+</div>
+<!-- Switch: Desktop Alerts -->
+<div class="pt-2 flex items-center justify-between p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+<div class="space-y-0.5 pr-2">
+<p class="text-xs font-bold text-slate-800">Notificaciones automáticas en escritorio</p>
+<p class="text-[11px] text-slate-400">Emitir avisos emergentes nativos en pantallas conectadas</p>
+</div>
+<!-- Interactive Toggle -->
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5.5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4.5 after:w-4.5 after:transition-all peer-checked:bg-brand-900"></div>
+</label>
+</div>
+</form>
+</div>
+<!-- Bottom Save Button -->
+<div class="mt-8 pt-4 border-t border-slate-100 flex items-center justify-end">
+<button class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-brand-900 hover:bg-brand-950 active:scale-[0.99] text-white font-bold text-xs transition-all shadow-md shadow-brand-900/20" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+<span>Guardar Cambios</span>
+</button>
+</div>
+</section>
+<!-- END: Left Column - Parámetros Generales -->
+<!-- BEGIN: Right Column - Días Festivos -->
+<section class="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+<div>
+<!-- Card Header -->
+<div class="flex items-start justify-between mb-6">
+<div>
+<h2 class="text-lg font-extrabold text-slate-800 tracking-tight">Días festivos</h2>
+<p class="text-xs text-slate-400 font-medium mt-0.5">No se programan pausas en estas fechas del calendario institucional</p>
+</div>
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-brand-700 flex items-center justify-center shrink-0">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+</div>
+</div>
+<!-- Form: Add Holiday -->
+<div class="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/70 mb-5">
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-3">
+<!-- Date input -->
+<div class="sm:col-span-5 relative">
+<input class="w-full text-xs font-medium text-slate-800 bg-white border border-slate-200 rounded-xl px-3 py-2 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all placeholder-slate-400" placeholder="dd / mm / aaaa" type="text"/>
+<div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none text-slate-400">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+</div>
+</div>
+<!-- Name input -->
+<div class="sm:col-span-7">
+<input class="w-full text-xs font-medium text-slate-800 bg-white border border-slate-200 rounded-xl px-3 py-2 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all placeholder-slate-400" placeholder="Nombre del festivo (ej. Día Cívico)" type="text"/>
+</div>
+</div>
+<!-- Options & Action row -->
+<div class="flex items-center justify-between gap-3 pt-1">
+<label class="flex items-center gap-2 cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded text-brand-700 focus:ring-brand-500/30 border-slate-300" type="checkbox"/>
+<span class="text-xs font-bold text-slate-600">Repetir anualmente</span>
+</label>
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-700/80 hover:bg-brand-800 active:scale-95 text-white font-bold text-xs transition-all shadow-sm" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+<span>Agregar</span>
+</button>
+</div>
+</div>
+<!-- List of Configured Holidays -->
+<div class="space-y-1 divide-y divide-slate-100">
+<!-- Holiday Item 1 -->
+<div class="py-3 first:pt-0 flex items-center justify-between group hover:bg-slate-50/60 px-2 rounded-xl transition-colors">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-slate-800">Año Nuevo</span>
+<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-brand-700 border border-blue-100">Anual</span>
+</div>
+<p class="text-[11px] text-slate-400 font-medium mt-0.5">1 de enero de 2026</p>
+</div>
+<button class="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all opacity-80 group-hover:opacity-100" title="Eliminar festivo">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+<!-- Holiday Item 2 -->
+<div class="py-3 flex items-center justify-between group hover:bg-slate-50/60 px-2 rounded-xl transition-colors">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-slate-800">Jueves Santo</span>
+</div>
+<p class="text-[11px] text-slate-400 font-medium mt-0.5">2 de abril de 2026</p>
+</div>
+<button class="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all opacity-80 group-hover:opacity-100" title="Eliminar festivo">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+<!-- Holiday Item 3 -->
+<div class="py-3 flex items-center justify-between group hover:bg-slate-50/60 px-2 rounded-xl transition-colors">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-slate-800">Viernes Santo</span>
+</div>
+<p class="text-[11px] text-slate-400 font-medium mt-0.5">3 de abril de 2026</p>
+</div>
+<button class="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all opacity-80 group-hover:opacity-100" title="Eliminar festivo">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+<!-- Holiday Item 4 -->
+<div class="py-3 flex items-center justify-between group hover:bg-slate-50/60 px-2 rounded-xl transition-colors">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-slate-800">Día del Trabajo</span>
+<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-brand-700 border border-blue-100">Anual</span>
+</div>
+<p class="text-[11px] text-slate-400 font-medium mt-0.5">1 de mayo de 2026</p>
+</div>
+<button class="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all opacity-80 group-hover:opacity-100" title="Eliminar festivo">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+<!-- Holiday Item 5 -->
+<div class="py-3 flex items-center justify-between group hover:bg-slate-50/60 px-2 rounded-xl transition-colors">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-slate-800">Día de la Independencia</span>
+<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-brand-700 border border-blue-100">Anual</span>
+</div>
+<p class="text-[11px] text-slate-400 font-medium mt-0.5">20 de julio de 2026</p>
+</div>
+<button class="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all opacity-80 group-hover:opacity-100" title="Eliminar festivo">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+<!-- Holiday Item 6 -->
+<div class="py-3 flex items-center justify-between group hover:bg-slate-50/60 px-2 rounded-xl transition-colors">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-slate-800">Batalla de Boyacá</span>
+<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-brand-700 border border-blue-100">Anual</span>
+</div>
+<p class="text-[11px] text-slate-400 font-medium mt-0.5">7 de agosto de 2026</p>
+</div>
+<button class="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all opacity-80 group-hover:opacity-100" title="Eliminar festivo">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Summary Indicator -->
+<div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+<span>6 días festivos configurados</span>
+<span class="flex items-center gap-1 text-brand-700 font-semibold cursor-pointer hover:underline">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+              Exportar Calendario
+            </span>
+</div>
+</section>
+<!-- END: Right Column - Días Festivos -->
+</div>
+<!-- END: Settings Dual Grid -->
+<!-- BEGIN: Footer -->
+<footer class="pt-2 pb-6 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
+<p>© 2025 ACTIVATE - Sistema Integral de Gestión de Pausas Activas Laborales • Versión 2.4.1</p>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1.5 text-slate-500">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            Todos los parámetros sincronizados
+          </span>
+<a class="hover:text-slate-600 transition-colors" href="#">Manual institucional</a>
+</div>
+</footer>
+<!-- END: Footer -->
+</main>
+<!-- END: Scrollable Content Container -->
+</div>
+<!-- END: Main Area -->
+</body></html>

@@ -6,13 +6,13 @@ import { PausasService } from '../../core/services/pausas.service';
 import { PortalService } from '../../core/services/portal.service';
 import { minutesFromTime, toMeridiem } from '../../core/utils';
 import { AchievementsComponent } from '../../shared/achievements.component';
-import { IconComponent } from '../../shared/icon.component';
+
 import { MascotaComponent } from '../../shared/mascota.component';
 import { ProgressRingComponent } from '../../shared/progress-ring.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, IconComponent, MascotaComponent, ProgressRingComponent, AchievementsComponent],
+  imports: [RouterLink, MascotaComponent, ProgressRingComponent, AchievementsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -79,11 +79,11 @@ export class HomeComponent {
   when(pause: DayPause): { label: string; tone: string } {
     const now = new Date();
     const diff = minutesFromTime(pause.time) - (now.getHours() * 60 + now.getMinutes());
-    if (pause.status === 'postponed') return { label: 'Aplazada', tone: 'chip-amber' };
-    if (diff > 60) return { label: `En ${Math.floor(diff / 60)} h ${diff % 60} min`, tone: 'chip-info' };
-    if (diff > 0) return { label: `En ${diff} minutos`, tone: 'chip-ok' };
-    if (diff > -pause.durationMin) return { label: 'Es ahora', tone: 'chip-ok' };
-    return { label: 'Pendiente', tone: 'chip-warn' };
+    if (pause.status === 'postponed') return { label: 'Aplazada', tone: 'bg-amber-50 text-amber-700 ring-amber-200' };
+    if (diff > 60) return { label: `En ${Math.floor(diff / 60)} h ${diff % 60} min`, tone: 'bg-brand-50 text-brand-700 ring-brand-100' };
+    if (diff > 0) return { label: `En ${diff} minutos`, tone: 'bg-emerald-50 text-emerald-700 ring-emerald-200' };
+    if (diff > -pause.durationMin) return { label: 'Es ahora', tone: 'bg-emerald-50 text-emerald-700 ring-emerald-200' };
+    return { label: 'Pendiente', tone: 'bg-rose-50 text-rose-600 ring-rose-200' };
   }
 
   acceptConsent(): void {

@@ -196,7 +196,7 @@ export class PausasService {
 
   readonly notifications = computed<NotificationItem[]>(() => {
     const read = new Set(this.readIds());
-    const list: Omit<NotificationItem, 'read'>[] = [];
+    const list: Omit<NotificationItem, 'read' | 'isConsent'>[] = [];
     const next = this.nextPause();
     const consent = this.consent();
     const stats = this.stats();
@@ -244,7 +244,7 @@ export class PausasService {
         time: toMeridiem(localTime(pausa.completedAt ?? pausa.scheduledAt)),
       });
     }
-    return list.map((n) => ({ ...n, read: read.has(n.id) }));
+    return list.map((n) => ({ ...n, read: read.has(n.id), isConsent: n.id === 'consent' }));
   });
 
   readonly unreadCount = computed(() => this.notifications().filter((n) => !n.read).length);
@@ -280,6 +280,16 @@ export class PausasService {
     const ids = [...new Set([...this.readIds(), ...this.notifications().map((n) => n.id)])].slice(-100);
     this.readIds.set(ids);
     localStorage.setItem(READ_KEY, JSON.stringify(ids));
+  }
+
+  /** Marca o desmarca un aviso individual. */
+  setNotificationRead(id: string, read: boolean): void {
+    const ids = new Set(this.readIds());
+    if (read) ids.delete(id);
+    else ids.add(id);
+    const next = [...ids].slice(-100);
+    this.readIds.set(next);
+    localStorage.setItem(READ_KEY, JSON.stringify(next));
   }
 
   /** Cupos (HH:mm) del cronograma para un día de la semana, excluyendo el almuerzo. */

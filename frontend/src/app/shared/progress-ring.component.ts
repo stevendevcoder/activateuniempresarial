@@ -4,13 +4,13 @@ import { Component, Input } from '@angular/core';
   selector: 'app-progress-ring',
   template: `
     <svg viewBox="0 0 100 100" aria-hidden="true">
-      <circle cx="50" cy="50" r="42" fill="none" stroke="#e5eaf7" stroke-width="10" />
+      <circle cx="50" cy="50" r="42" fill="none" stroke="#e0e7ff" stroke-width="10" />
       <circle
         cx="50"
         cy="50"
         r="42"
         fill="none"
-        stroke="#1b2f8a"
+        stroke="#1e40af"
         stroke-width="10"
         stroke-linecap="round"
         transform="rotate(-90 50 50)"
@@ -18,7 +18,7 @@ import { Component, Input } from '@angular/core';
         [attr.stroke-dashoffset]="offset"
       />
     </svg>
-    <div class="label">
+    <div class="absolute text-center">
       <b>{{ done }}/{{ total }}</b>
       <small>pausas</small>
     </div>
@@ -36,19 +36,17 @@ import { Component, Input } from '@angular/core';
       width: 100%;
       height: 100%;
     }
-    .label {
-      position: absolute;
-      text-align: center;
-    }
     b {
       display: block;
       font-size: 20px;
-      color: #1b2f8a;
       line-height: 1;
+      color: #1e40af;
+      font-weight: 800;
     }
     small {
       color: #64748b;
       font-size: 10px;
+      font-weight: 600;
     }
   `,
 })

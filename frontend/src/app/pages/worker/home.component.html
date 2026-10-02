@@ -1,122 +1,211 @@
-<section class="page home">
-  <header class="hero">
-    <div>
-      <h1>{{ auth.greeting() }}, {{ auth.firstName() }}</h1>
-      <p>Es un buen momento para cuidar de ti.</p>
+<main class="w-full">
+
+  <!-- ══ BANNER ══ -->
+  <header class="relative overflow-hidden bg-gradient-to-br from-brand-navy via-brand-900 to-brand-800 text-white px-5 lg:px-8 pt-7 pb-16 lg:pt-9 lg:pb-20">
+    <div class="absolute -right-16 -top-24 w-72 h-72 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-12 bottom-0 w-56 h-56 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="max-w-2xl lg:max-w-6xl mx-auto relative z-10">
+      <p class="text-[11px] font-bold uppercase tracking-widest text-blue-200/80">{{ auth.greeting() }}</p>
+      <h1 class="mt-1.5 text-2xl lg:text-3xl font-extrabold tracking-tight">{{ auth.firstName() }}</h1>
+      <p class="mt-2 text-sm text-blue-100/85 flex items-center gap-1.5">
+        <svg class="w-4 h-4 text-blue-300/70 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+        <span class="truncate">{{ auth.user()?.area }}</span>
+      </p>
+
+      <div class="mt-4 flex flex-wrap gap-2">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/15 text-blue-100 px-3 py-1.5 text-xs font-semibold">
+          <svg class="w-3.5 h-3.5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+          </svg>
+          {{ pausas.jornada() }}
+        </span>
+        @if (pausas.stats(); as stats) {
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/15 text-blue-100 px-3 py-1.5 text-xs font-semibold">
+            <svg class="w-3.5 h-3.5 text-amber-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2c.6 3 2.4 3.6 3.6 5.4.9 1.3 1 2.6.3 4.2 1.9-.5 3-2 3.4-4 1.7 1.8 2.7 4.4 2.7 7A10 10 0 010 14.6C0 9 4 5 8.6 2.2c-.2 2 .5 3.4 1.4 4.3.6-1.7.5-3.3 0-4.5z"></path>
+            </svg>
+            Racha: {{ stats.currentStreak }} día{{ stats.currentStreak === 1 ? '' : 's' }}
+          </span>
+        }
+      </div>
     </div>
-    <a class="bell" routerLink="/app/notificaciones" aria-label="Notificaciones">
-      <app-icon name="bell" [size]="20" />
-      @if (pausas.unreadCount() > 0) {
-        <i></i>
-      }
-    </a>
   </header>
 
-  <div class="sheet">
+  <!-- ══ CUERPO ══ -->
+  <div class="max-w-2xl lg:max-w-6xl mx-auto px-5 lg:px-8 -mt-8 space-y-4 relative z-10 pb-4 lg:pb-10">
+
     @if (pausas.consent(); as consent) {
       @if (!consent.accepted) {
-        <article class="card consent">
-          <span class="ico"><app-icon name="shield" [size]="18" /></span>
-          <div>
-            <b>Consentimiento pendiente</b>
-            <p>Autoriza el tratamiento de tus datos de cumplimiento (Ley 1581 de 2012).</p>
+        <div class="flex items-start gap-3 rounded-2xl bg-amber-50 border border-amber-200 p-4">
+          <span class="grid place-items-center w-10 h-10 rounded-xl bg-white text-amber-600 border border-amber-200 shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M12 9v4m0 4h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+          </span>
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-bold text-amber-900">Consentimiento pendiente</p>
+            <p class="text-xs text-amber-700 mt-1 leading-relaxed">
+              Autoriza el tratamiento de tus datos de cumplimiento (Ley 1581 de 2012).
+            </p>
           </div>
-          <button type="button" class="btn-ghost" (click)="acceptConsent()">Aceptar</button>
-        </article>
+          <button type="button" (click)="acceptConsent()"
+            class="shrink-0 self-center px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors">
+            Aceptar
+          </button>
+        </div>
       }
     }
 
     @if (yesterdayNote(); as note) {
-      <article class="card mood-note" [class.sad]="note.mood === 'sad'">
-        <span class="face"><app-mascota [name]="note.mood === 'happy' ? 'feliz' : 'triste'" /></span>
-        <div>
-          <b>{{ note.title }}</b>
-          <p>{{ note.text }}</p>
+      <div class="flex items-center gap-3 rounded-2xl bg-white border border-slate-100 p-4 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+        <span class="block w-11 h-12 shrink-0">
+          <app-mascota [name]="note.mood === 'happy' ? 'feliz' : 'triste'" />
+        </span>
+        <div class="min-w-0">
+          <p class="text-sm font-bold" [class]="note.mood === 'happy' ? 'text-emerald-600' : 'text-rose-500'">
+            {{ note.title }}
+          </p>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">{{ note.text }}</p>
         </div>
-      </article>
+      </div>
     }
 
+    <!-- ══ PRÓXIMA PAUSA ══ -->
     @if (pausas.nextPause(); as next) {
-      <article class="card">
-        <div class="next">
-          <div>
-            <p class="kicker">Próxima pausa</p>
-            <h2>{{ nextTitle(next) }}</h2>
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-800 to-brand-950 text-white p-5 shadow-lg shadow-brand-900/20">
+        <div class="absolute -right-10 -top-12 w-48 h-48 bg-brand-400/15 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <p class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-rose-300">Próxima pausa</p>
+            <h2 class="mt-1.5 text-xl font-extrabold tracking-tight leading-tight">{{ nextTitle(next) }}</h2>
           </div>
-          <div class="time">
-            <b>{{ hour(next.time) }}</b>
-            <small>{{ meridiem(next.time) }}</small>
+          <div class="shrink-0 text-center bg-white/10 border border-white/15 rounded-xl px-3.5 py-2">
+            <p class="text-2xl font-extrabold leading-none">{{ hour(next.time) }}</p>
+            <p class="text-[10px] font-bold uppercase tracking-wider text-blue-200 mt-1">{{ meridiem(next.time) }}</p>
           </div>
         </div>
-        <div class="chips">
-          <span class="chip chip-muted">
-            <app-icon name="clock" [size]="14" />
-            {{ next.durationMin || 5 }} minutos
+
+        <div class="relative z-10 flex flex-wrap gap-2 mt-4">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/15 px-2.5 py-1 text-[11px] font-semibold text-blue-100">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            {{ next.durationMin || 5 }} min
           </span>
-          <span class="chip" [class]="when(next).tone">{{ when(next).label }}</span>
+          <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1"
+            [class]="when(next).tone">
+            {{ when(next).label }}
+          </span>
         </div>
-        <a
-          class="btn-pill"
-          [routerLink]="['/app/pausas/ejecutar', next.routineId ?? 'libre']"
+
+        <a [routerLink]="['/app/pausas/ejecutar', next.routineId ?? 'libre']"
           [queryParams]="{ slot: next.scheduledAt, pausaId: next.pausaId }"
-        >
-          <app-icon name="play" [size]="16" />
+          class="relative z-10 mt-4 w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-white text-brand-900 text-sm font-bold hover:bg-blue-50 transition-colors shadow-sm">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M6.3 3.4A1 1 0 005 4.2v11.6a1 1 0 001.5.9l9.2-5.8a1 1 0 000-1.7L6.3 3.4z"></path>
+          </svg>
           Ver pausa
         </a>
-      </article>
+      </div>
     } @else {
-      <article class="card">
+      <div class="rounded-2xl bg-white border border-slate-100 p-5 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
         @if (!pausas.loaded()) {
-          <p class="done">Cargando tu jornada…</p>
+          <p class="text-sm font-semibold text-slate-500 text-center py-2">Cargando tu jornada…</p>
         } @else if (!pausas.schedule()) {
-          <p class="done">Tu área aún no tiene un cronograma de pausas para hoy.</p>
-          <a class="btn-pill free" routerLink="/app/rutinas">
-            <app-icon name="activity" [size]="16" />
-            Hacer una pausa libre
-          </a>
+          <div class="text-center">
+            <p class="text-sm font-bold text-slate-900">Tu área aún no tiene un cronograma de pausas para hoy.</p>
+            <p class="text-xs text-slate-500 mt-1.5">Puedes iniciar una pausa libre cuando quieras.</p>
+            <a routerLink="/app/rutinas"
+              class="mt-4 inline-flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl bg-brand-800 hover:bg-brand-900 text-white text-sm font-bold transition-colors shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+              Hacer una pausa libre
+            </a>
+          </div>
         } @else {
-          <p class="done">Completaste las pausas programadas de hoy.</p>
+          <div class="flex items-center gap-3">
+            <span class="grid place-items-center w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+            </span>
+            <div>
+              <p class="text-sm font-bold text-slate-900">Completaste las pausas programadas de hoy.</p>
+              <p class="text-xs text-slate-500 mt-1">Mañana empieza una nueva jornada.</p>
+            </div>
+          </div>
         }
-      </article>
+      </div>
     }
 
-    <article class="card">
-      <div class="progress-head">
-        <span class="today-face"><app-mascota [name]="todayMascot()" [animate]="pausas.compliance() >= 50" /></span>
-        <h3>Mi progreso de hoy</h3>
+    <!-- ══ PROGRESO + LOGROS (dos columnas en escritorio) ══ -->
+    <div class="grid gap-4 lg:grid-cols-2 lg:items-start">
+    <div class="rounded-2xl bg-white border border-slate-100 p-5 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+      <div class="flex items-center justify-between gap-3">
+        <h3 class="text-base font-extrabold text-slate-900 tracking-tight">Mi progreso de hoy</h3>
+        <span class="block w-9 h-9 shrink-0">
+          <app-mascota [name]="todayMascot()" [animate]="pausas.compliance() >= 50" />
+        </span>
       </div>
-      <div class="progress">
+
+      <div class="mt-4 flex items-center gap-5">
         <app-progress-ring [done]="pausas.completedCount()" [total]="pausas.totalActive()" />
-        <ul>
+
+        <ul class="flex-1 min-w-0 space-y-2">
           @for (goal of goals(); track goal.id) {
-            <li [class.on]="goal.status === 'completed'">
-              <span class="check" [class.on]="goal.status === 'completed'"><app-icon name="check" [size]="12" /></span>
-              {{ goalLabel(goal) }}
+            <li class="flex items-center gap-2.5 text-sm" [class]="goal.status === 'completed' ? 'text-slate-900 font-semibold' : 'text-slate-400'">
+              <span class="grid place-items-center w-5 h-5 rounded-full border-2 shrink-0 transition-colors"
+                [class]="goal.status === 'completed' ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-200 text-transparent'">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+                </svg>
+              </span>
+              <span class="truncate">{{ goalLabel(goal) }}</span>
             </li>
           } @empty {
-            <li>Sin pausas programadas hoy</li>
+            <li class="text-sm text-slate-400">Sin pausas programadas hoy</li>
           }
         </ul>
       </div>
+
       @if (pausas.stats(); as stats) {
-        <div class="streak">
-          <span class="chip chip-warn"><app-icon name="flame" [size]="14" /> Racha: {{ stats.currentStreak }} días</span>
-          <span class="chip chip-info"><app-icon name="trophy" [size]="14" /> Mejor: {{ stats.bestStreak }}</span>
+        <div class="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-2">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 text-amber-700 ring-1 ring-amber-200 px-2.5 py-1 text-[11px] font-bold">
+            Racha: {{ stats.currentStreak }} día{{ stats.currentStreak === 1 ? '' : 's' }}
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-brand-50 text-brand-700 ring-1 ring-brand-100 px-2.5 py-1 text-[11px] font-bold">
+            Mejor racha: {{ stats.bestStreak }}
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-50 text-slate-600 ring-1 ring-slate-200 px-2.5 py-1 text-[11px] font-bold">
+            Total: {{ stats.completadas }}
+          </span>
         </div>
       }
-    </article>
+    </div>
 
-    <article class="card">
-      <div class="card-head">
-        <h3>Tus logros</h3>
-        <span class="chip chip-info">{{ pausas.unlockedCount() }}/6</span>
+    <!-- ══ LOGROS ══ -->
+    <div class="rounded-2xl bg-white border border-slate-100 p-5 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+      <div class="flex items-center justify-between gap-3">
+        <h3 class="text-base font-extrabold text-slate-900 tracking-tight">Tus logros</h3>
+        <span class="rounded-full bg-brand-50 text-brand-700 ring-1 ring-brand-100 px-2.5 py-1 text-[11px] font-bold">
+          {{ pausas.unlockedCount() }}/{{ pausas.achievements().length }}
+        </span>
       </div>
-      <app-achievements [achievements]="pausas.achievements()" />
-    </article>
+      <app-achievements class="mt-4" [achievements]="pausas.achievements()" />
+    </div>
+    </div>
 
-    <article class="quote">
-      <div class="mascot"><app-mascota [name]="pausas.compliance() >= 100 ? 'feliz' : 'triste'" [animate]="true" /></div>
-      <p>“{{ motivation() }}”</p>
-    </article>
+    <!-- ══ MOTIVACIÓN ══ -->
+    <div class="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-brand-50 to-indigo-50 border border-brand-100 p-4">
+      <span class="block w-12 h-14 shrink-0">
+        <app-mascota [name]="pausas.compliance() >= 100 ? 'feliz' : 'triste'" [animate]="true" />
+      </span>
+      <p class="text-sm font-bold text-brand-900 leading-snug">“{{ motivation() }}”</p>
+    </div>
   </div>
-</section>
+</main>

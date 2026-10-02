@@ -1,113 +1,24 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Holiday } from '../../core/api.types';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { GlobalConfig, Holiday } from '../../core/api.types';
 import { AdminService } from '../../core/services/admin.service';
 import { DialogService } from '../../core/services/dialog.service';
-import { apiError } from '../../core/utils';
-import { IconComponent } from '../../shared/icon.component';
+import { apiError, downloadBlob, minutesFromTime, toMeridiem } from '../../core/utils';
+
+const DASHBOARD_MODES: { value: GlobalConfig['dashboardMode']; label: string }[] = [
+  { value: 'realtime', label: 'Tiempo real (Sincronización activa)' },
+  { value: 'batch', label: 'Modo Ahorro de Recursos (Por lote)' },
+];
+
+/** El backend no expone preferencias de escritorio, así que se guardan en el navegador. */
+const DESKTOP_NOTIFICATIONS_KEY = 'activate.admin.desktopNotifications';
 
 @Component({
   selector: 'app-configuracion',
-  imports: [DatePipe, ReactiveFormsModule, IconComponent],
-  template: `
-    <section class="page">
-      <header class="hero-navy">
-        <h1>Configuración</h1>
-        <p>Parámetros institucionales del programa</p>
-      </header>
-
-      <div class="page-body">
-        @if (message()) {
-          <p class="alert alert-ok">{{ message() }}</p>
-        }
-        @if (error()) {
-          <p class="alert alert-error">{{ error() }}</p>
-        }
-
-        <div class="grid-two">
-          <form class="card form-grid" [formGroup]="form" (ngSubmit)="save()">
-            <div class="card-head">
-              <div>
-                <h2>Parámetros generales</h2>
-                <p>Aplican a todas las áreas</p>
-              </div>
-              <span class="tile-icon"><app-icon name="settings" [size]="20" /></span>
-            </div>
-            <div class="form-field-row">
-              <label class="form-field">
-                <span>Inicio almuerzo</span>
-                <input class="input" type="time" formControlName="lunchStart" />
-              </label>
-              <label class="form-field">
-                <span>Fin almuerzo</span>
-                <input class="input" type="time" formControlName="lunchEnd" />
-              </label>
-            </div>
-            <label class="form-field">
-              <span>Máximo de aplazamientos por pausa</span>
-              <input class="input" type="number" min="0" max="10" formControlName="maxPostponements" />
-            </label>
-            <label class="form-field">
-              <span>Modo del dashboard</span>
-              <select class="input" formControlName="dashboardMode">
-                <option value="realtime">Tiempo real</option>
-                <option value="batch">Por lote</option>
-              </select>
-            </label>
-            <div class="form-actions">
-              <button type="submit" class="btn-pill" [disabled]="form.invalid || saving()">
-                <app-icon name="save" [size]="16" /> {{ saving() ? 'Guardando…' : 'Guardar' }}
-              </button>
-            </div>
-          </form>
-
-          <article class="card">
-            <div class="card-head">
-              <div>
-                <h2>Días festivos</h2>
-                <p>No se programan pausas en estas fechas</p>
-              </div>
-              <span class="tile-icon"><app-icon name="calendar" [size]="20" /></span>
-            </div>
-            <form class="holiday-form" [formGroup]="holidayForm" (ngSubmit)="addHoliday()">
-              <input class="input" type="date" formControlName="date" aria-label="Fecha" />
-              <input class="input" formControlName="name" placeholder="Nombre del festivo" />
-              <label class="check">
-                <input type="checkbox" formControlName="recurring" /> Anual
-              </label>
-              <button type="submit" class="btn-pill btn-sm" [disabled]="holidayForm.invalid">
-                <app-icon name="plus" [size]="14" /> Agregar
-              </button>
-            </form>
-            <div class="rows list">
-              @for (holiday of holidays(); track holiday.id) {
-                <div class="row-item">
-                  <div>
-                    <b>{{ holiday.name }}</b>
-                    <small>{{ holiday.date | date: 'longDate' }}{{ holiday.recurring ? ' · anual' : '' }}</small>
-                  </div>
-                  <button type="button" class="icon-btn danger" (click)="removeHoliday(holiday)" aria-label="Eliminar">
-                    <app-icon name="trash" [size]="16" />
-                  </button>
-                </div>
-              } @empty {
-                <p class="empty">No hay festivos registrados.</p>
-              }
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-  `,
-  styles: `
-    .grid-two { display: grid; gap: 14px; align-items: start; }
-    .holiday-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px 0 8px; }
-    .holiday-form .input:nth-child(2) { grid-column: span 1; }
-    .check { display: flex; align-items: center; gap: 6px; color: #475569; font-size: 13px; font-weight: 700; }
-    .list { max-height: 340px; overflow-y: auto; }
-    @media (min-width: 1000px) { .grid-two { grid-template-columns: 1fr 1fr; gap: 20px; } }
-  `,
+  imports: [DatePipe, FormsModule, ReactiveFormsModule],
+  templateUrl: './configuracion.component.html',
+  styleUrl: './configuracion.component.scss',
 })
 export class ConfiguracionComponent implements OnInit {
   private readonly admin = inject(AdminService);
@@ -115,15 +26,21 @@ export class ConfiguracionComponent implements OnInit {
   private readonly dialog = inject(DialogService);
 
   readonly holidays = signal<Holiday[]>([]);
+  readonly config = signal<GlobalConfig | null>(null);
+  readonly loading = signal(false);
   readonly saving = signal(false);
+  readonly addingHoliday = signal(false);
   readonly message = signal('');
   readonly error = signal('');
+
+  readonly dashboardModes = DASHBOARD_MODES;
 
   readonly form = this.fb.nonNullable.group({
     lunchStart: ['12:00', Validators.required],
     lunchEnd: ['14:00', Validators.required],
     maxPostponements: [2, [Validators.required, Validators.min(0), Validators.max(10)]],
-    dashboardMode: ['realtime', Validators.required],
+    dashboardMode: ['realtime' as GlobalConfig['dashboardMode'], Validators.required],
+    desktopNotifications: [this.readDesktopNotifications(), Validators.required],
   });
 
   readonly holidayForm = this.fb.nonNullable.group({
@@ -132,16 +49,57 @@ export class ConfiguracionComponent implements OnInit {
     recurring: [false],
   });
 
+  /** Duración real de la franja de almuerzo a partir de los valores del formulario. */
+  /** Espejo en signals de los dos horarios, para que los textos derivados reacconen al teclear. */
+  readonly lunchStart = signal('12:00');
+  readonly lunchEnd = signal('14:00');
+
+  readonly lunchWindow = computed(() => {
+    const start = this.lunchStart();
+    const end = this.lunchEnd();
+    if (!start || !end) return '';
+    const diff = minutesFromTime(end) - minutesFromTime(start);
+    if (diff <= 0) return 'Intervalo inválido: el fin de almuerzo debe ser posterior al inicio.';
+    if (diff === 60) return 'Durante 1 hora quedan deshabilitadas las notificaciones sonoras.';
+    const hours = diff / 60;
+    const label = Number.isInteger(hours) ? `${hours} hora${hours === 1 ? '' : 's'}` : `${hours.toFixed(1)} horas`;
+    return `Durante este intervalo (${label}) quedan deshabilitadas las notificaciones sonoras.`;
+  });
+
+  readonly lunchValid = computed(() => {
+    const start = this.lunchStart();
+    const end = this.lunchEnd();
+    return !!start && !!end && minutesFromTime(end) > minutesFromTime(start);
+  });
+
+  readonly recurringCount = computed(() => this.holidays().filter((h) => h.recurring).length);
+
+  readonly sortedHolidays = computed(() =>
+    [...this.holidays()].sort((a, b) => a.date.localeCompare(b.date)),
+  );
+
+  constructor() {
+    this.form.controls.lunchStart.valueChanges.subscribe((v) => this.lunchStart.set(v));
+    this.form.controls.lunchEnd.valueChanges.subscribe((v) => this.lunchEnd.set(v));
+  }
+
   ngOnInit(): void {
+    this.loading.set(true);
     this.admin.getConfig().subscribe({
-      next: (config) =>
+      next: (config) => {
+        this.config.set(config);
         this.form.patchValue({
           lunchStart: config.lunchStart,
           lunchEnd: config.lunchEnd,
           maxPostponements: config.maxPostponements,
           dashboardMode: config.dashboardMode,
-        }),
-      error: (err) => this.error.set(apiError(err, 'No se pudo cargar la configuración.')),
+        });
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set(apiError(err, 'No se pudo cargar la configuración.'));
+        this.loading.set(false);
+      },
     });
     this.loadHolidays();
   }
@@ -151,31 +109,64 @@ export class ConfiguracionComponent implements OnInit {
   }
 
   save(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid || !this.lunchValid()) return;
     this.saving.set(true);
     this.message.set('');
     this.error.set('');
     const raw = this.form.getRawValue();
-    this.admin.updateConfig({ ...raw, maxPostponements: Number(raw.maxPostponements) }).subscribe({
-      next: () => {
-        this.saving.set(false);
-        this.message.set('Configuración actualizada con éxito.');
-      },
-      error: (err) => {
-        this.saving.set(false);
-        this.error.set(apiError(err, 'No se pudo guardar la configuración.'));
-      },
+    this.admin
+      .updateConfig({
+        lunchStart: raw.lunchStart,
+        lunchEnd: raw.lunchEnd,
+        maxPostponements: Number(raw.maxPostponements),
+        dashboardMode: raw.dashboardMode,
+      })
+      .subscribe({
+        next: (res) => {
+          this.writeDesktopNotifications(raw.desktopNotifications);
+          this.saving.set(false);
+          this.config.set(res.config);
+          this.message.set('Parámetros guardados correctamente.');
+        },
+        error: (err) => {
+          this.saving.set(false);
+          this.error.set(apiError(err, 'No se pudo guardar la configuración.'));
+        },
+      });
+  }
+
+  /** Vuelve a los valores servidos por el backend y refresca la vista. */
+  restore(): void {
+    const config = this.config();
+    if (!config) return;
+    this.form.patchValue({
+      lunchStart: config.lunchStart,
+      lunchEnd: config.lunchEnd,
+      maxPostponements: config.maxPostponements,
+      dashboardMode: config.dashboardMode,
     });
+    this.message.set('Valores restaurados a la última configuración guardada.');
+    this.error.set('');
+  }
+
+  time(value: string): string {
+    return toMeridiem(value);
   }
 
   addHoliday(): void {
     if (this.holidayForm.invalid) return;
+    this.addingHoliday.set(true);
+    this.error.set('');
     this.admin.createHoliday(this.holidayForm.getRawValue()).subscribe({
       next: () => {
+        this.addingHoliday.set(false);
         this.holidayForm.reset({ date: '', name: '', recurring: false });
         this.loadHolidays();
       },
-      error: (err) => this.error.set(apiError(err, 'No se pudo registrar el festivo.')),
+      error: (err) => {
+        this.addingHoliday.set(false);
+        this.error.set(apiError(err, 'No se pudo registrar el festivo.'));
+      },
     });
   }
 
@@ -189,5 +180,34 @@ export class ConfiguracionComponent implements OnInit {
           error: (err) => this.error.set(apiError(err, 'No se pudo eliminar el festivo.')),
         });
       });
+  }
+
+  private readDesktopNotifications(): boolean {
+    try {
+      return localStorage.getItem(DESKTOP_NOTIFICATIONS_KEY) !== 'false';
+    } catch {
+      return true;
+    }
+  }
+
+  private writeDesktopNotifications(enabled: boolean): void {
+    try {
+      localStorage.setItem(DESKTOP_NOTIFICATIONS_KEY, String(enabled));
+    } catch {
+      /* almacenamiento no disponible: se ignora */
+    }
+  }
+
+  exportCalendar(): void {
+    const rows = this.sortedHolidays();
+    if (rows.length === 0) return;
+    const header = ['Fecha', 'Festivo', 'Repetir anualmente'];
+    const lines = rows.map((h) => [
+      h.date,
+      `"${(h.name ?? '').replace(/"/g, '""')}"`,
+      h.recurring ? 'Sí' : 'No',
+    ]);
+    const csv = '\uFEFF' + [header.join(','), ...lines].join('\n');
+    downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), 'dias-festivos.csv');
   }
 }

@@ -1,211 +1,74 @@
-.hero {
-  background: #1b2f8a;
-  color: #fff;
-  padding: 36px 20px 28px;
-}
-
-.hero h1 {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 800;
-}
-
-.hero p {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 8px 0 0;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 13px;
-}
-
-.wrap {
-  padding: 16px;
-}
-
-.summary {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.summary small,
-.item small,
-em,
-.period {
-  color: #94a3b8;
-}
-
-.summary b {
-  color: #1b2f8a;
-  font-size: 28px;
-}
-
-.row {
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-}
-
-.bar {
-  flex: 1;
-  height: 8px;
-  margin-bottom: 8px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #eef2ff;
-}
-
-.bar i {
-  display: block;
-  height: 100%;
-  background: #1b2f8a;
-}
-
-em {
-  display: block;
-  margin-top: 4px;
-  font-size: 11px;
-  font-style: normal;
-}
-
-.period {
-  margin: 8px 0 10px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-
+/* Línea de tiempo del día: conector vertical y color del punto según el estado. */
 .timeline {
-  margin: 0 0 18px 8px;
-  padding-left: 18px;
-  border-left: 2px solid #e2e8f0;
-}
-
-.item {
   position: relative;
-  margin-bottom: 12px;
-  padding: 14px;
-  border-radius: 24px;
 }
 
-.item.pending {
-  background: #fff;
-  box-shadow: 0 8px 24px rgba(27, 47, 138, 0.06);
-}
-
-.item.done {
-  background: #ecfdf3;
-}
-
-.item.lunch {
-  background: #eef2f7;
-}
-
-.dot {
+.timeline::before {
+  content: '';
   position: absolute;
-  top: 22px;
-  left: -26px;
-  width: 12px;
-  height: 12px;
-  border: 2px solid #cbd5e1;
-  border-radius: 50%;
+  left: 5px;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+
+.tl-card {
+  background: #fff;
+  border-color: #f1f5f9;
+}
+
+.timeline-dot {
+  border-color: #cbd5e1;
   background: #fff;
 }
 
-.item.done .dot {
-  border-color: #1b2f8a;
-  background: #1b2f8a;
+/* Jornada y almuerzo: hitos informativos, sin acción. */
+.timeline-item.lunch .tl-card,
+.timeline-item.start .tl-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
 }
 
-.item.lunch .dot {
+.timeline-item.lunch .timeline-dot,
+.timeline-item.start .timeline-dot {
   border-color: #94a3b8;
   background: #94a3b8;
 }
 
-.content {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
+/* Pausa completada. */
+.timeline-item.done .tl-card {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
 }
 
-h2 {
-  margin: 2px 0;
-  font-size: 16px;
+.timeline-item.done .timeline-dot {
+  border-color: #10b981;
+  background: #10b981;
 }
 
-.item p,
-.item a {
-  margin: 0;
-  font-size: 12px;
-}
-
-.item a {
-  display: inline-block;
-  margin-top: 8px;
-  color: #1b2f8a;
-  font-weight: 800;
-}
-
-.badge {
-  align-self: flex-start;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.pending .badge {
-  background: #fff1f2;
-  color: #e11d48;
-}
-
-.done .badge {
+/* Pausa pendiente: el punto marca que exige atención. */
+.timeline-item.pending .timeline-dot {
+  border-color: #e11d48;
   background: #fff;
-  color: #16a34a;
 }
 
-.lunch .badge {
-  background: #fff;
-  color: #64748b;
-}
-
-.item.cancelled {
+/* Pausa cancelada. */
+.timeline-item.cancelled .tl-card {
   background: #f8fafc;
-  opacity: 0.8;
+  border-color: #e2e8f0;
+  opacity: 0.75;
 }
 
-.cancelled .badge {
-  background: #fff;
-  color: #94a3b8;
+.timeline-item.cancelled .timeline-dot {
+  border-color: #cbd5e1;
+  background: #f8fafc;
 }
 
-.alert {
-  margin-bottom: 14px;
-}
-
-.empty-card {
-  display: grid;
-  gap: 12px;
-  text-align: center;
-}
-
-.empty-card p {
-  margin: 0;
-  color: #64748b;
-  font-weight: 700;
-}
-
-@media (min-width: 900px) {
-  .hero {
-    padding: 48px 40px 32px;
-  }
-
-  .wrap {
-    padding: 24px 40px 32px;
-    max-width: 980px;
+/* En escritorio los periodos van en columnas: el conector vertical deja de tener sentido. */
+@media (min-width: 1024px) {
+  .timeline::before {
+    display: none;
   }
 }

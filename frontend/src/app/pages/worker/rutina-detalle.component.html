@@ -1,0 +1,119 @@
+<main class="w-full">
+
+  @if (routine(); as routine) {
+    <!-- ══ BANNER ══ -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-brand-navy via-brand-900 to-brand-800 text-white px-5 lg:px-8 pt-6 pb-16 lg:pt-8 lg:pb-20">
+      <div class="absolute -right-16 -top-24 w-72 h-72 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-12 bottom-0 w-56 h-56 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="max-w-2xl lg:max-w-6xl mx-auto relative z-10">
+        <a routerLink="/app/rutinas"
+          class="inline-grid place-items-center w-9 h-9 rounded-xl bg-white/10 border border-white/15 text-white hover:bg-white/20 transition-colors"
+          aria-label="Volver a rutinas">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+          </svg>
+        </a>
+        <h1 class="mt-4 text-2xl lg:text-3xl font-extrabold tracking-tight">{{ routine.name }}</h1>
+        <p class="mt-1.5 text-sm text-blue-100/85 leading-relaxed">{{ routine.description }}</p>
+      </div>
+    </header>
+
+    <!-- ══ CUERPO ══ -->
+    <div class="max-w-2xl lg:max-w-6xl mx-auto px-5 lg:px-8 -mt-8 space-y-4 relative z-10 pb-4 lg:pb-10">
+
+      <!-- Resumen de la rutina -->
+      <div class="rounded-2xl bg-white border border-slate-100 p-5 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+        <div class="flex items-center gap-4">
+          <span class="grid place-items-center w-20 h-20 rounded-2xl shrink-0 border border-white" [style.background]="routine.tint">
+            <app-mascot [pose]="routine.pose" />
+          </span>
+
+          <div class="min-w-0 flex-1">
+            <h2 class="text-base font-extrabold text-slate-900 tracking-tight">{{ routine.exercises.length }}
+              {{ routine.exercises.length === 1 ? 'ejercicio' : 'ejercicios' }}</h2>
+            <div class="mt-2.5 flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-50 text-slate-600 ring-1 ring-slate-200 px-2.5 py-1 text-[11px] font-bold">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+                </svg>
+                {{ routine.duration }}
+              </span>
+              <span class="inline-flex items-center rounded-full bg-brand-50 text-brand-700 ring-1 ring-brand-100 px-2.5 py-1 text-[11px] font-bold">
+                {{ routine.category }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <a [routerLink]="['/app/pausas/ejecutar', routine.id]"
+          class="mt-4 w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-brand-800 hover:bg-brand-900 text-white text-sm font-bold transition-colors shadow-lg shadow-brand-900/20">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M6.3 3.4A1 1 0 005 4.2v11.6a1 1 0 001.5.9l9.2-5.8a1 1 0 000-1.7L6.3 3.4z"></path>
+          </svg>
+          Iniciar rutina
+        </a>
+      </div>
+
+      <p class="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 pt-1">Ejercicios</p>
+
+      <div class="grid gap-3 sm:grid-cols-2 lg:items-start">
+        @for (exercise of routine.exercises; track exercise.id; let i = $index) {
+          <div class="flex items-start gap-4 rounded-2xl bg-white border border-slate-100 p-4 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+            <span class="grid place-items-center w-9 h-9 rounded-xl bg-brand-50 text-brand-700 ring-1 ring-brand-100 text-xs font-extrabold shrink-0">
+              {{ i + 1 }}
+            </span>
+
+            <div class="min-w-0 flex-1">
+              <div class="flex items-start justify-between gap-3">
+                <h3 class="text-sm font-extrabold text-slate-900 tracking-tight leading-tight">{{ exercise.name }}</h3>
+                @if (exercise.videoId) {
+                  <span class="shrink-0 inline-flex items-center gap-1 rounded-full bg-rose-50 text-rose-600 ring-1 ring-rose-200 px-2 py-0.5 text-[11px] font-bold">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M4 3.5A1.5 1.5 0 015.5 2h9A1.5 1.5 0 0116 3.5v13a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 014 16.5v-13z" />
+                    </svg>
+                    Video
+                  </span>
+                }
+              </div>
+              <p class="mt-1.5 text-xs text-slate-500 leading-relaxed">{{ exercise.instruction }}</p>
+              <p class="mt-2 inline-flex items-center gap-1 rounded-full bg-slate-50 text-slate-500 px-2 py-0.5 text-[11px] font-bold">
+                {{ duration(exercise.seconds) }}
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <!-- ══ ESTADO DE CARGA / ERROR ══ -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-brand-navy via-brand-900 to-brand-800 text-white px-5 lg:px-8 pt-6 pb-16 lg:pt-8 lg:pb-20">
+      <div class="absolute -right-16 -top-24 w-72 h-72 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="max-w-2xl lg:max-w-6xl mx-auto relative z-10">
+        <a routerLink="/app/rutinas"
+          class="inline-grid place-items-center w-9 h-9 rounded-xl bg-white/10 border border-white/15 text-white hover:bg-white/20 transition-colors"
+          aria-label="Volver a rutinas">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+          </svg>
+        </a>
+        <h1 class="mt-4 text-2xl lg:text-3xl font-extrabold tracking-tight">Rutina</h1>
+      </div>
+    </header>
+
+    <div class="max-w-2xl lg:max-w-6xl mx-auto px-5 lg:px-8 -mt-8 relative z-10 pb-4 lg:pb-10">
+      <div class="rounded-2xl bg-white border border-slate-100 p-6 text-center shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)] max-w-xl mx-auto">
+        @if (loading()) {
+          <span class="inline-block w-6 h-6 rounded-full border-2 border-brand-200 border-t-brand-700 animate-spin"></span>
+          <p class="mt-3 text-sm font-semibold text-slate-500">Cargando rutina…</p>
+        } @else {
+          <p class="text-sm font-bold text-slate-900">No encontramos esta rutina.</p>
+          <a routerLink="/app/rutinas"
+            class="mt-4 inline-flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl bg-brand-800 hover:bg-brand-900 text-white text-sm font-bold transition-colors">
+            Volver a rutinas
+          </a>
+        }
+      </div>
+    </div>
+  }
+</main>

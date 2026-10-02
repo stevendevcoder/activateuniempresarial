@@ -37,7 +37,13 @@ const LABEL: Record<DayMood, string> = {
     </svg>
   `,
   styles: `
-    :host { display: inline-block; line-height: 0; }
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+      line-height: 0;
+      flex-shrink: 0;
+    }
     svg { width: 100%; height: 100%; display: block; }
   `,
 })

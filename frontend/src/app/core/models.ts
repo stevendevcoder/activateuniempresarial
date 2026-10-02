@@ -85,6 +85,9 @@ export interface NotificationItem {
   id: string;
   title: string;
   body: string;
+  /** Etiqueta contextual del aviso: "Hoy", "Logro", "Privacidad" o la hora del registro. */
   time: string;
   read: boolean;
+  /** Aviso institucional de consentimiento, no una pausa. */
+  isConsent: boolean;
 }

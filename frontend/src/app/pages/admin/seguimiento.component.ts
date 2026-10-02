@@ -4,8 +4,7 @@ import { RouterLink } from '@angular/router';
 import { UserCompliance } from '../../core/api.types';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { apiError } from '../../core/utils';
-import { AvatarComponent, avatarKind } from '../../shared/avatar.component';
-import { IconComponent } from '../../shared/icon.component';
+import { avatarKind } from '../../shared/avatar.component';
 
 /** Umbral de cumplimiento histórico para considerar a un trabajador "al día". */
 export const ON_TRACK_RATE = 80;
@@ -17,7 +16,7 @@ export function trackStatus(worker: UserCompliance): 'ok' | 'pending' {
 
 @Component({
   selector: 'app-seguimiento',
-  imports: [RouterLink, DecimalPipe, AvatarComponent, IconComponent],
+  imports: [RouterLink, DecimalPipe],
   templateUrl: './seguimiento.component.html',
   styleUrl: './seguimiento.component.scss',
 })

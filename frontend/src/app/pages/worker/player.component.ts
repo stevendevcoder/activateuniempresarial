@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
 import { PortalPause, TELEMETRY_TYPE } from '../../core/api.types';
 import { Exercise, Routine } from '../../core/models';
@@ -27,7 +27,7 @@ const FREE_ROUTINE: Routine = {
 
 @Component({
   selector: 'app-player',
-  imports: [RouterLink, FormsModule, IconComponent, MascotaComponent],
+  imports: [FormsModule, IconComponent, MascotaComponent],
   templateUrl: './player.component.html',
   styleUrl: './player.component.scss',
 })

@@ -1,0 +1,134 @@
+<main class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-slate-50">
+  <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-lg relative overflow-hidden" data-purpose="page-hero-banner">
+    <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"></div>
+    <div class="absolute right-1/3 -bottom-12 w-64 h-64 rounded-full bg-indigo-500/15 blur-2xl pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-8 lg:py-10 relative z-10">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs font-medium text-blue-200/90">
+          <span class="hover:text-white transition-colors cursor-pointer">Panel General</span>
+          <svg class="w-3.5 h-3.5 text-blue-400/80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span class="text-white font-semibold">Trabajadores</span>
+        </nav>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-200 border border-blue-400/30 backdrop-blur-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          Superadministrador
+        </div>
+      </div>
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+        <div class="space-y-1.5">
+          <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-white">Trabajadores</h1>
+          <p class="text-sm lg:text-base text-blue-100/80 font-normal">
+            Gestión centralizada de usuarios, roles institucionales y asignación de áreas.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] border border-white cursor-pointer select-none" type="button" (click)="openCreate()">
+            <svg class="w-4 h-4 text-blue-600 stroke-[2.5]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+            <span class="tracking-tight font-bold text-slate-900">Nuevo Trabajador</span>
+          </button>
+        </div>
+      </div>
+      <div class="mt-8 max-w-3xl">
+        <div class="relative flex items-center">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+            <svg class="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+          <input class="w-full pl-11 pr-4 py-3 bg-white/95 backdrop-blur-md rounded-2xl text-slate-800 placeholder-slate-400 text-sm font-medium border-0 ring-1 ring-white/40 shadow-xl shadow-slate-950/20 focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all outline-none" placeholder="Buscar por nombre, correo electrónico o área..." type="text" (input)="query.set($any($event.target).value)">
+          <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center">
+            <span class="text-[11px] font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">⌘K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-8 w-full flex-1 flex flex-col justify-between">
+    <div>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
+        <div class="flex items-center gap-1.5 p-1 bg-white border border-slate-200 rounded-xl shadow-sm">
+          <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-slate-900 shadow-sm transition-all" type="button" [class.bg-slate-900]="filter() === 'active'" (click)="filter.set('active')">Activos ({{ count('active') }})</button>
+          <button class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" type="button" [class.bg-slate-900]="filter() === 'inactive'" (click)="filter.set('inactive')">Inactivos ({{ count('inactive') }})</button>
+          <button class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" type="button" [class.bg-slate-900]="filter() === 'all'" (click)="filter.set('all')">Todos ({{ count('all') }})</button>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <div class="relative inline-block text-left">
+            <select class="bg-white border border-slate-200 text-slate-700 text-xs font-medium rounded-xl px-3 py-2 pr-8 shadow-sm hover:border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer">
+              <option selected>Todas las Áreas / Facultades</option>
+              <option>Facultad de Ingeniería</option>
+              <option>Facultad de Ciencias de la Salud</option>
+              <option>Administración Central</option>
+            </select>
+          </div>
+          <div class="relative inline-block text-left">
+            <select class="bg-white border border-slate-200 text-slate-700 text-xs font-medium rounded-xl px-3 py-2 pr-8 shadow-sm hover:border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer">
+              <option selected>Ordenar: Nombre (A-Z)</option>
+              <option>Ordenar: Recientes</option>
+              <option>Ordenar: Área</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6" data-purpose="workers-grid">
+        @for (user of filtered(); track user.id) {
+          <article class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200 p-6 flex flex-col justify-between group" [class.opacity-70]="user.status !== 1">
+            <div class="flex items-start gap-4">
+              <div class="relative flex-shrink-0">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 flex items-center justify-center text-white shadow-md shadow-slate-900/10 ring-4 ring-slate-100 group-hover:ring-blue-50 transition-all">
+                  <svg class="w-8 h-8 text-blue-200" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4.5"></circle><path d="M4 19.5C4 15.5 7.5 13 12 13s8 2.5 8 6.5V21H4v-1.5z"></path></svg>
+                </div>
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center shadow-xs">
+                  <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+                </span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-base font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors">{{ user.name }}</h3>
+                  <span class="text-[11px] font-medium text-slate-400 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">ID #{{ user.id }}</span>
+                </div>
+                <p class="text-xs text-slate-500 truncate mt-0.5 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  {{ user.email }}
+                </p>
+                <div class="flex flex-wrap items-center gap-2 mt-3.5">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold" [class]="user.roleName === 'Administrador' ? 'bg-blue-50 text-blue-700 border border-blue-100' : 'bg-slate-100 text-slate-700 border border-slate-200'">{{ user.roleName ?? 'Sin rol' }}</span>
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                    <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    {{ user.areaName ?? 'Sin área' }}
+                  </span>
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold" [class]="user.status === 1 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-700 border border-slate-200'">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    {{ user.status === 1 ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-[11px] text-slate-400">Última actividad: <strong class="font-medium text-slate-600">Hoy</strong></span>
+              <div class="flex items-center gap-1">
+                <button class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all" title="Ver detalles" (click)="openEdit(user)">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+                <button class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all" title="Editar" (click)="openEdit(user)">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+                <button class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all" title="Desactivar" (click)="deactivate(user)">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 4.243a9 9 0 01-2.828-9.9M9.879 9.879a5 5 0 00-1.414 4.95" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        } @empty {
+          <p class="text-center text-slate-500">No hay usuarios para este filtro.</p>
+        }
+      </div>
+    </div>
+    <footer class="mt-12 pt-6 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500" data-purpose="directory-footer">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+        <span>Mostrando <strong>{{ filtered().length }}</strong> de <strong>{{ users().length }}</strong> trabajadores registrados</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-slate-400">© 2026 ACTIVATE Pausas Saludables • Sistema Integrado de Bienestar</span>
+      </div>
+    </footer>
+  </div>
+</main>

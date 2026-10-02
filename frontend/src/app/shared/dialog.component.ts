@@ -7,49 +7,48 @@ import { IconComponent } from './icon.component';
   imports: [IconComponent],
   template: `
     @if (dialog.state(); as state) {
-      <div class="modal-backdrop" (click)="dialog.close(false)">
+      <div
+        class="fixed inset-0 z-[100] flex items-center justify-center p-5 bg-slate-900/50 backdrop-blur-sm"
+        (click)="dialog.close(false)"
+      >
         <div
-          class="modal dialog"
+          class="w-full max-w-md rounded-3xl bg-white p-7 text-center shadow-2xl"
           role="alertdialog"
           aria-modal="true"
           aria-labelledby="dialog-title"
           (click)="$event.stopPropagation()"
         >
-          <span class="badge" [class.danger]="state.options.danger">
-            <app-icon [name]="state.options.danger ? 'alert' : 'info'" [size]="22" />
+          <span
+            class="inline-grid place-items-center w-14 h-14 rounded-full"
+            [class]="state.options.danger ? 'bg-rose-50 text-rose-600' : 'bg-brand-50 text-brand-700'"
+          >
+            <app-icon [name]="state.options.danger ? 'alert' : 'info'" [size]="24" />
           </span>
-          <h2 id="dialog-title">{{ state.options.title }}</h2>
-          <p>{{ state.options.message }}</p>
-          <div class="actions">
+
+          <h2 id="dialog-title" class="mt-3.5 text-lg font-extrabold tracking-tight text-slate-900">
+            {{ state.options.title }}
+          </h2>
+          <p class="mt-2 mx-auto max-w-sm text-sm text-slate-500 leading-relaxed">{{ state.options.message }}</p>
+
+          <div class="grid grid-cols-2 gap-3 mt-6">
             @if (state.options.type === 'confirm') {
-              <button type="button" class="btn-outline" (click)="dialog.close(false)">
+              <button type="button" (click)="dialog.close(false)"
+                class="px-4 py-3 min-h-12 rounded-xl bg-white text-slate-600 ring-1 ring-slate-200 text-sm font-bold hover:bg-slate-50 transition-colors">
                 {{ state.options.cancelLabel ?? 'Cancelar' }}
               </button>
             }
-            <button type="button" class="btn-pill" [class.btn-danger]="state.options.danger" (click)="dialog.close(true)">
+            <button type="button" (click)="dialog.close(true)"
+              class="px-4 py-3 min-h-12 rounded-xl text-white text-sm font-bold transition-colors"
+              [class]="state.options.danger
+                ? 'bg-rose-600 hover:bg-rose-700'
+                : 'bg-brand-800 hover:bg-brand-900'"
+              [class.col-span-2]="state.options.type !== 'confirm'">
               {{ state.options.confirmLabel ?? (state.options.danger ? 'Eliminar' : 'Aceptar') }}
             </button>
           </div>
         </div>
       </div>
     }
-  `,
-  styles: `
-    .dialog { text-align: center; }
-    .badge {
-      display: inline-grid;
-      place-items: center;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: #eef2ff;
-      color: #1b2f8a;
-    }
-    .badge.danger { background: #fff1f2; color: #e11d48; }
-    h2 { margin: 12px 0 6px; color: #0f172a; font-size: 18px; font-weight: 800; }
-    p { margin: 0 auto; max-width: 360px; color: #64748b; font-size: 14px; line-height: 1.45; }
-    .actions { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 10px; margin-top: 20px; }
-    @media (min-width: 900px) { .dialog { max-width: 420px; } }
   `,
 })
 export class DialogComponent {

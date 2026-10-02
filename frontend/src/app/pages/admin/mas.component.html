@@ -1,0 +1,32 @@
+<main class="w-full">
+
+  <!-- ══ BANNER ══ -->
+  <header class="relative overflow-hidden bg-gradient-to-br from-brand-navy via-brand-900 to-brand-800 text-white px-5 md:px-10 pt-7 pb-14">
+    <div class="absolute -right-16 -top-24 w-72 h-72 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-12 bottom-0 w-56 h-56 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="max-w-5xl mx-auto relative z-10">
+      <h1 class="text-2xl font-extrabold tracking-tight">Más opciones</h1>
+      <p class="mt-2 text-sm text-blue-100/85">Gestión completa del programa de pausas activas</p>
+    </div>
+  </header>
+
+  <!-- ══ CUERPO ══ -->
+  <div class="max-w-5xl mx-auto px-5 md:px-10 -mt-6 relative z-10 pb-4">
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      @for (item of items; track item.path) {
+        <a [routerLink]="item.path"
+          class="flex items-center gap-3.5 rounded-2xl bg-white border border-slate-100 p-4 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)] hover:border-brand-200 transition-colors">
+          <span class="grid place-items-center w-11 h-11 rounded-xl bg-brand-50 text-brand-700 shrink-0">
+            <app-icon [name]="item.icon" [size]="20" />
+          </span>
+          <div class="min-w-0 flex-1">
+            <b class="block text-sm font-extrabold text-slate-900 tracking-tight">{{ item.label }}</b>
+            <small class="block text-xs text-slate-500 mt-0.5">{{ item.description }}</small>
+          </div>
+          <app-icon name="arrow-right" [size]="18" class="text-slate-300 shrink-0" />
+        </a>
+      }
+    </div>
+  </div>
+</main>

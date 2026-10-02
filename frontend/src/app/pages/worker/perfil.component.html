@@ -1,131 +1,139 @@
-<section class="page">
-  <header class="hero"><h1>Mi perfil</h1></header>
+<main class="w-full">
 
-  <div class="sheet">
+  <!-- ══ BANNER + IDENTIDAD ══ -->
+  <header class="relative overflow-hidden bg-gradient-to-br from-brand-navy via-brand-900 to-brand-800 text-white px-5 lg:px-8 pt-7 pb-16 lg:pt-9 lg:pb-20">
+    <div class="absolute -right-16 -top-24 w-72 h-72 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-12 bottom-0 w-56 h-56 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="max-w-2xl lg:max-w-6xl mx-auto relative z-10">
+      <h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight">Mi perfil</h1>
+
+      <!-- Tarjeta de identidad -->
+      <div class="mt-5 bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/15">
+        <div class="flex items-center gap-4">
+          <div class="relative shrink-0">
+            <button type="button" (click)="photoInput.click()" [disabled]="uploading()"
+              class="block rounded-2xl ring-4 ring-white/20 transition hover:ring-white/30 disabled:opacity-60"
+              aria-label="Cambiar foto de perfil">
+              <app-avatar [kind]="kind()" [photo]="auth.user()?.photo" [size]="80" />
+            </button>
+            <span class="absolute -bottom-1.5 -right-1.5 grid place-items-center w-7 h-7 rounded-full bg-brand-600 ring-2 ring-brand-900 pointer-events-none">
+              @if (uploading()) {
+                <span class="w-3 h-3 rounded-full border-2 border-white/40 border-t-white animate-spin"></span>
+              } @else {
+                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+                  <path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+                </svg>
+              }
+            </span>
+            <input #photoInput type="file" class="hidden" accept="image/png,image/jpeg,image/webp" (change)="onPhoto($event)" />
+          </div>
+
+          <div class="min-w-0 flex-1">
+            @if (editing()) {
+              <input type="text" [(ngModel)]="nameDraft" aria-label="Nombre"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-white/15 border border-white/25 text-white text-base font-bold placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-white/40" />
+            } @else {
+              <h2 class="text-lg font-extrabold tracking-tight truncate">{{ auth.user()?.name }}</h2>
+            }
+            <p class="mt-1 text-xs text-blue-200/90 flex items-center gap-1.5 truncate">
+              <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+              <span class="truncate">{{ auth.user()?.email }}</span>
+            </p>
+            <p class="mt-1 text-xs text-blue-200/90 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+              {{ pausas.jornada() }}
+            </p>
+          </div>
+        </div>
+
+        <button type="button" (click)="toggleEdit()" [disabled]="saving()"
+          class="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white text-xs font-bold transition-colors disabled:opacity-60">
+          @if (saving()) {
+            Actualizando…
+          } @else {
+            {{ editing() ? 'Guardar nombre' : 'Editar nombre' }}
+          }
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ CUERPO ══ -->
+  <div class="max-w-2xl lg:max-w-6xl mx-auto px-5 lg:px-8 -mt-8 space-y-4 relative z-10 pb-4 lg:pb-10">
+
     @if (message()) {
-      <p class="alert alert-ok">{{ message() }}</p>
+      <p class="rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold px-4 py-3">
+        {{ message() }}
+      </p>
     }
     @if (error()) {
-      <p class="alert alert-error">{{ error() }}</p>
+      <p class="rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-sm font-semibold px-4 py-3">
+        {{ error() }}
+      </p>
     }
 
-    <article class="card person">
-      <button type="button" class="photo" (click)="photoInput.click()" [disabled]="uploading()" aria-label="Cambiar foto de perfil">
-        <app-avatar [kind]="kind()" [photo]="auth.user()?.photo" [size]="64" />
-        <span class="cam"><app-icon name="camera" [size]="12" /></span>
-      </button>
-      <input #photoInput type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onPhoto($event)" />
-      <div class="meta">
-        @if (editing()) {
-          <input class="input" [(ngModel)]="nameDraft" aria-label="Nombre" />
-        } @else {
-          <h2>{{ auth.user()?.name }}</h2>
-        }
-        <p><app-icon name="building" [size]="14" /> {{ auth.user()?.area }}</p>
-        <p><app-icon name="clock" [size]="14" /> {{ pausas.jornada() }}</p>
-      </div>
-      <button type="button" class="btn-ghost" (click)="toggleEdit()" [disabled]="saving()">
-        {{ editing() ? 'Guardar' : 'Editar' }}
-      </button>
-    </article>
-
+    <!-- Estadísticas -->
     @if (pausas.stats(); as stats) {
-      <div class="stats">
-        <div><b>{{ stats.completadas }}</b><span>Completadas</span></div>
-        <div><b>{{ stats.currentStreak }}</b><span>Racha actual</span></div>
-        <div><b>{{ stats.bestStreak }}</b><span>Mejor racha</span></div>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="rounded-2xl bg-white border border-slate-100 p-4 text-center shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+          <p class="text-2xl font-extrabold text-brand-800 leading-none">{{ stats.completadas }}</p>
+          <p class="text-[11px] text-slate-500 mt-1.5 font-semibold">Completadas</p>
+        </div>
+        <div class="rounded-2xl bg-white border border-slate-100 p-4 text-center shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+          <p class="text-2xl font-extrabold text-amber-600 leading-none">{{ stats.currentStreak }}</p>
+          <p class="text-[11px] text-slate-500 mt-1.5 font-semibold">Racha actual</p>
+        </div>
+        <div class="rounded-2xl bg-white border border-slate-100 p-4 text-center shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+          <p class="text-2xl font-extrabold text-slate-900 leading-none">{{ stats.bestStreak }}</p>
+          <p class="text-[11px] text-slate-500 mt-1.5 font-semibold">Mejor racha</p>
+        </div>
       </div>
     }
 
-    <article class="card">
-      <p class="label">Preferencias</p>
-      @for (item of items; track item.key) {
-        <div class="pref">
-          <span class="ico"><app-icon [name]="item.icon" [size]="18" /></span>
-          <div>
-            <b>{{ item.label }}</b>
-            <small>{{ auth.preferences()[item.key] ? item.on : item.off }}</small>
-          </div>
-          <button type="button" class="toggle" [class.on]="auth.preferences()[item.key]" (click)="togglePref(item.key)" [attr.aria-label]="item.label">
-            <span></span>
-          </button>
-        </div>
-      }
-    </article>
+    <!-- Preferencias -->
+    <div class="rounded-2xl bg-white border border-slate-100 p-5 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+      <h3 class="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400">Preferencias</h3>
 
-    <article class="dnd">
-      <div class="dnd-title">
-        <span class="ico white"><app-icon name="moon" [size]="18" /></span>
-        <b>Modo No Molestar</b>
-      </div>
-      <p>“Silencia temporalmente los recordatorios cuando necesites concentrarte.”</p>
-      <button type="button" class="btn-pill mini" (click)="auth.setPreference('dnd', !auth.preferences().dnd)">
-        {{ auth.preferences().dnd ? 'Desactivar ahora' : 'Activar ahora' }}
-      </button>
-    </article>
+      <div class="mt-3 divide-y divide-slate-100 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:gap-y-1 lg:divide-y-0">
+        @for (item of items; track item.key) {
+          <div class="flex items-center gap-3.5 py-3.5">
+            <span class="grid place-items-center w-10 h-10 rounded-xl bg-brand-50 text-brand-700 shrink-0">
+              <app-icon [name]="item.icon" [size]="20" />
+            </span>
 
-    <article class="card">
-      <p class="label">Seguridad</p>
-      @if (changingPassword()) {
-        <div class="form-grid">
-          <label class="form-field">
-            <span>Contraseña actual</span>
-            <input class="input" type="password" [(ngModel)]="currentPassword" autocomplete="current-password" />
-          </label>
-          <label class="form-field">
-            <span>Nueva contraseña</span>
-            <input class="input" type="password" [(ngModel)]="newPassword" autocomplete="new-password" placeholder="Mínimo 6 caracteres" />
-          </label>
-          <div class="form-actions">
-            <button type="button" class="btn-outline" (click)="changingPassword.set(false)">Cancelar</button>
-            <button type="button" class="btn-pill" (click)="savePassword()" [disabled]="saving()">Actualizar</button>
-          </div>
-        </div>
-      } @else {
-        <div class="pref">
-          <span class="ico"><app-icon name="key" [size]="18" /></span>
-          <div>
-            <b>Contraseña</b>
-            <small>Cámbiala periódicamente</small>
-          </div>
-          <button type="button" class="btn-ghost" (click)="changingPassword.set(true)">Cambiar</button>
-        </div>
-      }
-    </article>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-bold text-slate-900">{{ item.label }}</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">
+                {{ auth.preferences()[item.key] ? item.on : item.off }}
+              </p>
+            </div>
 
-    <article class="card">
-      <p class="label">Privacidad y datos</p>
-      <div class="pref">
-        <span class="ico"><app-icon name="shield" [size]="18" /></span>
-        <div>
-          <b>Consentimiento informado</b>
-          <small>
-            @if (pausas.consent()?.accepted) {
-              Aceptado (v{{ pausas.consent()?.version }})
-            } @else {
-              Pendiente de aceptar
-            }
-          </small>
-        </div>
-        @if (pausas.consent()?.accepted) {
-          <button type="button" class="btn-ghost" (click)="revokeConsent()">Revocar</button>
-        } @else {
-          <button type="button" class="btn-ghost" (click)="acceptConsent()">Aceptar</button>
+            <button type="button" (click)="togglePref(item.key)"
+              class="shrink-0 w-12 h-7 rounded-full p-1 transition-colors"
+              [class]="auth.preferences()[item.key] ? 'bg-brand-700' : 'bg-slate-200'"
+              [attr.aria-pressed]="auth.preferences()[item.key]"
+              [attr.aria-label]="item.label">
+              <span class="block w-5 h-5 rounded-full bg-white shadow transition-transform"
+                [class]="auth.preferences()[item.key] ? 'translate-x-5' : 'translate-x-0'"></span>
+            </button>
+          </div>
         }
       </div>
-      <div class="pref">
-        <span class="ico danger"><app-icon name="trash" [size]="18" /></span>
-        <div>
-          <b>Eliminar mis datos</b>
-          <small>Anonimiza tu información personal (Ley 1581)</small>
-        </div>
-        <button type="button" class="btn-ghost danger" (click)="requestDeletion()">Solicitar</button>
-      </div>
-    </article>
+    </div>
 
-    <button type="button" class="logout" (click)="auth.logout()">
-      <app-icon name="logout" [size]="16" />
+    <!-- Cerrar sesión -->
+    <button type="button" (click)="auth.logout()"
+      class="w-full inline-flex items-center justify-center gap-2 px-4 py-3.5 min-h-12 rounded-xl bg-white text-rose-600 ring-1 ring-rose-200 text-sm font-bold hover:bg-rose-50 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+      </svg>
       Cerrar sesión
     </button>
   </div>
-</section>
+</main>

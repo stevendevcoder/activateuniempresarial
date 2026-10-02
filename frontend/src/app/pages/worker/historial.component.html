@@ -1,0 +1,103 @@
+<main class="w-full">
+
+  <!-- ══ BANNER ══ -->
+  <header class="relative overflow-hidden bg-gradient-to-br from-brand-navy via-brand-900 to-brand-800 text-white px-5 lg:px-8 pt-6 pb-16 lg:pt-8 lg:pb-20">
+    <div class="absolute -right-16 -top-24 w-72 h-72 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-12 bottom-0 w-56 h-56 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="max-w-2xl lg:max-w-6xl mx-auto relative z-10">
+      <a routerLink="/app/pausas"
+        class="inline-grid place-items-center w-9 h-9 rounded-xl bg-white/10 border border-white/15 text-white hover:bg-white/20 transition-colors"
+        aria-label="Volver a mis pausas">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+      </a>
+      <h1 class="mt-4 text-2xl lg:text-3xl font-extrabold tracking-tight">Historial</h1>
+      <p class="mt-1.5 text-sm text-blue-100/85">Cumplimiento de pausas de los últimos 7 días</p>
+    </div>
+  </header>
+
+  <!-- ══ CUERPO ══ -->
+  <div class="max-w-2xl lg:max-w-6xl mx-auto px-5 lg:px-8 -mt-8 space-y-4 relative z-10 pb-4 lg:pb-10">
+
+    @if (pausas.stats(); as stats) {
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="rounded-2xl bg-white border border-slate-100 p-4 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+          <div class="flex items-center gap-2 text-brand-700">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M8 2v3M16 2v3M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider">Últimos 7 días</span>
+          </div>
+          <p class="mt-2 text-2xl font-extrabold text-slate-900 leading-none">{{ stats.weeklyCompleted }}</p>
+          <p class="text-[11px] text-slate-500 mt-1.5 font-semibold">Pausas completadas</p>
+        </div>
+
+        <div class="rounded-2xl bg-white border border-slate-100 p-4 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+          <div class="flex items-center gap-2 text-emerald-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider">Histórico</span>
+          </div>
+          <p class="mt-2 text-2xl font-extrabold text-slate-900 leading-none">{{ stats.completadas }}</p>
+          <p class="text-[11px] text-slate-500 mt-1.5 font-semibold">Total completadas</p>
+        </div>
+
+        <div class="rounded-2xl bg-white border border-slate-100 p-4 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+          <div class="flex items-center gap-2 text-amber-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider">Aplazadas</span>
+          </div>
+          <p class="mt-2 text-2xl font-extrabold text-slate-900 leading-none">{{ stats.aplazadas }}</p>
+          <p class="text-[11px] text-slate-500 mt-1.5 font-semibold">Reprogramadas</p>
+        </div>
+
+        <div class="rounded-2xl bg-white border border-slate-100 p-4 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+          <div class="flex items-center gap-2 text-rose-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider">Canceladas</span>
+          </div>
+          <p class="mt-2 text-2xl font-extrabold text-slate-900 leading-none">{{ stats.canceladas }}</p>
+          <p class="text-[11px] text-slate-500 mt-1.5 font-semibold">Con motivo registrado</p>
+        </div>
+      </div>
+    }
+
+    <p class="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 pt-2">Detalle por día</p>
+
+    <div class="grid gap-3 sm:grid-cols-2 lg:items-start">
+      @for (day of pausas.history(); track day.date) {
+        <div class="flex items-center gap-3.5 rounded-2xl bg-white border border-slate-100 p-4 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+          <span class="block w-9 h-9 shrink-0">
+            <app-mood [mood]="day.mood" />
+          </span>
+
+          <div class="min-w-0 flex-1">
+            <div class="flex items-baseline justify-between gap-3">
+              <p class="text-sm font-bold text-slate-900 truncate">{{ day.label }}</p>
+              <p class="text-[11px] font-semibold text-slate-400 shrink-0">{{ day.date }}</p>
+            </div>
+
+            @if (day.total > 0) {
+              <div class="mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-500" [class]="barTone(day.mood)"
+                  [style.width.%]="day.total ? (day.completed / day.total) * 100 : 0"></div>
+              </div>
+            }
+          </div>
+
+          <p class="shrink-0 text-sm font-extrabold tabular-nums"
+            [class]="day.total === 0 ? 'text-slate-300' : 'text-brand-800'">
+            {{ day.completed }}<span class="text-slate-400 font-semibold">/{{ day.total }}</span>
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+</main>

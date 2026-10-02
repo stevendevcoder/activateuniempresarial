@@ -1,0 +1,63 @@
+<main class="flex-1 px-8 py-8 max-w-7xl w-full mx-auto space-y-6">
+  <a routerLink="/admin/seguimiento" class="inline-flex items-center gap-2 text-xs font-medium text-blue-600 hover:text-blue-800">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+    Volver
+  </a>
+
+  @if (worker(); as worker) {
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-1 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm">
+        <div class="flex flex-col items-center text-center">
+          <app-avatar [kind]="kind" [photo]="worker.photo" [size]="80" />
+          <h2 class="text-xl font-bold text-slate-900 mt-3">{{ worker.name }}</h2>
+          <p class="text-sm text-slate-500">{{ worker.areaName ?? 'Sin área asignada' }}</p>
+          <p class="text-xs text-slate-400 mt-1">{{ worker.email }}</p>
+          @if (user(); as user) {
+            <p class="text-xs text-slate-400">{{ user.roleName ?? 'Sin rol' }} · {{ user.status === 1 ? 'Activo' : 'Inactivo' }}</p>
+          }
+        </div>
+      </div>
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm">
+          <h3 class="text-base font-bold text-slate-900">Cumplimiento Histórico</h3>
+          <div class="flex items-center gap-4 mt-4">
+            <app-progress-ring [done]="worker.todayCompleted" [total]="worker.todayTotal" />
+            <div>
+              <b class="text-3xl font-extrabold text-slate-900">{{ worker.complianceRate | number: '1.0-1' }}%</b>
+              <p class="text-xs text-slate-500">Cumplimiento histórico</p>
+              <span class="inline-flex mt-1 px-2.5 py-0.5 rounded-full text-xs font-semibold" [class]="status === 'ok' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-rose-50 text-rose-700 border border-rose-100'">{{ status === 'ok' ? 'Al día' : 'Pausas pendientes' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white rounded-xl border border-slate-200/90 p-4 text-center">
+            <b class="text-2xl font-extrabold text-slate-900 block">{{ worker.total }}</b>
+            <span class="text-xs text-slate-500">Registradas</span>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200/90 p-4 text-center">
+            <b class="text-2xl font-extrabold text-emerald-600 block">{{ worker.completadas }}</b>
+            <span class="text-xs text-slate-500">Completadas</span>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200/90 p-4 text-center">
+            <b class="text-2xl font-extrabold text-amber-600 block">{{ worker.aplazadas }}</b>
+            <span class="text-xs text-slate-500">Aplazadas</span>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200/90 p-4 text-center">
+            <b class="text-2xl font-extrabold text-rose-600 block">{{ worker.canceladas }}</b>
+            <span class="text-xs text-slate-500">Canceladas</span>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm">
+          <h3 class="text-base font-bold text-slate-900">Última actividad</h3>
+          <p class="text-sm text-slate-700 mt-2">
+            {{ worker.lastActivity ? (worker.lastActivity | date: 'fullDate') + ' · ' + (worker.lastActivity | date: 'shortTime') : 'Sin actividad registrada' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm text-center">
+      <p class="text-slate-500">{{ error() || (loading() ? 'Cargando…' : 'No encontramos ese trabajador.') }}</p>
+    </div>
+  }
+</main>

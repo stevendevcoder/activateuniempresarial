@@ -5,6 +5,6 @@ import { DialogComponent } from './shared/dialog.component';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, DialogComponent],
-  template: `<div class="app-phone"><router-outlet /></div><app-dialog />`,
+  template: `<router-outlet /><app-dialog />`,
 })
 export class AppComponent {}

@@ -1,22 +1,22 @@
-import { DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+
 import { AnalyticsSummary, AreaCompliance, TimelinePoint, UserCompliance } from '../../core/api.types';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { PausasService } from '../../core/services/pausas.service';
 import { apiError, downloadBlob, startOfDay, WEEKDAY_LABELS } from '../../core/utils';
-import { IconComponent } from '../../shared/icon.component';
-import { LogoComponent } from '../../shared/logo.component';
 
 const LOW_COMPLIANCE = 60;
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink, DecimalPipe, IconComponent, LogoComponent],
+  imports: [DatePipe, DecimalPipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
   private readonly analytics = inject(AnalyticsService);
+  private readonly pausas = inject(PausasService);
 
   readonly summary = signal<AnalyticsSummary | null>(null);
   readonly timeline = signal<TimelinePoint[]>([]);
@@ -28,6 +28,17 @@ export class DashboardComponent implements OnInit {
   readonly pending = computed(() => {
     const s = this.summary();
     return s ? s.programadas + s.aplazadas : 0;
+  });
+
+  readonly proximasSesiones = computed(() => {
+    return this.pausas.pauses().filter(p => p.kind === 'active');
+  });
+
+  readonly today = new Date();
+
+  readonly avgWeekly = computed(() => {
+    const values = this.weekly().map((d) => d.value).filter((v) => v > 0);
+    return values.length ? Math.round(values.reduce((a, b) => a + b, 0) / values.length) : 0;
   });
 
   /** Últimos 7 días (incluye días sin pausas) con el % de cumplimiento diario. */
@@ -73,6 +84,7 @@ export class DashboardComponent implements OnInit {
     this.analytics.getTimeline('day', since.toISOString()).subscribe({ next: (t) => this.timeline.set(t), error: fail });
     this.analytics.getAreas().subscribe({ next: (a) => this.areas.set(a), error: fail });
     this.analytics.getUsers().subscribe({ next: (u) => this.users.set(u), error: () => undefined });
+    this.pausas.load();
   }
 
   downloadPdf(): void {

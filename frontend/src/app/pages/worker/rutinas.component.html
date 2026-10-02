@@ -1,54 +1,109 @@
-<section class="page">
-  <header class="hero">
-    <h1>Rutinas</h1>
-    <p>Encuentra una rutina para continuar cuidándote.</p>
+<main class="w-full">
+
+  <!-- ══ BANNER ══ -->
+  <header class="relative overflow-hidden bg-gradient-to-br from-brand-navy via-brand-900 to-brand-800 text-white px-5 lg:px-8 pt-7 pb-16 lg:pt-9 lg:pb-20">
+    <div class="absolute -right-16 -top-24 w-72 h-72 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-12 bottom-0 w-56 h-56 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="max-w-2xl lg:max-w-6xl mx-auto relative z-10">
+      <h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight">Rutinas</h1>
+      <p class="mt-2 text-sm text-blue-100/85">Encuentra una rutina para continuar cuidándote.</p>
+    </div>
   </header>
 
-  <div class="wrap">
-    <div class="filters">
-      <button type="button" [class.on]="filter() === 'todas'" (click)="filter.set('todas')">Todas</button>
+  <!-- ══ CUERPO ══ -->
+  <div class="max-w-2xl lg:max-w-6xl mx-auto px-5 lg:px-8 -mt-6 space-y-4 relative z-10 pb-4 lg:pb-10">
+
+    <!-- Filtros por categoría -->
+    <div class="filter-scroll flex gap-2 overflow-x-auto pb-1 -mx-5 lg:-mx-8 px-5 lg:px-8">
+      <button type="button" (click)="filter.set('todas')"
+        class="shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-colors"
+        [class]="filter() === 'todas' ? 'bg-brand-800 text-white shadow-sm' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50'">
+        Todas
+      </button>
       @for (cat of rutinas.categories(); track cat) {
-        <button type="button" [class.on]="filter() === cat" (click)="filter.set(cat)">{{ cat }}</button>
+        <button type="button" (click)="filter.set(cat)"
+          class="shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-colors"
+          [class]="filter() === cat ? 'bg-brand-800 text-white shadow-sm' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50'">
+          {{ cat }}
+        </button>
       }
     </div>
 
     @if (rutinas.error()) {
-      <p class="alert alert-error">{{ rutinas.error() }}</p>
+      <p class="rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-sm font-semibold px-4 py-3">
+        {{ rutinas.error() }}
+      </p>
     }
 
-    <div class="list">
-      <article class="card row">
-        <div class="thumb" style="background: #fef3c7">
-          <app-mascot pose="wave" />
-        </div>
-        <div class="info">
-          <h2>Pausa libre</h2>
-          <p>Ejercicios guiados rápidos, sin video</p>
-          <small><app-icon name="clock" [size]="14" /> 2 min</small>
-        </div>
-        <a class="btn-ghost" [routerLink]="['/app/pausas/ejecutar', 'libre']">Iniciar</a>
-      </article>
+    <!-- Pausa libre -->
+    <a [routerLink]="['/app/pausas/ejecutar', 'libre']"
+      class="flex items-center gap-4 rounded-2xl bg-gradient-to-br from-brand-800 to-brand-950 text-white p-4 shadow-lg shadow-brand-900/20 transition-transform active:scale-[0.99]">
+      <span class="grid place-items-center w-14 h-14 rounded-2xl bg-white/10 border border-white/15 shrink-0">
+        <app-mascot pose="wave" />
+      </span>
+      <div class="min-w-0 flex-1">
+        <p class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-rose-300">Recomendada</p>
+        <h2 class="mt-1 text-base font-extrabold tracking-tight">Pausa libre</h2>
+        <p class="text-xs text-blue-100/85 mt-1">Ejercicios guiados rápidos, sin video</p>
+      </div>
+      <span class="shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white text-brand-900 text-xs font-bold">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M6.3 3.4A1 1 0 005 4.2v11.6a1 1 0 001.5.9l9.2-5.8a1 1 0 000-1.7L6.3 3.4z"></path>
+        </svg>
+        2 min
+      </span>
+    </a>
 
+    <p class="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 pt-1">
+      {{ filter() === 'todas' ? 'Todas las rutinas' : filter() }}
+    </p>
+
+    <!-- Rutinas -->
+    <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
       @for (routine of rutinas.byCategory(filter()); track routine.id) {
-        <article class="card row">
-          <div class="thumb" [style.background]="routine.tint">
+        <a [routerLink]="['/app/rutinas', routine.id]"
+          class="flex items-center gap-3.5 rounded-2xl bg-white border border-slate-100 p-4 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)] hover:border-brand-200 transition-colors">
+          <span class="grid place-items-center w-14 h-14 rounded-2xl shrink-0 border border-white"
+            [style.background]="routine.tint">
             <app-mascot [pose]="routine.pose" />
+          </span>
+
+          <div class="min-w-0 flex-1">
+            <h2 class="text-sm font-extrabold text-slate-900 tracking-tight leading-tight">{{ routine.name }}</h2>
+            <p class="mt-1 text-xs text-slate-500 leading-relaxed line-clamp-2">{{ routine.description }}</p>
+            <div class="mt-2 flex items-center gap-2 flex-wrap">
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-50 text-slate-600 ring-1 ring-slate-200 px-2 py-0.5 text-[11px] font-bold">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+                </svg>
+                {{ routine.duration }}
+              </span>
+              <span class="inline-flex items-center rounded-full bg-brand-50 text-brand-700 ring-1 ring-brand-100 px-2 py-0.5 text-[11px] font-bold">
+                {{ routine.category }}
+              </span>
+            </div>
           </div>
-          <div class="info">
-            <h2>{{ routine.name }}</h2>
-            <p>{{ routine.description }}</p>
-            <small>
-              <app-icon name="clock" [size]="14" />
-              {{ routine.duration }} · {{ routine.category }}
-            </small>
-          </div>
-          <a class="btn-ghost" [routerLink]="['/app/rutinas', routine.id]">Ver</a>
-        </article>
+
+          <span class="shrink-0 grid place-items-center w-8 h-8 rounded-xl bg-slate-50 text-slate-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+          </span>
+        </a>
       } @empty {
         @if (!rutinas.loading()) {
-          <p class="empty">Aún no hay rutinas publicadas en esta categoría.</p>
+          <div class="sm:col-span-2 xl:col-span-3 rounded-2xl bg-white border border-slate-100 p-8 text-center shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)]">
+            <span class="inline-grid place-items-center w-14 h-14 rounded-2xl bg-slate-50 text-slate-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.6L19 9.4V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+            </span>
+            <p class="mt-3 text-sm font-bold text-slate-900">Aún no hay rutinas publicadas en esta categoría.</p>
+            <p class="mt-1 text-xs text-slate-500">Mientras tanto puedes iniciar una pausa libre.</p>
+          </div>
         }
       }
     </div>
   </div>
-</section>
+</main>

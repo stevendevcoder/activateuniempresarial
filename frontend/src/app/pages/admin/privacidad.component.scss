@@ -1,0 +1,13 @@
+/* Estilos mínimos: todo el layout de Privacidad vive en utilidades Tailwind. */
+
+/* Oculta los controles nativos del input numérico: la tarjeta usa ▲ / ▼ propios. */
+input[inputmode='numeric']::-webkit-inner-spin-button,
+input[inputmode='numeric']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[inputmode='numeric'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}

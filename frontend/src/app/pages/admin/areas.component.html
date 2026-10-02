@@ -1,0 +1,281 @@
+<main class="flex-1 w-full min-w-0 bg-[#f8fafc]">
+  <div class="flex flex-col w-full gap-6 px-8 pt-8 pb-10">
+
+  <!-- ══ BANNER INSTITUCIONAL ══ -->
+  <section class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-950 via-brand-900 to-brand-800 text-white p-6 md:p-8 shadow-lg shadow-brand-950/10">
+    <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full border border-white/5 pointer-events-none"></div>
+    <div class="absolute -right-6 -top-6 w-56 h-56 rounded-full border border-white/10 pointer-events-none"></div>
+    <div class="absolute right-20 bottom-[-40px] w-44 h-44 rounded-full bg-blue-500/10 blur-2xl pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[11px] font-semibold uppercase tracking-wider text-emerald-300">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Superadministrador
+          </span>
+          <span class="text-blue-100/70 text-xs">• Vigencia 2026</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight">Áreas</h1>
+        <p class="text-blue-100/90 text-sm md:text-base leading-relaxed max-w-xl">
+          Departamentos y facultades de la institución encargados del cumplimiento de pausas activas y ergonomía laboral.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3 self-start md:self-auto">
+        <button type="button" (click)="openCreate()"
+          class="group flex items-center gap-2.5 px-5 py-3 rounded-xl bg-white text-slate-900 font-bold text-sm shadow-md hover:shadow-lg hover:bg-slate-50 transition transform active:scale-95">
+          <span class="w-6 h-6 rounded-lg bg-blue-50 flex items-center justify-center text-brand-600 font-extrabold text-base transition-transform group-hover:rotate-90">+</span>
+          <span>Nueva Área</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Buscador + filtros integrados al banner -->
+    <div class="relative z-10 mt-6 pt-5 border-t border-white/15 flex flex-col sm:flex-row items-center gap-3">
+      <div class="relative flex-1 w-full">
+        <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+        <input type="text" [value]="query()" (input)="setQuery($any($event.target).value)"
+          class="w-full bg-white text-slate-900 text-xs md:text-sm pl-10 pr-4 py-2.5 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-inner placeholder:text-slate-400"
+          placeholder="Buscar departamento, facultad o código...">
+      </div>
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <label class="relative inline-flex items-center w-1/2 sm:w-auto">
+          <span class="sr-only">Filtrar por estado</span>
+          <svg class="w-4 h-4 text-blue-100 absolute left-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+          </svg>
+          <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
+            class="w-full appearance-none pl-9 pr-8 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-semibold text-white transition">
+            <option value="all" class="text-slate-900">Filtros</option>
+            <option value="1" class="text-slate-900">Solo activas</option>
+            <option value="0" class="text-slate-900">Solo inactivas</option>
+          </select>
+          <svg class="w-3.5 h-3.5 text-blue-100 absolute right-2.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </label>
+        <button type="button" (click)="exportCsv()"
+          class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-semibold text-white transition w-1/2 sm:w-auto">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+          </svg>
+          Exportar
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CONTADORES Y FILTROS RÁPIDOS ══ -->
+  <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+    <div class="inline-flex p-1 rounded-xl bg-slate-200/70 self-start">
+      @for (tab of tabs; track tab.id) {
+        <button type="button" (click)="filter.set(tab.id)"
+          class="px-4 py-2 rounded-lg text-xs font-semibold transition-all"
+          [class]="filter() === tab.id
+            ? 'bg-white text-brand-700 shadow-sm'
+            : 'text-slate-500 hover:text-slate-800'">
+          {{ tab.label }}
+          <span class="ml-1.5 px-1.5 py-0.5 rounded-full bg-slate-100 text-[10px] font-bold"
+            [class]="filter() === tab.id ? 'text-brand-700' : 'text-slate-500'">{{ tab.count() }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
+        <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center text-brand-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-[10px] uppercase font-semibold text-slate-400">Total áreas</span>
+          <span class="text-sm font-bold text-slate-900 leading-tight">{{ areas().length }} <span class="text-[11px] font-normal text-slate-400">registradas</span></span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
+        <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-[10px] uppercase font-semibold text-slate-400">Áreas operativas</span>
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm font-bold text-slate-900 leading-tight">{{ activeCount() }}</span>
+            <span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 text-[10px] font-bold">{{ activeRate() }}%</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
+        <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center text-brand-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-[10px] uppercase font-semibold text-slate-400">Total colaboradores</span>
+          <span class="text-sm font-bold text-brand-700 leading-tight">{{ totalWorkers() }} <span class="text-[11px] font-normal text-slate-400">asignados</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) {
+    <p class="mx-0 text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-4 py-2.5">{{ error() }}</p>
+  }
+
+  <!-- ══ GRID DE ÁREAS ══ -->
+  @if (filtered().length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (area of filtered(); track area.id) {
+        <article class="group flex flex-col justify-between rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+          <div class="flex flex-col gap-4 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-brand-700 group-hover:scale-105 group-hover:bg-blue-50 transition-all duration-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                  <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 10h.01M15 10h.01M9 14h.01M15 14h.01" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold"
+                [class]="area.status === 1 ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'">
+                <span class="w-1.5 h-1.5 rounded-full" [class]="area.status === 1 ? 'bg-emerald-500' : 'bg-slate-400'"></span>
+                {{ area.status === 1 ? 'Activa' : 'Inactiva' }}
+              </span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+              <h2 class="text-base font-bold text-slate-900 group-hover:text-brand-700 transition-colors">{{ area.name }}</h2>
+              <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ area.description || 'Sin descripción' }}</p>
+              @if (area.responsibleName) {
+                <p class="text-[11px] text-slate-400 mt-0.5">Responsable: <span class="text-slate-600 font-medium">{{ area.responsibleName }}</span></p>
+              }
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2">
+              <div class="p-2.5 rounded-lg bg-slate-50 flex flex-col">
+                <span class="text-[10px] text-slate-400">Pausas asignadas</span>
+                <span class="text-xs font-bold text-slate-800">{{ areaMeta(area.id).total }} registradas</span>
+              </div>
+              <div class="p-2.5 rounded-lg bg-slate-50 flex flex-col">
+                <span class="text-[10px] text-slate-400">Cumplimiento</span>
+                <span class="text-xs font-bold"
+                  [class]="areaMeta(area.id).rate === null ? 'text-slate-400' : areaMeta(area.id).rate! >= 80 ? 'text-emerald-600' : 'text-amber-600'">
+                  {{ areaMeta(area.id).label }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="px-5 py-3 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-1.5" [class]="area.workerCount > 0 ? 'text-brand-700' : 'text-slate-400'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span class="text-xs font-medium">{{ area.workerCount }} trabajadores</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button type="button" (click)="openEdit(area)" title="Editar área"
+                class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-brand-700 hover:bg-white transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+              <button type="button" (click)="remove(area)" title="Eliminar área"
+                class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-white transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="flex flex-col items-center justify-center py-14 rounded-2xl bg-white border border-slate-200/90 text-center">
+      <div class="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300 mb-3">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M13 16h-3v-3h3m4 0h3v3h-3z" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </div>
+      <h3 class="text-base font-bold text-slate-900">No se encontraron áreas</h3>
+      <p class="text-sm text-slate-500 max-w-sm mt-1 mb-4">
+        {{ loading() ? 'Cargando información…' : 'Intenta ajustar tu búsqueda o prueba con otro término para visualizar las facultades.' }}
+      </p>
+      @if (!loading()) {
+        <button type="button" (click)="resetFilters()" class="px-4 py-2 rounded-xl bg-brand-700 hover:bg-brand-800 text-white text-xs font-semibold transition">
+          Restablecer filtros
+        </button>
+      }
+    </div>
+  }
+
+  <!-- ══ PIE DE PÁGINA ══ -->
+  <footer class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+      <span>Mostrando {{ filtered().length }} de {{ areas().length }} áreas registradas</span>
+    </div>
+    <span class="text-center sm:text-right">© 2026 ACTIVATE Pausas Saludables • Sistema Integrado de Bienestar</span>
+  </footer>
+  </div>
+</main>
+
+<!-- ══ MODAL CREAR / EDITAR ÁREA ══ -->
+@if (showForm()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-brand-950/50 backdrop-blur-sm p-4" (click)="showForm.set(false)">
+    <form class="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl flex flex-col gap-5 p-6" [formGroup]="form" (ngSubmit)="save()" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-50 text-brand-700 flex items-center justify-center font-bold text-lg">+</div>
+          <h3 class="text-base font-bold text-slate-900">{{ editingId() ? 'Editar Área' : 'Registrar Nueva Área' }}</h3>
+        </div>
+        <button type="button" (click)="showForm.set(false)" aria-label="Cerrar"
+          class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <label class="flex flex-col gap-1.5">
+          <span class="text-xs font-semibold text-slate-700">Nombre del área o facultad</span>
+          <input type="text" formControlName="name" placeholder="Ej: Facultad de Medicina"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
+        </label>
+
+        <label class="flex flex-col gap-1.5">
+          <span class="text-xs font-semibold text-slate-700">Descripción o programas</span>
+          <textarea rows="3" formControlName="description" placeholder="Ej: Carreras de ciencias de la salud y laboratorios clínicos"
+            class="w-full px-3.5 py-2 rounded-xl bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition"></textarea>
+        </label>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="area-status" [checked]="form.value.status === 1"
+            (change)="form.patchValue({ status: $any($event.target).checked ? 1 : 0 })"
+            class="w-4 h-4 rounded border-slate-300 text-brand-700 focus:ring-brand-500">
+          <label for="area-status" class="text-xs font-semibold text-slate-700">Área activa</label>
+        </div>
+
+        @if (formError()) {
+          <p class="text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">{{ formError() }}</p>
+        }
+      </div>
+
+      <div class="pt-2 flex items-center justify-end gap-2">
+        <button type="button" (click)="showForm.set(false)"
+          class="px-4 py-2 rounded-xl text-slate-500 hover:text-slate-800 text-xs font-semibold transition-colors">Cancelar</button>
+        <button type="submit" [disabled]="form.invalid || saving()"
+          class="px-5 py-2.5 rounded-xl bg-brand-700 hover:bg-brand-800 disabled:opacity-60 text-white text-xs font-bold shadow-md transition-all">
+          {{ saving() ? 'Guardando…' : 'Guardar Área' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}
