@@ -3,7 +3,7 @@ import joi from "joi";
 export type ReturnRoutineData = {
     name: string;
     description: string;
-    idRoutineType: number;
+    idRoutineType?: number;
     status: number;
     videos: {
         idVideo: number;
@@ -34,10 +34,9 @@ function validateRoutineData(data: any) {
         description: joi.string().trim().max(500).allow("").default("").messages({
             "string.base": "La descripción debe ser un texto",
         }),
-        idRoutineType: joi.number().integer().positive().required().messages({
+        idRoutineType: joi.number().integer().positive().messages({
             "number.base": "El tipo de rutina debe ser un ID",
             "number.positive": "El tipo de rutina debe ser un ID positivo",
-            "any.required": "El tipo de rutina es obligatorio",
         }),
         status: joi.number().valid(0, 1).required().messages({
             "number.base": "El estado debe ser numérico",

@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS users.routine (
     id_routine       SERIAL PRIMARY KEY,
     name_routine     VARCHAR(255) NOT NULL,
     description_routine VARCHAR(500) NOT NULL DEFAULT '',
-    id_routine_type  INTEGER NOT NULL REFERENCES users.routine_type(id_routine_type),
+    id_routine_type  INTEGER REFERENCES users.routine_type(id_routine_type),
     status_routine   INTEGER NOT NULL DEFAULT 1
 );
 

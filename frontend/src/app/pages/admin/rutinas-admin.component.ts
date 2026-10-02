@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ApiRoutine, RoutineType, VideoItem } from '../../core/api.types';
+import { ApiRoutine, VideoItem } from '../../core/api.types';
 import { AdminService } from '../../core/services/admin.service';
 import { DialogService } from '../../core/services/dialog.service';
 import { poseForType } from '../../core/services/rutinas.service';
@@ -76,23 +76,13 @@ import { MascotComponent } from '../../shared/mascot.component';
               <span>Descripción</span>
               <textarea class="input" rows="2" formControlName="description"></textarea>
             </label>
-            <div class="form-field-row">
-              <label class="form-field">
-                <span>Tipo</span>
-                <select class="input" formControlName="idRoutineType">
-                  @for (type of types(); track type.id) {
-                    <option [value]="type.id">{{ type.name }}</option>
-                  }
-                </select>
-              </label>
-              <label class="form-field">
-                <span>Estado</span>
-                <select class="input" formControlName="status">
-                  <option [value]="1">Activa</option>
-                  <option [value]="0">Inactiva</option>
-                </select>
-              </label>
-            </div>
+            <label class="form-field">
+              <span>Estado</span>
+              <select class="input" formControlName="status">
+                <option [value]="1">Activa</option>
+                <option [value]="0">Inactiva</option>
+              </select>
+            </label>
 
             <div class="form-field">
               <div class="videos-head">
@@ -166,7 +156,6 @@ export class RutinasAdminComponent implements OnInit {
   private readonly dialog = inject(DialogService);
 
   readonly routines = signal<ApiRoutine[]>([]);
-  readonly types = signal<RoutineType[]>([]);
   readonly videos = signal<VideoItem[]>([]);
   readonly loading = signal(false);
   readonly saving = signal(false);
@@ -180,7 +169,6 @@ export class RutinasAdminComponent implements OnInit {
   readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     description: [''],
-    idRoutineType: [0, Validators.required],
     status: [1, Validators.required],
     videos: this.fb.array<ReturnType<RutinasAdminComponent['newVideoRow']>>([]),
   });
@@ -191,7 +179,6 @@ export class RutinasAdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
-    this.admin.getRoutineTypes().subscribe({ next: (t) => this.types.set(t), error: () => undefined });
     this.loadVideos();
   }
 
@@ -252,7 +239,7 @@ export class RutinasAdminComponent implements OnInit {
     this.videoControls.clear();
     const first = this.videos()[0];
     if (first) this.videoControls.push(this.newVideoRow(first.id, first.durationSeconds || 60));
-    this.form.patchValue({ name: '', description: '', idRoutineType: this.types()[0]?.id ?? 0, status: 1 });
+    this.form.patchValue({ name: '', description: '', status: 1 });
     this.showForm.set(true);
   }
 
@@ -266,15 +253,14 @@ export class RutinasAdminComponent implements OnInit {
     this.form.patchValue({
       name: routine.name,
       description: routine.description,
-      idRoutineType: routine.idRoutineType,
       status: routine.status,
     });
     this.showForm.set(true);
   }
 
   save(): void {
-    if (this.form.invalid) return;
     const raw = this.form.getRawValue();
+    if (this.form.invalid) return;
     const videos = raw.videos.map((v) => ({ idVideo: Number(v.idVideo), durationSeconds: Number(v.durationSeconds) }));
     if (videos.length === 0 || videos.some((v) => !v.idVideo)) {
       this.formError.set('La rutina debe tener al menos un video válido.');
@@ -284,7 +270,6 @@ export class RutinasAdminComponent implements OnInit {
     const payload = {
       name: raw.name.trim(),
       description: raw.description.trim(),
-      idRoutineType: Number(raw.idRoutineType),
       status: Number(raw.status),
       videos,
     };

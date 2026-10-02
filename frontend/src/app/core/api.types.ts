@@ -90,7 +90,7 @@ export interface ApiRoutine {
   id: number;
   name: string;
   description: string;
-  idRoutineType: number;
+  idRoutineType: number | null;
   routineTypeName: string | null;
   status: number;
   totalDurationSeconds: number;

@@ -14,7 +14,7 @@ export class RoutineController {
     async createRoutine(req: Request, res: Response): Promise<Response> {
         try {
             const { name, description, idRoutineType, status, videos } = loadRoutineData(req.body);
-            const routineId = await this.routineService.createRoutine({ name, description, idRoutineType, status, videos });
+            const routineId = await this.routineService.createRoutine({ name, description, idRoutineType: idRoutineType ?? null, status, videos });
             return res.status(201).json({ message: "Rutina creada con éxito", routineId });
         } catch (error) {
             if (error instanceof Error) {

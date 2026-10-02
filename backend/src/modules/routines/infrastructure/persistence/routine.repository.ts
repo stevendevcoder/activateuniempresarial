@@ -16,7 +16,7 @@ export interface RoutineRecord {
     id: number;
     name: string;
     description: string;
-    idRoutineType: number;
+    idRoutineType: number | null;
     routineTypeName: string | null;
     status: number;
     totalDurationSeconds: number;
@@ -31,7 +31,7 @@ export interface RoutineVideoInput {
 export interface RoutineCreateInput {
     name: string;
     description: string;
-    idRoutineType: number;
+    idRoutineType?: number | null;
     status: number;
     videos: RoutineVideoInput[];
 }
@@ -39,7 +39,7 @@ export interface RoutineCreateInput {
 export type RoutineUpdateInput = Partial<
     Omit<RoutineCreateInput, "idRoutineType" | "status" | "videos">
 > & {
-    idRoutineType?: number;
+    idRoutineType?: number | null;
     status?: number;
     videos?: RoutineVideoInput[];
 };
@@ -92,7 +92,7 @@ export class RoutineRepository implements IRoutineRepository {
             const routine = new Routine();
             routine.name_routine = input.name;
             routine.description_routine = input.description;
-            routine.id_routine_type = input.idRoutineType;
+            routine.id_routine_type = input.idRoutineType ?? null;
             routine.status_routine = input.status;
             const saved = await manager.save(Routine, routine);
 
@@ -118,7 +118,7 @@ export class RoutineRepository implements IRoutineRepository {
             Object.assign(routine, {
                 name_routine: input.name ?? routine.name_routine,
                 description_routine: input.description ?? routine.description_routine,
-                id_routine_type: input.idRoutineType ?? routine.id_routine_type,
+                id_routine_type: input.idRoutineType !== undefined ? input.idRoutineType : routine.id_routine_type,
                 status_routine: input.status ?? routine.status_routine,
             });
             await manager.save(Routine, routine);

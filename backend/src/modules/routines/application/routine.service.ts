@@ -23,9 +23,11 @@ export class RoutineService {
     }
 
     async createRoutine(input: RoutineCreateInput): Promise<number> {
-        const type = await this.routineTypeRepo.findById(input.idRoutineType);
-        if (!type) {
-            throw new Error("El tipo de rutina indicado no existe");
+        if (input.idRoutineType != null) {
+            const type = await this.routineTypeRepo.findById(input.idRoutineType);
+            if (!type) {
+                throw new Error("El tipo de rutina indicado no existe");
+            }
         }
 
         await this.validateVideos(input);
@@ -37,7 +39,7 @@ export class RoutineService {
         if (!existing) {
             throw new Error("Rutina no encontrada");
         }
-        if (input.idRoutineType) {
+        if (input.idRoutineType != null) {
             const type = await this.routineTypeRepo.findById(input.idRoutineType);
             if (!type) {
                 throw new Error("El tipo de rutina indicado no existe");
