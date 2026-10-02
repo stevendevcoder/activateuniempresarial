@@ -15,6 +15,17 @@ export type ReturnEnvironmentVars = {
     APP_TIMEZONE: string;
     SCHEDULER_ENABLED: boolean;
     CONSENT_REQUIRED: boolean;
+    FRONTEND_URL: string;
+    PASSWORD_RESET_TTL_MINUTES: number;
+    SMTP_HOST: string;
+    SMTP_PORT: number;
+    SMTP_SECURE: boolean;
+    SMTP_USER: string;
+    SMTP_PASS: string;
+    SMTP_FROM: string;
+    VAPID_PUBLIC_KEY: string;
+    VAPID_PRIVATE_KEY: string;
+    VAPID_SUBJECT: string;
 };
 
 type ValidationEnvironmentVars = {
@@ -37,6 +48,17 @@ function validateEnvVars(vars: NodeJS.ProcessEnv): ValidationEnvironmentVars {
         APP_TIMEZONE: joi.string().default("America/Bogota"),
         SCHEDULER_ENABLED: joi.boolean().truthy("true").falsy("false").default(true),
         CONSENT_REQUIRED: joi.boolean().truthy("true").falsy("false").default(false),
+        FRONTEND_URL: joi.string().uri().default("http://localhost:4200"),
+        PASSWORD_RESET_TTL_MINUTES: joi.number().integer().min(5).max(1440).default(30),
+        SMTP_HOST: joi.string().allow("").default(""),
+        SMTP_PORT: joi.number().default(587),
+        SMTP_SECURE: joi.boolean().truthy("true").falsy("false").default(false),
+        SMTP_USER: joi.string().allow("").default(""),
+        SMTP_PASS: joi.string().allow("").default(""),
+        SMTP_FROM: joi.string().allow("").default("ACTIVATE Pausas Saludables <no-reply@pausas.com>"),
+        VAPID_PUBLIC_KEY: joi.string().allow("").default(""),
+        VAPID_PRIVATE_KEY: joi.string().allow("").default(""),
+        VAPID_SUBJECT: joi.string().allow("").default("mailto:admin@pausas.com"),
     }).unknown(true);
 
     const { error, value } = envSchema.validate(vars);
@@ -63,6 +85,17 @@ const loadEnvVars = (): ReturnEnvironmentVars => {
         APP_TIMEZONE: value.APP_TIMEZONE,
         SCHEDULER_ENABLED: value.SCHEDULER_ENABLED,
         CONSENT_REQUIRED: value.CONSENT_REQUIRED,
+        FRONTEND_URL: value.FRONTEND_URL.replace(/\/+$/, ""),
+        PASSWORD_RESET_TTL_MINUTES: value.PASSWORD_RESET_TTL_MINUTES,
+        SMTP_HOST: value.SMTP_HOST,
+        SMTP_PORT: value.SMTP_PORT,
+        SMTP_SECURE: value.SMTP_SECURE,
+        SMTP_USER: value.SMTP_USER,
+        SMTP_PASS: value.SMTP_PASS,
+        SMTP_FROM: value.SMTP_FROM,
+        VAPID_PUBLIC_KEY: value.VAPID_PUBLIC_KEY,
+        VAPID_PRIVATE_KEY: value.VAPID_PRIVATE_KEY,
+        VAPID_SUBJECT: value.VAPID_SUBJECT,
     };
 };
 

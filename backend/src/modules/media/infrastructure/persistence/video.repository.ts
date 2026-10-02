@@ -85,13 +85,13 @@ export class VideoRepository implements IVideoRepository {
         return true;
     }
 
+    /**
+     * Borrado definitivo: MediaService solo lo invoca cuando ninguna rutina usa el video y
+     * también elimina el archivo del disco. Para ocultarlo sin borrarlo se usa status = 0.
+     */
     async delete(id: number): Promise<boolean> {
-        const existing = await this.repo.findOne({ where: { id_video: id } });
-        if (!existing) return false;
-
-        existing.status_video = 0;
-        await this.repo.save(existing);
-        return true;
+        const result = await this.repo.delete({ id_video: id });
+        return (result.affected ?? 0) > 0;
     }
 
     async findById(id: number): Promise<VideoRecord | null> {

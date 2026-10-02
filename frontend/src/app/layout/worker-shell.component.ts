@@ -1,11 +1,18 @@
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../core/services/auth.service';
+import { DialogService } from '../core/services/dialog.service';
 import { PausasService } from '../core/services/pausas.service';
+import { PausePushData, PauseAlertService } from '../core/services/pause-alert.service';
+import { PushMessage, PushService } from '../core/services/push.service';
 import { ReminderService } from '../core/services/reminder.service';
 import { RutinasService } from '../core/services/rutinas.service';
 import { AvatarComponent, avatarKind } from '../shared/avatar.component';
 import { IconComponent } from '../shared/icon.component';
+import { PauseAlertComponent } from '../shared/pause-alert.component';
+
+const PROMPT_DISMISSED_KEY = 'activate_push_prompt_dismissed';
 
 export interface WorkerNavItem {
   path: string;
@@ -32,7 +39,7 @@ const UE_LOGO = 'https://fabricasoluciones.uniempresarial.edu.co/assets/logo%20u
 
 @Component({
   selector: 'app-worker-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, IconComponent, AvatarComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, IconComponent, AvatarComponent, PauseAlertComponent],
   template: `
     <div class="min-h-dvh bg-slate-50 flex flex-col">
       @if (!immersive()) {
@@ -173,15 +180,59 @@ const UE_LOGO = 'https://fabricasoluciones.uniempresarial.edu.co/assets/logo%20u
           </div>
         </nav>
       }
+
+      <app-pause-alert />
+
+      @if (showPrompt()) {
+        <!-- ══ INVITACIÓN A ACTIVAR NOTIFICACIONES ══ -->
+        <div class="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm"
+          (click)="dismissPrompt()">
+          <div class="w-full max-w-md rounded-3xl bg-white p-7 text-center shadow-2xl"
+            role="dialog" aria-modal="true" aria-labelledby="push-prompt-title" (click)="$event.stopPropagation()">
+            <span class="inline-grid place-items-center w-14 h-14 rounded-full bg-brand-50 text-brand-700">
+              <app-icon name="bell" [size]="26" />
+            </span>
+            <h2 id="push-prompt-title" class="mt-3.5 text-lg font-extrabold tracking-tight text-slate-900">
+              ¿Te avisamos cuando sea hora de tu pausa?
+            </h2>
+            <p class="mt-2 mx-auto max-w-sm text-sm text-slate-500 leading-relaxed">
+              Activa las notificaciones y te recordaremos tus pausas activas aunque tengas ACTIVATE cerrado.
+              Puedes cambiarlo cuando quieras desde tu perfil.
+            </p>
+            @if (promptError()) {
+              <p class="mt-4 text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">{{ promptError() }}</p>
+            }
+            <div class="grid grid-cols-2 gap-3 mt-6">
+              <button type="button" (click)="dismissPrompt()"
+                class="px-4 py-3 min-h-12 rounded-xl bg-white text-slate-600 ring-1 ring-slate-200 text-sm font-bold hover:bg-slate-50 transition-colors">
+                Ahora no
+              </button>
+              <button type="button" (click)="enablePush()" [disabled]="enabling()"
+                class="px-4 py-3 min-h-12 rounded-xl bg-brand-800 hover:bg-brand-900 disabled:opacity-60 text-white text-sm font-bold transition-colors">
+                {{ enabling() ? 'Activando…' : 'Activar' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      }
     </div>
   `,
 })
 export class WorkerShellComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly rutinas = inject(RutinasService);
+  private readonly route = inject(ActivatedRoute);
   private readonly reminders = inject(ReminderService);
+  private readonly push = inject(PushService);
+  private readonly alerts = inject(PauseAlertService);
+  private readonly dialog = inject(DialogService);
+  private pushMessages: Subscription | null = null;
   readonly auth = inject(AuthService);
   readonly pausas = inject(PausasService);
+
+  readonly showPrompt = signal(false);
+  readonly enabling = signal(false);
+  readonly promptError = signal('');
 
   readonly logo = UE_LOGO;
   readonly items = WORKER_NAV;
@@ -200,10 +251,76 @@ export class WorkerShellComponent implements OnInit, OnDestroy {
       error: () => this.pausas.load(),
     });
     this.reminders.start();
+    this.setupPush();
   }
 
   ngOnDestroy(): void {
     this.reminders.stop();
+    this.pushMessages?.unsubscribe();
+    this.alerts.dismiss();
+  }
+
+  async enablePush(): Promise<void> {
+    this.enabling.set(true);
+    this.promptError.set('');
+    const result = await this.push.enable();
+    this.enabling.set(false);
+    if (result === 'enabled') {
+      this.auth.setPreference('notifications', true);
+      this.showPrompt.set(false);
+    } else if (result === 'denied') {
+      this.promptError.set('El navegador bloqueó las notificaciones. Puedes permitirlas en la configuración del sitio.');
+    } else {
+      this.promptError.set('No pudimos activar las notificaciones en este navegador. Inténtalo más tarde.');
+    }
+  }
+
+  dismissPrompt(): void {
+    this.showPrompt.set(false);
+    try {
+      localStorage.setItem(PROMPT_DISMISSED_KEY, '1');
+    } catch {
+      /* sin almacenamiento local se vuelve a preguntar en la próxima sesión */
+    }
+  }
+
+  private setupPush(): void {
+    // Avisos que el service worker reenvía a la pestaña (push recibido o clic en la notificación).
+    this.pushMessages = this.push.messages.subscribe((message) => this.handlePushMessage(message));
+    void this.push.init();
+
+    // La app se abrió desde una notificación con la pestaña cerrada: /app/pausas?aviso={...}
+    const aviso = this.route.snapshot.queryParamMap.get('aviso')
+      ?? this.route.firstChild?.snapshot.queryParamMap.get('aviso');
+    if (aviso) {
+      try {
+        this.alerts.fromPush(JSON.parse(aviso) as PausePushData, undefined, undefined, true);
+      } catch {
+        /* parámetro mal formado: se ignora */
+      }
+      this.router.navigate([], { relativeTo: this.route.firstChild ?? this.route, queryParams: { aviso: null }, queryParamsHandling: 'merge', replaceUrl: true });
+    }
+
+    let dismissed = false;
+    try {
+      dismissed = localStorage.getItem(PROMPT_DISMISSED_KEY) === '1';
+    } catch {
+      dismissed = false;
+    }
+    this.showPrompt.set(this.push.permission() === 'default' && !dismissed && !aviso);
+  }
+
+  private handlePushMessage(message: PushMessage): void {
+    const { payload } = message;
+    if (payload.type === 'test') {
+      this.dialog.alert({ title: payload.title ?? 'Notificación', message: payload.body ?? '' }).subscribe();
+      return;
+    }
+    if (payload.type !== 'pausa-due') return;
+    const opened = this.alerts.fromPush(payload.data ?? {}, payload.title, payload.body, message.action === 'start');
+    if (message.action === 'start' && opened) this.alerts.start();
+    // Llegó una pausa nueva: se refresca la línea de tiempo del día.
+    this.pausas.load();
   }
 
   /** Durante la pausa activa no hay chrome: la pantalla es inmersiva a pantalla completa. */

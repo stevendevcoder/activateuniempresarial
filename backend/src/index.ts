@@ -7,6 +7,8 @@ import { ScheduleRepository } from "./modules/schedules/infrastructure/persisten
 import { ConfigRepository } from "./modules/config/infrastructure/persistence/config.repository";
 import { ConfigService } from "./modules/config/application/config.service";
 import { SchedulerService } from "./modules/schedules/application/scheduler.service";
+import { PushService, isPushEnabled } from "./modules/push/application/push.service";
+import { PAUSA_DUE, PausaDueEvent, schedulerEvents } from "./events/scheduler.events";
 
 const PORT = Number(envs.PORT);
 
@@ -21,6 +23,16 @@ const PORT = Number(envs.PORT);
         );
         if (envs.SCHEDULER_ENABLED) {
             scheduler.start();
+        }
+
+        // Cada pausa que emite el motor se avisa por Web Push a los trabajadores del área.
+        if (isPushEnabled()) {
+            const push = new PushService();
+            schedulerEvents.on(PAUSA_DUE, (event: PausaDueEvent) => {
+                push.notifyPausaDue(event).catch((error) => console.error("[push] error al notificar pausa:", error));
+            });
+        } else {
+            console.warn("[push] VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY no configuradas: notificaciones push desactivadas");
         }
 
         const server = http.createServer(app);

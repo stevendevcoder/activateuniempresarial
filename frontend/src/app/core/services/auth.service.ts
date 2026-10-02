@@ -5,6 +5,7 @@ import { Observable, map, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginResponse, MeResponse, TokenPayload } from '../api.types';
 import { Preferences, SessionUser } from '../models';
+import { PushService } from './push.service';
 
 const TOKEN_KEY = 'activate_token';
 const USER_KEY = 'activate_user';
@@ -22,6 +23,7 @@ const DEFAULT_PREFERENCES: Preferences = {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly push = inject(PushService);
   private readonly api = environment.apiUrl;
 
   readonly user = signal<SessionUser | null>(this.readUser());
@@ -41,6 +43,19 @@ export class AuthService {
         tap((res) => localStorage.setItem(TOKEN_KEY, res.token)),
         switchMap(() => this.refreshProfile()),
       );
+  }
+
+  /** Pide el enlace de recuperación. El backend responde igual exista o no el correo. */
+  forgotPassword(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.api}/api/password/forgot`, { email: email.trim() });
+  }
+
+  validateResetToken(token: string): Observable<{ valid: boolean }> {
+    return this.http.get<{ valid: boolean }>(`${this.api}/api/password/reset/${encodeURIComponent(token)}`);
+  }
+
+  resetPassword(token: string, password: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.api}/api/password/reset`, { token, password });
   }
 
   /** Recarga los datos del usuario autenticado desde GET /api/me. */
@@ -98,6 +113,8 @@ export class AuthService {
   }
 
   logout(redirect = true): void {
+    // Este navegador deja de recibir los avisos push del usuario que sale.
+    void this.push.forgetDevice();
     this.clearSession();
     if (redirect) this.router.navigate(['/login']);
   }

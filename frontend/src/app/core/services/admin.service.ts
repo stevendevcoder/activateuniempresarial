@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -86,6 +86,48 @@ export class AdminService {
     formData.append('durationSeconds', String(metadata.durationSeconds));
     formData.append('status', String(metadata.status));
     return this.http.post<Msg & { videoId: number }>(`${this.api}/media`, formData);
+  }
+
+  updateVideo(
+    id: number,
+    metadata: { title: string; description: string; durationSeconds: number; status: number },
+  ): Observable<Msg> {
+    return this.http.put<Msg>(`${this.api}/media/${id}`, metadata);
+  }
+
+  /** Igual que uploadVideo pero emite el progreso de la subida (HttpEventType.UploadProgress). */
+  uploadVideoWithProgress(
+    file: File,
+    metadata: { title: string; description: string; durationSeconds: number; status: number },
+  ): Observable<HttpEvent<Msg & { videoId: number }>> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('title', metadata.title);
+    formData.append('description', metadata.description);
+    formData.append('durationSeconds', String(metadata.durationSeconds));
+    formData.append('status', String(metadata.status));
+    return this.http.post<Msg & { videoId: number }>(`${this.api}/media`, formData, {
+      reportProgress: true,
+      observe: 'events',
+    });
+  }
+
+  replaceVideoFile(id: number, file: File): Observable<HttpEvent<Msg>> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.put<Msg>(`${this.api}/media/${id}/file`, formData, {
+      reportProgress: true,
+      observe: 'events',
+    });
+  }
+
+  deleteVideo(id: number): Observable<Msg> {
+    return this.http.delete<Msg>(`${this.api}/media/${id}`);
+  }
+
+  /** El stream exige el token JWT, así que se descarga como blob para la vista previa. */
+  getVideoBlob(id: number): Observable<Blob> {
+    return this.http.get(`${this.api}/media/${id}/stream`, { responseType: 'blob' });
   }
 
   getRoutines(): Observable<ApiRoutine[]> {

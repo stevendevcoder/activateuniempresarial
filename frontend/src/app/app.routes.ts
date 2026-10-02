@@ -9,6 +9,18 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login.component').then((m) => m.LoginComponent),
   },
   {
+    path: 'recuperar',
+    canActivate: [guestGuard],
+    loadComponent: () =>
+      import('./pages/password/forgot-password.component').then((m) => m.ForgotPasswordComponent),
+  },
+  {
+    path: 'restablecer',
+    canActivate: [guestGuard],
+    loadComponent: () =>
+      import('./pages/password/reset-password.component').then((m) => m.ResetPasswordComponent),
+  },
+  {
     path: 'app',
     canActivate: [authGuard, workerGuard],
     loadComponent: () => import('./layout/worker-shell.component').then((m) => m.WorkerShellComponent),
@@ -85,6 +97,10 @@ export const routes: Routes = [
         path: 'rutinas',
         loadComponent: () =>
           import('./pages/admin/rutinas-admin.component').then((m) => m.RutinasAdminComponent),
+      },
+      {
+        path: 'videos',
+        loadComponent: () => import('./pages/admin/videos.component').then((m) => m.VideosComponent),
       },
       {
         path: 'cronogramas',

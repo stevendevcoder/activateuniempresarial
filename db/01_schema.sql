@@ -207,6 +207,31 @@ CREATE TABLE IF NOT EXISTS users.consent (
 
 CREATE INDEX IF NOT EXISTS idx_consent_user ON users.consent(id_user);
 
+-- Recuperación de contraseña: tokens de un solo uso (se guarda solo el hash SHA-256)
+CREATE TABLE IF NOT EXISTS users.password_reset (
+    id_reset    SERIAL PRIMARY KEY,
+    id_user     INTEGER NOT NULL REFERENCES users."user"(id_user) ON DELETE CASCADE,
+    token_hash  VARCHAR(64) NOT NULL UNIQUE,
+    expires_at  TIMESTAMPTZ NOT NULL,
+    used_at     TIMESTAMPTZ,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_password_reset_user ON users.password_reset(id_user);
+
+-- Notificaciones Web Push: una suscripción por navegador/dispositivo
+CREATE TABLE IF NOT EXISTS users.push_subscription (
+    id_subscription SERIAL PRIMARY KEY,
+    id_user         INTEGER NOT NULL REFERENCES users."user"(id_user) ON DELETE CASCADE,
+    endpoint        TEXT NOT NULL UNIQUE,
+    p256dh          VARCHAR(255) NOT NULL,
+    auth            VARCHAR(255) NOT NULL,
+    user_agent      VARCHAR(255),
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_push_subscription_user ON users.push_subscription(id_user);
+
 COMMENT ON TABLE users."user" IS 'Usuarios de la aplicación (trabajadores y administradores)';
 COMMENT ON COLUMN users."user".status_user IS '1 = activo, 0 = inactivo (baja lógica)';
 COMMENT ON COLUMN users."user".photo_user IS 'Ruta pública de la foto de perfil (EP09)';
@@ -238,5 +263,7 @@ COMMENT ON COLUMN users.pausa_event.event_type IS '1 = inicio, 2 = fin, 3 = apla
 COMMENT ON COLUMN users.pausa_event.reason IS 'Motivo obligatorio en cancelaciones (EP11.5)';
 COMMENT ON TABLE users.consent IS 'Consentimiento informado de tratamiento de datos (EP16, Ley 1581)';
 COMMENT ON COLUMN users.consent.revoked_at IS 'Fecha de revocación del consentimiento (NULL si sigue activo)';
+COMMENT ON TABLE users.password_reset IS 'Tokens de recuperación de contraseña (un solo uso, con vencimiento)';
+COMMENT ON TABLE users.push_subscription IS 'Suscripciones Web Push de los navegadores de cada usuario';
 COMMENT ON COLUMN users."user".anonymized_user IS 'TRUE cuando los datos personales fueron anonimizados (EP16)';
 COMMENT ON COLUMN users.global_config.retention_months IS 'Meses de retención antes de anonimizar (EP16)';

@@ -125,6 +125,25 @@
           </div>
         }
       </div>
+
+      @if (auth.preferences().notifications) {
+        <div class="mt-3 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            @if (push.subscribed()) {
+              <span class="inline-flex items-center gap-1.5 font-semibold text-emerald-700">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Avisos push activos en este dispositivo
+              </span>
+            } @else {
+              Los avisos aparecerán mientras tengas ACTIVATE abierto.
+            }
+          </p>
+          <button type="button" (click)="sendTestPush()" [disabled]="testing()"
+            class="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-50 text-brand-800 ring-1 ring-brand-100 text-xs font-bold hover:bg-brand-100 disabled:opacity-60 transition-colors">
+            <app-icon name="bell" [size]="14" />
+            {{ testing() ? 'Enviando…' : 'Enviar notificación de prueba' }}
+          </button>
+        </div>
+      }
     </div>
 
     <!-- Cerrar sesión -->

@@ -14,6 +14,8 @@ import { Schedule } from "../modules/schedules/infrastructure/persistence/schedu
 import { ScheduleEvent } from "../modules/schedules/infrastructure/persistence/schedule-event.entity";
 import { PausaEvent } from "../modules/telemetry/infrastructure/persistence/pausa-event.entity";
 import { Consent } from "../modules/privacy/infrastructure/persistence/consent.entity";
+import { PasswordReset } from "../modules/auth/infrastructure/persistence/password-reset.entity";
+import { PushSubscription } from "../modules/push/infrastructure/persistence/push-subscription.entity";
 import envs from "./environment-vars";
 
 export const AppDataSource = new DataSource({
@@ -38,6 +40,8 @@ export const AppDataSource = new DataSource({
         ScheduleEvent,
         PausaEvent,
         Consent,
+        PasswordReset,
+        PushSubscription,
     ],
 });
 

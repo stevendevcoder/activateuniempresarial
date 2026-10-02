@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import path from "path";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../../config/data-base";
 import { RoutineVideo } from "../../routines/infrastructure/persistence/routine-video.entity";
@@ -84,15 +85,20 @@ export class MediaService {
         return this.videoRepo.findAll();
     }
 
+    /**
+     * Resuelve la ruta guardada (absoluta de multer o relativa al directorio de subidas)
+     * usando `path` para que funcione igual en Windows y Linux. Devuelve null si sale del directorio.
+     */
     private buildFilePath(storedPath: string): string | null {
-        const base = MEDIA_UPLOAD_DIR.replace(/\/+$/, "");
-        const cleaned = storedPath.startsWith("/") ? storedPath : `/${storedPath}`;
-        if (cleaned.startsWith(base)) {
-            return cleaned;
-        }
-        if (cleaned.includes("..")) {
-            return null;
-        }
-        return `${base}${cleaned}`;
+        const candidates = [
+            path.resolve(MEDIA_UPLOAD_DIR, storedPath),
+            path.resolve(MEDIA_UPLOAD_DIR, storedPath.replace(/^[/\\]+/, "")),
+        ];
+        return candidates.find((candidate) => this.isInsideUploadDir(candidate)) ?? null;
+    }
+
+    private isInsideUploadDir(candidate: string): boolean {
+        const relative = path.relative(MEDIA_UPLOAD_DIR, candidate);
+        return relative !== "" && !relative.startsWith("..") && !path.isAbsolute(relative);
     }
 }

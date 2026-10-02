@@ -7,8 +7,10 @@ import { UserService } from "../../application/user.service";
 import { AuthController } from "./auth.controller";
 import { authenticateToken } from "../../../../middlewares/auth.middleware";
 import { requirePermission } from "../../../../middlewares/rbac.middleware";
-import { loginLimiter } from "../../../../middlewares/rate-limit.middleware";
+import { forgotPasswordLimiter, loginLimiter, resetPasswordLimiter } from "../../../../middlewares/rate-limit.middleware";
 import { PERMISSIONS } from "../../../../config/permissions";
+import { PasswordResetService } from "../../application/password-reset.service";
+import { PasswordResetController } from "./password-reset.controller";
 
 const router = Router();
 
@@ -18,8 +20,14 @@ const areaRepository = new AreaRepository();
 const authService = new AuthService(userRepository, roleRepository);
 const userService = new UserService(userRepository, roleRepository, areaRepository);
 const authController = new AuthController(authService, userService);
+const passwordResetController = new PasswordResetController(new PasswordResetService(userRepository));
 
 router.post("/login", loginLimiter, (req, res) => authController.login(req, res));
+
+// Recuperación de contraseña (pública).
+router.post("/password/forgot", forgotPasswordLimiter, (req, res) => passwordResetController.forgot(req, res));
+router.get("/password/reset/:token", resetPasswordLimiter, (req, res) => passwordResetController.validate(req, res));
+router.post("/password/reset", resetPasswordLimiter, (req, res) => passwordResetController.reset(req, res));
 
 router.get("/me", authenticateToken, (req, res) => authController.getMe(req, res));
 

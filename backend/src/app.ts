@@ -17,6 +17,7 @@ import configRoutes from "./modules/config/infrastructure/http/config.routes";
 import scheduleRoutes from "./modules/schedules/infrastructure/http/schedule.routes";
 import telemetryRoutes from "./modules/telemetry/infrastructure/http/telemetry.routes";
 import privacyRoutes from "./modules/privacy/infrastructure/http/privacy.routes";
+import pushRoutes from "./modules/push/infrastructure/http/push.routes";
 import mePrivacyRoutes from "./modules/privacy/infrastructure/http/me-privacy.routes";
 
 class App {
@@ -69,6 +70,7 @@ class App {
         this.app.use("/api/telemetry", telemetryRoutes);
         this.app.use("/api", mePrivacyRoutes);
         this.app.use("/api/privacy", privacyRoutes);
+        this.app.use("/api/push", pushRoutes);
     }
 
     private errorHandlers(): void {
