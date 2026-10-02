@@ -246,3 +246,46 @@ li.on {
     grid-column: 1 / -1;
   }
 }
+
+.mood-note {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mood-note .face {
+  width: 44px;
+  height: 44px;
+  flex: none;
+}
+
+.progress-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-head h3 {
+  margin: 0;
+}
+
+.today-face {
+  width: 40px;
+  height: 40px;
+  flex: none;
+}
+
+.mood-note b {
+  display: block;
+  color: #10b981;
+}
+
+.mood-note.sad b {
+  color: #e11d48;
+}
+
+.mood-note p {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}

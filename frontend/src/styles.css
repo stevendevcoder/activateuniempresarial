@@ -859,6 +859,24 @@ textarea.input {
   }
 }
 
+@media (max-width: 639px) {
+  .form-field-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
+  }
+
+  .form-actions > button {
+    flex: 1 1 120px;
+  }
+
+  .form-actions .btn-pill {
+    min-width: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

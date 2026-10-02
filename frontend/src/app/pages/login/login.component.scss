@@ -19,6 +19,22 @@
   padding: 48px 24px 58px;
 }
 
+.logo-badge {
+  width: fit-content;
+  margin: 0 auto;
+  padding: 14px;
+  background: #fff;
+  border-radius: 28px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.brand-logo {
+  display: block;
+  width: 150px;
+  max-width: 100%;
+  height: auto;
+}
+
 .hero h1 {
   margin: 14px 0 0;
   color: #fff;
@@ -160,11 +176,18 @@ label {
 }
 
 .forgot {
+  display: block;
+  width: 100%;
   margin: 18px 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
   text-align: center;
   color: #1b2f8a;
   font-size: 14px;
   font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .hint {
@@ -173,6 +196,22 @@ label {
   color: #94a3b8;
   font-size: 11px;
   line-height: 1.5;
+}
+
+.hint.ok {
+  color: #16a34a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.forgot-box {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.forgot-box .submit {
+  margin-top: 2px;
 }
 
 .bars {

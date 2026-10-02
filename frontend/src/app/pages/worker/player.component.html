@@ -5,7 +5,18 @@
       <h1>{{ routine().name }}</h1>
       <p>Es momento de moverte un poco.</p>
     </div>
-    <span class="back ghost"></span>
+    @if (phase() === 'running') {
+      <button
+        type="button"
+        class="back voice"
+        (click)="toggleVoice()"
+        [attr.aria-label]="voiceOn() ? 'Silenciar guía por voz' : 'Activar guía por voz'"
+      >
+        <app-icon [name]="voiceOn() ? 'volume' : 'volume-x'" [size]="20" />
+      </button>
+    } @else {
+      <span class="back ghost"></span>
+    }
     @if (phase() === 'running') {
       <div class="meta">
         <span>Ejercicio {{ index() + 1 }} de {{ routine().exercises.length }}</span>
@@ -18,13 +29,13 @@
   <div class="sheet">
     @switch (phase()) {
       @case ('loading') {
-        <div class="mascot"><app-mascot pose="wave" /></div>
+        <div class="mascot"><app-mascota name="feliz" /></div>
         <h2>Preparando tu pausa…</h2>
         <p class="quote">“Busca un espacio cómodo y respira profundo.”</p>
       }
 
       @case ('error') {
-        <div class="mascot"><app-mascot pose="idle" /></div>
+        <div class="mascot"><app-mascota name="triste" /></div>
         <h2>No pudimos iniciar</h2>
         <p class="alert alert-error">{{ error() }}</p>
         <div class="actions single">
@@ -33,7 +44,12 @@
       }
 
       @case ('done') {
-        <div class="mascot"><app-mascot pose="arms-up" /></div>
+        <div class="confetti" aria-hidden="true">
+          @for (piece of confetti; track $index) {
+            <i [style.left.%]="piece.left" [style.animation-delay.s]="piece.delay" [style.animation-duration.s]="piece.duration"></i>
+          }
+        </div>
+        <div class="mascot celebrate"><app-mascota name="feliz" [animate]="true" /></div>
         <h2>¡Pausa completada!</h2>
         <p class="quote">“Buen trabajo. Tu cuerpo te lo agradece.”</p>
         <p class="tip"><app-icon name="check-circle" [size]="16" /> Registramos tu cumplimiento correctamente.</p>
@@ -47,14 +63,42 @@
           <div class="video">
             <video [src]="url" autoplay muted loop playsinline></video>
           </div>
+        } @else if (current().videoId) {
+          <div class="video-placeholder" aria-live="polite">
+            @if (loadingVideo()) {
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Cargando video…</span>
+            } @else {
+              <app-icon name="film" [size]="22" />
+              <span>No se pudo cargar el video.</span>
+            }
+          </div>
         } @else {
-          <div class="mascot" [class.pulse]="loadingVideo()"><app-mascot [pose]="current().pose" /></div>
+          <div class="video-placeholder" aria-label="Espacio reservado para el video del ejercicio">
+            <app-icon name="activity" [size]="24" />
+            <span>Sigue la instrucción del ejercicio.</span>
+          </div>
         }
-        <h2>{{ current().name }}</h2>
-        <p class="quote">“{{ current().instruction }}”</p>
-        <div class="clock">{{ clock() }}</div>
-        <small>tiempo restante</small>
-        <div class="bar dark"><i [style.width.%]="exerciseProgress()"></i></div>
+        <h2 class="video-title">{{ routine().name }}</h2>
+        <p class="video-description">{{ current().instruction }}</p>
+        <div class="timer">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="track" cx="60" cy="60" r="52" />
+            <circle
+              class="progress"
+              cx="60"
+              cy="60"
+              r="52"
+              transform="rotate(-90 60 60)"
+              [attr.stroke-dasharray]="ringCircumference"
+              [attr.stroke-dashoffset]="ringOffset()"
+            />
+          </svg>
+          <div class="timer-label">
+            <b>{{ clock() }}</b>
+            <small>restante</small>
+          </div>
+        </div>
         <p class="tip"><app-icon name="heart" [size]="16" /> {{ current().tip }}</p>
 
         @if (actionError()) {

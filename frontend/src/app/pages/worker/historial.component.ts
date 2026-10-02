@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PausasService } from '../../core/services/pausas.service';
 import { IconComponent } from '../../shared/icon.component';
+import { MoodComponent } from '../../shared/mood.component';
 
 @Component({
   selector: 'app-historial',
-  imports: [RouterLink, IconComponent],
+  imports: [RouterLink, IconComponent, MoodComponent],
   template: `
     <section class="page">
       <header class="hero-navy">
@@ -17,9 +18,12 @@ import { IconComponent } from '../../shared/icon.component';
         @for (day of pausas.history(); track day.date) {
           <article class="card">
             <div class="row">
-              <div>
-                <b>{{ day.label }}</b>
-                <small>{{ day.date }}</small>
+              <div class="who">
+                <span class="face"><app-mood [mood]="day.mood" /></span>
+                <div>
+                  <b>{{ day.label }}</b>
+                  <small>{{ day.date }}</small>
+                </div>
               </div>
               <em>{{ day.completed }}/{{ day.total }}</em>
             </div>
@@ -40,7 +44,9 @@ import { IconComponent } from '../../shared/icon.component';
   styles: `
     .back { display: inline-grid; place-items: center; width: 32px; height: 32px; color: #fff; margin-bottom: 8px; }
     .list { padding: 16px; display: grid; gap: 12px; }
-    .row { display: flex; justify-content: space-between; }
+    .row { display: flex; justify-content: space-between; align-items: center; }
+    .who { display: flex; align-items: center; gap: 12px; }
+    .face { width: 40px; height: 40px; flex: none; }
     b { display: block; }
     small, em { color: #94a3b8; font-size: 12px; font-style: normal; }
     .bar { height: 8px; margin-top: 10px; border-radius: 999px; background: #eef2ff; overflow: hidden; }

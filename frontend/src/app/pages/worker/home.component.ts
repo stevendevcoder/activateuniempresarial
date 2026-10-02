@@ -5,13 +5,14 @@ import { AuthService } from '../../core/services/auth.service';
 import { PausasService } from '../../core/services/pausas.service';
 import { PortalService } from '../../core/services/portal.service';
 import { minutesFromTime, toMeridiem } from '../../core/utils';
+import { AchievementsComponent } from '../../shared/achievements.component';
 import { IconComponent } from '../../shared/icon.component';
-import { MascotComponent } from '../../shared/mascot.component';
+import { MascotaComponent } from '../../shared/mascota.component';
 import { ProgressRingComponent } from '../../shared/progress-ring.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, IconComponent, MascotComponent, ProgressRingComponent],
+  imports: [RouterLink, IconComponent, MascotaComponent, ProgressRingComponent, AchievementsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -21,6 +22,32 @@ export class HomeComponent {
   private readonly portal = inject(PortalService);
 
   readonly goals = computed(() => this.pausas.activePauses().slice(0, 4));
+
+  /** Cara de la mascota según el cumplimiento de HOY (acompaña el anillo de progreso). */
+  readonly todayMascot = computed<'feliz' | 'triste'>(() => {
+    if (this.pausas.totalActive() === 0) return 'feliz';
+    return this.pausas.compliance() >= 50 ? 'feliz' : 'triste';
+  });
+
+  /** Mensaje de ánimo según cómo le fue al trabajador el día anterior. */
+  readonly yesterdayNote = computed(() => {
+    // Si hoy ya completaste todas tus pausas, no tiene sentido recordar lo de ayer.
+    if (this.pausas.totalActive() > 0 && this.pausas.compliance() >= 100) return null;
+    const day = this.pausas.yesterday();
+    if (!day || day.total === 0) return null;
+    if (day.mood === 'happy') {
+      return {
+        mood: 'happy' as const,
+        title: '¡Bien hecho ayer!',
+        text: `Completaste tus ${day.total} pausa(s). Sigue cuidando tu bienestar.`,
+      };
+    }
+    return {
+      mood: 'sad' as const,
+      title: 'Ayer quedaste a mitad de camino',
+      text: `No completaste tus pausas de ayer (${day.completed}/${day.total}). Hoy es un nuevo día para intentarlo.`,
+    };
+  });
 
   readonly motivation = computed(() => {
     const compliance = this.pausas.compliance();

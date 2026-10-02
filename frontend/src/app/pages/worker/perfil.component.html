@@ -46,7 +46,7 @@
             <b>{{ item.label }}</b>
             <small>{{ auth.preferences()[item.key] ? item.on : item.off }}</small>
           </div>
-          <button type="button" class="toggle" [class.on]="auth.preferences()[item.key]" (click)="auth.setPreference(item.key, !auth.preferences()[item.key])" [attr.aria-label]="item.label">
+          <button type="button" class="toggle" [class.on]="auth.preferences()[item.key]" (click)="togglePref(item.key)" [attr.aria-label]="item.label">
             <span></span>
           </button>
         </div>

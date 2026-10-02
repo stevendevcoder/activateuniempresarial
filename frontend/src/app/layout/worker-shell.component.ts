@@ -1,7 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { PausasService } from '../core/services/pausas.service';
+import { ReminderService } from '../core/services/reminder.service';
 import { RutinasService } from '../core/services/rutinas.service';
 import { IconComponent } from '../shared/icon.component';
 
@@ -34,11 +35,12 @@ import { IconComponent } from '../shared/icon.component';
     </div>
   `,
 })
-export class WorkerShellComponent implements OnInit {
+export class WorkerShellComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
   private readonly pausas = inject(PausasService);
   private readonly rutinas = inject(RutinasService);
+  private readonly reminders = inject(ReminderService);
 
   ngOnInit(): void {
     this.rutinas.load();
@@ -47,6 +49,11 @@ export class WorkerShellComponent implements OnInit {
       next: () => this.pausas.load(),
       error: () => this.pausas.load(),
     });
+    this.reminders.start();
+  }
+
+  ngOnDestroy(): void {
+    this.reminders.stop();
   }
 
   hideNav(): boolean {

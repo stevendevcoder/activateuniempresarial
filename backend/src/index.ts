@@ -3,10 +3,10 @@ import app from "./app";
 import envs from "./config/environment-vars";
 import { connectDB, AppDataSource } from "./config/data-base";
 import { bootstrapData } from "./config/bootstrap";
-import { ScheduleRepository } from "./modules/schedules/repository/schedule.repository";
-import { ConfigRepository } from "./modules/config/repository/config.repository";
-import { ConfigService } from "./modules/config/service/config.service";
-import { SchedulerService } from "./modules/schedules/service/scheduler.service";
+import { ScheduleRepository } from "./modules/schedules/infrastructure/persistence/schedule.repository";
+import { ConfigRepository } from "./modules/config/infrastructure/persistence/config.repository";
+import { ConfigService } from "./modules/config/application/config.service";
+import { SchedulerService } from "./modules/schedules/application/scheduler.service";
 
 const PORT = Number(envs.PORT);
 

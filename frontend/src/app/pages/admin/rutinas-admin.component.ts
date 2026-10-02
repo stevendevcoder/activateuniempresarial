@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ApiRoutine, RoutineType, VideoItem } from '../../core/api.types';
+import { FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ApiRoutine, VideoItem } from '../../core/api.types';
 import { AdminService } from '../../core/services/admin.service';
 import { DialogService } from '../../core/services/dialog.service';
 import { poseForType } from '../../core/services/rutinas.service';
@@ -10,7 +10,7 @@ import { MascotComponent } from '../../shared/mascot.component';
 
 @Component({
   selector: 'app-rutinas-admin',
-  imports: [ReactiveFormsModule, IconComponent, MascotComponent],
+  imports: [FormsModule, ReactiveFormsModule, IconComponent, MascotComponent],
   template: `
     <section class="page">
       <header class="hero-navy">
@@ -76,30 +76,20 @@ import { MascotComponent } from '../../shared/mascot.component';
               <span>Descripción</span>
               <textarea class="input" rows="2" formControlName="description"></textarea>
             </label>
-            <div class="form-field-row">
-              <label class="form-field">
-                <span>Tipo</span>
-                <select class="input" formControlName="idRoutineType">
-                  @for (type of types(); track type.id) {
-                    <option [value]="type.id">{{ type.name }}</option>
-                  }
-                </select>
-              </label>
-              <label class="form-field">
-                <span>Estado</span>
-                <select class="input" formControlName="status">
-                  <option [value]="1">Activa</option>
-                  <option [value]="0">Inactiva</option>
-                </select>
-              </label>
-            </div>
+            <label class="form-field">
+              <span>Estado</span>
+              <select class="input" formControlName="status">
+                <option [value]="1">Activa</option>
+                <option [value]="0">Inactiva</option>
+              </select>
+            </label>
 
             <div class="form-field">
               <div class="videos-head">
                 <span>Videos</span>
                 <div>
                   <button type="button" class="btn-ghost" (click)="uploadInput.click()" [disabled]="uploading()">
-                    <app-icon name="upload" [size]="14" /> {{ uploading() ? 'Subiendo…' : 'Subir video' }}
+                    <app-icon name="upload" [size]="14" /> {{ pendingVideo() ? 'Cambiar video' : 'Seleccionar video' }}
                   </button>
                   <button type="button" class="btn-ghost" (click)="addVideo()" [disabled]="videos().length === 0">
                     <app-icon name="plus" [size]="14" /> Agregar
@@ -107,6 +97,22 @@ import { MascotComponent } from '../../shared/mascot.component';
                 </div>
                 <input #uploadInput type="file" accept="video/*,.mp4,.webm,.ogg,.mov" hidden (change)="onVideoSelected($event)" />
               </div>
+              @if (pendingVideo(); as pending) {
+                <div class="video-upload-form">
+                  <p class="muted upload-filename">Archivo: {{ pending.name }}</p>
+                  <label class="form-field">
+                    <span>Nombre del video</span>
+                    <input class="input" name="videoTitle" [(ngModel)]="uploadTitle" [ngModelOptions]="{ standalone: true }" maxlength="255" required />
+                  </label>
+                  <label class="form-field">
+                    <span>Descripción del video</span>
+                    <textarea class="input" name="videoDescription" [(ngModel)]="uploadDescription" [ngModelOptions]="{ standalone: true }" rows="3" maxlength="500" required></textarea>
+                  </label>
+                  <button type="button" class="btn-ghost" (click)="uploadPendingVideo()" [disabled]="uploading() || !uploadTitle.trim() || !uploadDescription.trim()">
+                    <app-icon name="upload" [size]="14" /> {{ uploading() ? 'Subiendo…' : 'Guardar video' }}
+                  </button>
+                </div>
+              }
               @if (uploadError()) {
                 <p class="alert alert-error">{{ uploadError() }}</p>
               }
@@ -153,11 +159,19 @@ import { MascotComponent } from '../../shared/mascot.component';
     .videos-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
     .videos-head > span { color: #111827; font-size: 13px; font-weight: 800; }
     .videos-head > div { display: flex; gap: 6px; }
+    .video-upload-form { display: grid; gap: 10px; padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; }
+    .upload-filename { margin: 0; font-size: 12px; overflow-wrap: anywhere; }
     .hint { margin: 0; font-size: 12px; }
     .video-rows { display: grid; gap: 8px; }
-    .video-row { display: grid; grid-template-columns: 24px 1fr 90px 36px; align-items: center; gap: 8px; }
+    .video-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) 90px 36px; align-items: center; gap: 8px; }
+    .video-row .input { min-width: 0; }
     .num { color: #94a3b8; font-size: 12px; font-weight: 800; text-align: center; }
     .secs { padding: 14px 10px; }
+    @media (max-width: 480px) {
+      .video-row { grid-template-columns: 20px minmax(0, 1fr) 68px 32px; gap: 6px; }
+      .video-row .icon-btn { width: 32px; }
+      .video-row .secs { padding: 12px 6px; }
+    }
   `,
 })
 export class RutinasAdminComponent implements OnInit {
@@ -166,7 +180,6 @@ export class RutinasAdminComponent implements OnInit {
   private readonly dialog = inject(DialogService);
 
   readonly routines = signal<ApiRoutine[]>([]);
-  readonly types = signal<RoutineType[]>([]);
   readonly videos = signal<VideoItem[]>([]);
   readonly loading = signal(false);
   readonly saving = signal(false);
@@ -176,11 +189,13 @@ export class RutinasAdminComponent implements OnInit {
   readonly uploadError = signal('');
   readonly showForm = signal(false);
   readonly editingId = signal<number | null>(null);
+  readonly pendingVideo = signal<File | null>(null);
+  uploadTitle = '';
+  uploadDescription = '';
 
   readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     description: [''],
-    idRoutineType: [0, Validators.required],
     status: [1, Validators.required],
     videos: this.fb.array<ReturnType<RutinasAdminComponent['newVideoRow']>>([]),
   });
@@ -191,7 +206,6 @@ export class RutinasAdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
-    this.admin.getRoutineTypes().subscribe({ next: (t) => this.types.set(t), error: () => undefined });
     this.loadVideos();
   }
 
@@ -228,12 +242,26 @@ export class RutinasAdminComponent implements OnInit {
     input.value = '';
     if (!file) return;
 
+    this.pendingVideo.set(file);
+    this.uploadTitle = file.name.replace(/\.[^.]+$/, '');
+    this.uploadDescription = '';
+    this.uploadError.set('');
+  }
+
+  uploadPendingVideo(): void {
+    const file = this.pendingVideo();
+    const title = this.uploadTitle.trim();
+    const description = this.uploadDescription.trim();
+    if (!file || !title || !description) return;
+
     this.uploading.set(true);
     this.uploadError.set('');
-    const title = file.name.replace(/\.[^.]+$/, '');
-    this.admin.uploadVideo(file, { title, description: '', durationSeconds: 0, status: 1 }).subscribe({
+    this.admin.uploadVideo(file, { title, description, durationSeconds: 0, status: 1 }).subscribe({
       next: (res) => {
         this.uploading.set(false);
+        this.pendingVideo.set(null);
+        this.uploadTitle = '';
+        this.uploadDescription = '';
         this.loadVideos();
         const empty = this.videoControls.controls.find((c) => Number(c.get('idVideo')?.value) === 0);
         if (empty) empty.get('idVideo')?.setValue(res.videoId);
@@ -252,7 +280,7 @@ export class RutinasAdminComponent implements OnInit {
     this.videoControls.clear();
     const first = this.videos()[0];
     if (first) this.videoControls.push(this.newVideoRow(first.id, first.durationSeconds || 60));
-    this.form.patchValue({ name: '', description: '', idRoutineType: this.types()[0]?.id ?? 0, status: 1 });
+    this.form.patchValue({ name: '', description: '', status: 1 });
     this.showForm.set(true);
   }
 
@@ -266,15 +294,14 @@ export class RutinasAdminComponent implements OnInit {
     this.form.patchValue({
       name: routine.name,
       description: routine.description,
-      idRoutineType: routine.idRoutineType,
       status: routine.status,
     });
     this.showForm.set(true);
   }
 
   save(): void {
-    if (this.form.invalid) return;
     const raw = this.form.getRawValue();
+    if (this.form.invalid) return;
     const videos = raw.videos.map((v) => ({ idVideo: Number(v.idVideo), durationSeconds: Number(v.durationSeconds) }));
     if (videos.length === 0 || videos.some((v) => !v.idVideo)) {
       this.formError.set('La rutina debe tener al menos un video válido.');
@@ -284,7 +311,6 @@ export class RutinasAdminComponent implements OnInit {
     const payload = {
       name: raw.name.trim(),
       description: raw.description.trim(),
-      idRoutineType: Number(raw.idRoutineType),
       status: Number(raw.status),
       videos,
     };

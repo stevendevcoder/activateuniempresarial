@@ -5,6 +5,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { DialogService } from '../../core/services/dialog.service';
 import { PausasService } from '../../core/services/pausas.service';
 import { PortalService } from '../../core/services/portal.service';
+import { ReminderService } from '../../core/services/reminder.service';
 import { apiError } from '../../core/utils';
 import { AvatarComponent, avatarKind } from '../../shared/avatar.component';
 import { IconComponent } from '../../shared/icon.component';
@@ -20,6 +21,7 @@ export class PerfilComponent {
   readonly pausas = inject(PausasService);
   private readonly portal = inject(PortalService);
   private readonly dialog = inject(DialogService);
+  private readonly reminders = inject(ReminderService);
 
   readonly editing = signal(false);
   readonly changingPassword = signal(false);
@@ -45,6 +47,18 @@ export class PerfilComponent {
     { key: 'reminders', label: 'Recordatorios', icon: 'clock', on: 'Activados', off: 'Desactivados' },
     { key: 'visualRest', label: 'Descanso visual', icon: 'eye', on: 'Activado', off: 'Desactivado' },
   ];
+
+  async togglePref(key: keyof Preferences): Promise<void> {
+    const next = !this.auth.preferences()[key];
+    if (key === 'notifications' && next) {
+      const granted = await this.reminders.requestPermission();
+      if (!granted) {
+        this.error.set('Tu navegador bloqueó las notificaciones. Actívalas en los permisos del sitio.');
+        return;
+      }
+    }
+    this.auth.setPreference(key, next);
+  }
 
   toggleEdit(): void {
     if (!this.editing()) {

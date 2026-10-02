@@ -1,15 +1,14 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { apiError } from '../../core/utils';
 import { IconComponent } from '../../shared/icon.component';
-import { LogoComponent } from '../../shared/logo.component';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, IconComponent, LogoComponent],
+  imports: [ReactiveFormsModule, FormsModule, IconComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   host: { class: 'login-host' },
@@ -22,6 +21,26 @@ export class LoginComponent {
   hidePassword = true;
   loading = false;
   errorMessage = '';
+
+  readonly showForgot = signal(false);
+  readonly forgotSent = signal(false);
+  readonly forgotError = signal('');
+  forgotEmail = '';
+
+  toggleForgot(): void {
+    this.showForgot.update((v) => !v);
+    this.forgotError.set('');
+  }
+
+  sendForgot(): void {
+    const email = this.forgotEmail.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      this.forgotError.set('Escribe un correo válido.');
+      return;
+    }
+    this.forgotError.set('');
+    this.forgotSent.set(true);
+  }
 
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],

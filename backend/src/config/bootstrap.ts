@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import { AppDataSource } from "./data-base";
-import { Role } from "../modules/roles/repository/role.entity";
-import { Permission } from "../modules/roles/repository/permission.entity";
-import { User } from "../modules/auth/repository/user.entity";
+import { Role } from "../modules/roles/infrastructure/persistence/role.entity";
+import { Permission } from "../modules/roles/infrastructure/persistence/permission.entity";
+import { User } from "../modules/auth/infrastructure/persistence/user.entity";
 import { ADMIN_ROLE_NAME, WORKER_ROLE_NAME } from "./permissions";
 import envs from "./environment-vars";
 
