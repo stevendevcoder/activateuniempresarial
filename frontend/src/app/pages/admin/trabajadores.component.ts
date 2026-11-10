@@ -1,16 +1,19 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { AdminUser, Area, Role } from '../../core/api.types';
 import { AdminService } from '../../core/services/admin.service';
 import { DialogService } from '../../core/services/dialog.service';
 import { apiError } from '../../core/utils';
 import { avatarKind } from '../../shared/avatar.component';
+import { IconComponent } from '../../shared/icon.component';
 
 type StatusFilter = 'all' | 'active' | 'inactive';
+type SortOption = 'name' | 'recent' | 'area';
 
 @Component({
   selector: 'app-trabajadores',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink, IconComponent],
   templateUrl: './trabajadores.component.html',
   styleUrl: './trabajadores.component.scss',
 })
@@ -31,6 +34,8 @@ export class TrabajadoresComponent implements OnInit {
   readonly editingId = signal<number | null>(null);
   readonly query = signal('');
   readonly filter = signal<StatusFilter>('active');
+  readonly areaFilter = signal<number | null>(null);
+  readonly sort = signal<SortOption>('name');
 
   readonly tabs: { id: StatusFilter; label: string }[] = [
     { id: 'active', label: 'Activos' },
@@ -40,10 +45,22 @@ export class TrabajadoresComponent implements OnInit {
 
   readonly filtered = computed(() => {
     const q = this.query().trim().toLowerCase();
-    return this.users().filter((u) => {
+    const area = this.areaFilter();
+    const list = this.users().filter((u) => {
       const matchesStatus = this.matchesStatus(u, this.filter());
-      const matchesQuery = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
-      return matchesStatus && matchesQuery;
+      const matchesArea = area === null || u.idArea === area;
+      const matchesQuery =
+        !q ||
+        u.name.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q) ||
+        (u.areaName ?? '').toLowerCase().includes(q);
+      return matchesStatus && matchesArea && matchesQuery;
+    });
+    const sort = this.sort();
+    return [...list].sort((a, b) => {
+      if (sort === 'recent') return b.id - a.id;
+      if (sort === 'area') return (a.areaName ?? '~').localeCompare(b.areaName ?? '~', 'es') || a.name.localeCompare(b.name, 'es');
+      return a.name.localeCompare(b.name, 'es');
     });
   });
 
@@ -110,8 +127,17 @@ export class TrabajadoresComponent implements OnInit {
     this.showForm.set(false);
   }
 
+  onAreaFilter(value: string): void {
+    this.areaFilter.set(value === '' ? null : Number(value));
+  }
+
   save(): void {
-    if (this.form.invalid) return;
+    if (this.saving()) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.formError.set('Revisa los campos marcados antes de guardar.');
+      return;
+    }
     const raw = this.form.getRawValue();
     const editing = this.editingId();
 
@@ -184,6 +210,13 @@ export class TrabajadoresComponent implements OnInit {
           error: (err) => this.error.set(apiError(err, 'No se pudo desactivar el usuario.')),
         });
       });
+  }
+
+  reactivate(user: AdminUser): void {
+    this.admin.updateUser(user.id, { status: 1 }).subscribe({
+      next: () => this.load(),
+      error: (err) => this.error.set(apiError(err, 'No se pudo reactivar el usuario.')),
+    });
   }
 
   private matchesStatus(user: AdminUser, filter: StatusFilter): boolean {
