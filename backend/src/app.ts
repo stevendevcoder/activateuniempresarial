@@ -34,6 +34,10 @@ class App {
 
     private middlewares(): void {
         const origins = envs.CORS_ORIGIN === "*" ? "*" : envs.CORS_ORIGIN.split(",").map((o) => o.trim());
+        // Detrás de un proxy (Nginx) se toma la IP real del cliente para el rate-limit
+        if (envs.TRUST_PROXY > 0) {
+            this.app.set("trust proxy", envs.TRUST_PROXY);
+        }
         this.app.use(cors({ origin: origins }));
         this.app.use(express.json());
         this.app.use(globalLimiter);

@@ -9,6 +9,7 @@ export type ReturnEnvironmentVars = {
     JWT_EXPIRES_IN: string;
     BCRYPT_ROUNDS: number;
     CORS_ORIGIN: string;
+    TRUST_PROXY: number;
     MEDIA_UPLOAD_DIR: string;
     MEDIA_MAX_FILE_SIZE_MB: number;
     MEDIA_ALLOWED_MIME: string;
@@ -42,6 +43,7 @@ function validateEnvVars(vars: NodeJS.ProcessEnv): ValidationEnvironmentVars {
         JWT_EXPIRES_IN: joi.string().default("1h"),
         BCRYPT_ROUNDS: joi.number().default(12),
         CORS_ORIGIN: joi.string().default("*"),
+        TRUST_PROXY: joi.number().integer().min(0).default(0),
         MEDIA_UPLOAD_DIR: joi.string().default("./uploads"),
         MEDIA_MAX_FILE_SIZE_MB: joi.number().default(200),
         MEDIA_ALLOWED_MIME: joi.string().default("video/mp4,video/webm,video/ogg,video/quicktime"),
@@ -79,6 +81,7 @@ const loadEnvVars = (): ReturnEnvironmentVars => {
         JWT_EXPIRES_IN: value.JWT_EXPIRES_IN,
         BCRYPT_ROUNDS: value.BCRYPT_ROUNDS,
         CORS_ORIGIN: value.CORS_ORIGIN,
+        TRUST_PROXY: value.TRUST_PROXY,
         MEDIA_UPLOAD_DIR: value.MEDIA_UPLOAD_DIR,
         MEDIA_MAX_FILE_SIZE_MB: value.MEDIA_MAX_FILE_SIZE_MB,
         MEDIA_ALLOWED_MIME: value.MEDIA_ALLOWED_MIME,
