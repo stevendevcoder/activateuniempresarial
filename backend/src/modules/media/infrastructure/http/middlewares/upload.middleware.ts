@@ -1,18 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import multer from "multer";
-import crypto from "crypto";
-import { MEDIA_UPLOAD_DIR, MEDIA_MAX_FILE_SIZE, MEDIA_ALLOWED_MIME_TYPES, extensionForMime } from "../../../../../config/media";
-
-const storage = multer.diskStorage({
-    destination: MEDIA_UPLOAD_DIR,
-    filename: (_req, file, cb) => {
-        const extension = extensionForMime(file.mimetype, ".mp4");
-        cb(null, `${Date.now()}-${crypto.randomUUID()}${extension}`);
-    },
-});
+import { MEDIA_MAX_FILE_SIZE, MEDIA_ALLOWED_MIME_TYPES } from "../../../../../config/media";
 
 const upload = multer({
-    storage,
+    storage: multer.memoryStorage(),
     limits: { fileSize: MEDIA_MAX_FILE_SIZE },
     fileFilter: (_req, file, cb) => {
         if (MEDIA_ALLOWED_MIME_TYPES.includes(file.mimetype)) {

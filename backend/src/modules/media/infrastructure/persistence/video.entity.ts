@@ -17,6 +17,9 @@ export class Video {
     @Column({ type: "character varying", length: 500 })
     file_path_video!: string;
 
+    @Column({ type: "bytea", nullable: true })
+    video_data!: Buffer | null;
+
     @Column({ type: "character varying", length: 100 })
     mime_type_video!: string;
 

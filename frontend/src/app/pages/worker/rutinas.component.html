@@ -36,25 +36,6 @@
       </p>
     }
 
-    <!-- Pausa libre -->
-    <a [routerLink]="['/app/pausas/ejecutar', 'libre']"
-      class="flex items-center gap-4 rounded-2xl bg-gradient-to-br from-brand-800 to-brand-950 text-white p-4 shadow-lg shadow-brand-900/20 transition-transform active:scale-[0.99]">
-      <span class="grid place-items-center w-14 h-14 rounded-2xl bg-white/10 border border-white/15 shrink-0">
-        <app-mascot pose="wave" />
-      </span>
-      <div class="min-w-0 flex-1">
-        <p class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-rose-300">Recomendada</p>
-        <h2 class="mt-1 text-base font-extrabold tracking-tight">Pausa libre</h2>
-        <p class="text-xs text-blue-100/85 mt-1">Ejercicios guiados rápidos, sin video</p>
-      </div>
-      <span class="shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white text-brand-900 text-xs font-bold">
-        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M6.3 3.4A1 1 0 005 4.2v11.6a1 1 0 001.5.9l9.2-5.8a1 1 0 000-1.7L6.3 3.4z"></path>
-        </svg>
-        2 min
-      </span>
-    </a>
-
     <p class="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 pt-1">
       {{ filter() === 'todas' ? 'Todas las rutinas' : filter() }}
     </p>

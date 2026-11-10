@@ -3,7 +3,7 @@ import joi from "joi";
 export type ReturnRoutineUpdateData = Partial<{
     name: string;
     description: string;
-    idRoutineType: number;
+    idRoutineType: number | null;
     status: number;
     videos: {
         idVideo: number;
@@ -34,7 +34,7 @@ function validateRoutineUpdateData(data: any) {
             description: joi.string().trim().max(500).allow("").messages({
                 "string.base": "La descripción debe ser un texto",
             }),
-            idRoutineType: joi.number().integer().positive().messages({
+            idRoutineType: joi.number().integer().positive().allow(null).messages({
                 "number.base": "El tipo de rutina debe ser un ID",
                 "number.positive": "El tipo de rutina debe ser un ID positivo",
             }),

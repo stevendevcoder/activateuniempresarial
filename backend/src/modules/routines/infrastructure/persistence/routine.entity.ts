@@ -12,12 +12,12 @@ export class Routine {
     @Column({ type: "character varying", length: 500, default: "" })
     description_routine!: string;
 
-    @Column({ type: "integer" })
-    id_routine_type!: number;
+    @Column({ type: "integer", nullable: true })
+    id_routine_type!: number | null;
 
     @ManyToOne(() => RoutineType)
     @JoinColumn({ name: "id_routine_type" })
-    routineType!: RoutineType;
+    routineType!: RoutineType | null;
 
     @Column({ type: "integer", default: 1 })
     status_routine!: number;

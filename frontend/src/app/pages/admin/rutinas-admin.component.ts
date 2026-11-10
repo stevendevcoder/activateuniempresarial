@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiRoutine, RoutineType, VideoItem } from '../../core/api.types';
 import { AdminService } from '../../core/services/admin.service';
 import { DialogService } from '../../core/services/dialog.service';
@@ -21,7 +21,7 @@ const THUMB_ICONS = [
 
 @Component({
   selector: 'app-rutinas-admin',
-  imports: [ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './rutinas-admin.component.html',
   styleUrl: './rutinas-admin.component.scss',
 })
@@ -44,11 +44,14 @@ export class RutinasAdminComponent implements OnInit {
   readonly query = signal('');
   readonly onlyActive = signal(false);
   readonly typeFilter = signal(0);
+  readonly pendingVideo = signal<File | null>(null);
+  uploadTitle = '';
+  uploadDescription = '';
 
   readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     description: [''],
-    idRoutineType: [0, Validators.required],
+    idRoutineType: [null as number | null],
     status: [1, Validators.required],
     videos: this.fb.array<ReturnType<RutinasAdminComponent['newVideoRow']>>([]),
   });
@@ -112,7 +115,7 @@ export class RutinasAdminComponent implements OnInit {
     this.onlyActive.set(false);
   }
 
-  countByType(idRoutineType: number): number {
+  countByType(idRoutineType: number | null): number {
     return this.routines().filter((r) => r.idRoutineType === idRoutineType).length;
   }
 
@@ -120,11 +123,11 @@ export class RutinasAdminComponent implements OnInit {
     return formatDuration(seconds || 0);
   }
 
-  thumbClass(idRoutineType: number): string {
+  thumbClass(idRoutineType: number | null): string {
     return THUMB_GRADIENTS[this.indexOfType(idRoutineType) % THUMB_GRADIENTS.length];
   }
 
-  thumbIconClass(idRoutineType: number): string {
+  thumbIconClass(idRoutineType: number | null): string {
     return THUMB_ICONS[this.indexOfType(idRoutineType) % THUMB_ICONS.length];
   }
 
@@ -139,12 +142,30 @@ export class RutinasAdminComponent implements OnInit {
     input.value = '';
     if (!file) return;
 
+    this.pendingVideo.set(file);
+    this.uploadTitle = file.name.replace(/\.[^.]+$/, '');
+    this.uploadDescription = '';
+    this.uploadError.set('');
+  }
+
+  cancelPendingVideo(): void {
+    this.pendingVideo.set(null);
+    this.uploadTitle = '';
+    this.uploadDescription = '';
+  }
+
+  uploadPendingVideo(): void {
+    const file = this.pendingVideo();
+    const title = this.uploadTitle.trim();
+    const description = this.uploadDescription.trim();
+    if (!file || !title || !description) return;
+
     this.uploading.set(true);
     this.uploadError.set('');
-    const title = file.name.replace(/\.[^.]+$/, '');
-    this.admin.uploadVideo(file, { title, description: '', durationSeconds: 0, status: 1 }).subscribe({
+    this.admin.uploadVideo(file, { title, description, durationSeconds: 0, status: 1 }).subscribe({
       next: (res) => {
         this.uploading.set(false);
+        this.cancelPendingVideo();
         this.loadVideos();
         const empty = this.videoControls.controls.find((c) => Number(c.get('idVideo')?.value) === 0);
         if (empty) empty.get('idVideo')?.setValue(res.videoId);
@@ -163,12 +184,8 @@ export class RutinasAdminComponent implements OnInit {
     this.videoControls.clear();
     const first = this.videos()[0];
     if (first) this.videoControls.push(this.newVideoRow(first.id, first.durationSeconds || 60));
-    this.form.patchValue({
-      name: '',
-      description: '',
-      idRoutineType: this.types()[0]?.id ?? 0,
-      status: 1,
-    });
+    this.cancelPendingVideo();
+    this.form.patchValue({ name: '', description: '', idRoutineType: null, status: 1 });
     this.showForm.set(true);
   }
 
@@ -176,6 +193,7 @@ export class RutinasAdminComponent implements OnInit {
     this.editingId.set(routine.id);
     this.formError.set('');
     this.videoControls.clear();
+    this.cancelPendingVideo();
     for (const video of [...routine.videos].sort((a, b) => a.position - b.position)) {
       this.videoControls.push(this.newVideoRow(video.idVideo, video.videoDuration));
     }
@@ -200,7 +218,7 @@ export class RutinasAdminComponent implements OnInit {
     const payload = {
       name: raw.name.trim(),
       description: raw.description.trim(),
-      idRoutineType: Number(raw.idRoutineType),
+      idRoutineType: raw.idRoutineType ? Number(raw.idRoutineType) : null,
       status: Number(raw.status),
       videos,
     };
@@ -263,7 +281,7 @@ export class RutinasAdminComponent implements OnInit {
     downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), 'rutinas.csv');
   }
 
-  private indexOfType(idRoutineType: number): number {
+  private indexOfType(idRoutineType: number | null): number {
     const index = this.types().findIndex((t) => t.id === idRoutineType);
     return index < 0 ? 0 : index;
   }

@@ -67,6 +67,7 @@ export class InitialSchema1758100000000 implements MigrationInterface {
                 description_video     VARCHAR(500) NOT NULL DEFAULT '',
                 file_name_video       VARCHAR(255) NOT NULL,
                 file_path_video       VARCHAR(500) NOT NULL,
+                video_data            BYTEA,
                 mime_type_video       VARCHAR(100) NOT NULL,
                 size_video            INTEGER NOT NULL DEFAULT 0,
                 duration_seconds_video INTEGER NOT NULL DEFAULT 0,

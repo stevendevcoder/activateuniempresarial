@@ -84,7 +84,7 @@ export function toRoutine(api: ApiRoutine): Routine {
       ? videos.map((video, i) => ({
           id: `v-${video.id}`,
           name: video.videoTitle ?? `Ejercicio ${i + 1}`,
-          instruction: 'Sigue el video y replica cada movimiento con calma.',
+          instruction: video.videoDescription?.trim() || api.description?.trim() || 'Sigue el video y replica cada movimiento con calma.',
           seconds: video.videoDuration > 0 ? video.videoDuration : 60,
           pose,
           tip: TIPS[i % TIPS.length],
