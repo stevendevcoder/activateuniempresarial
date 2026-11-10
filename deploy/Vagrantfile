@@ -1,0 +1,413 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+#
+# ACTIVATE Pausas Saludables — despliegue en 3 máquinas virtuales
+#
+#   db        Debian 12          192.168.56.10   PostgreSQL :5432  (solo acepta al backend)
+#   backend   Ubuntu 22.04       192.168.56.20   API Node.js :3000 (solo acepta al frontend)
+#   frontend  CentOS Stream 9    192.168.56.30   Nginx :80         (Angular + proxy /api)
+#
+# Cada VM descarga el código con git clone desde GitHub. Para desplegar cambios nuevos:
+#   git push  ->  vagrant provision backend   (o frontend / db)
+#
+# Abrir la app en el anfitrión: http://localhost:8080
+
+REPO_URL = "https://github.com/stevendevcoder/activateuniempresarial.git"
+BRANCH   = "feature/videos-recuperacion-push"
+
+DB_IP       = "192.168.56.10"
+BACKEND_IP  = "192.168.56.20"
+FRONTEND_IP = "192.168.56.30"
+
+DB_NAME      = "pausas_activas"
+DB_USER      = "pausas_admin"
+DB_PASSWORD  = "Pausas_Segura_2026"
+BACKEND_PORT = "3000"
+
+# --------------------------------------------------
+# Funciones comunes a las 3 máquinas
+# --------------------------------------------------
+COMMON = <<'SHELL'
+#!/bin/bash
+set -euo pipefail
+REPO_DIR=/opt/activate/repo
+
+# Descarga el código la primera vez y lo actualiza en cada `vagrant provision`
+sync_repo() {
+  if [ -d "$REPO_DIR/.git" ]; then
+    git -C "$REPO_DIR" fetch --depth 1 origin "$BRANCH"
+    git -C "$REPO_DIR" reset --hard FETCH_HEAD
+  else
+    mkdir -p "$(dirname "$REPO_DIR")"
+    git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$REPO_DIR"
+  fi
+  echo "==> Código en la versión: $(git -C "$REPO_DIR" log -1 --format='%h %s')"
+}
+
+# Memoria virtual extra para que npm y el build de Angular no se queden sin RAM
+ensure_swap() {
+  if ! grep -q '^/swapfile' /proc/swaps; then
+    [ -f /swapfile ] || dd if=/dev/zero of=/swapfile bs=1M count="$1" status=none
+    chmod 600 /swapfile
+    mkswap /swapfile >/dev/null
+    swapon /swapfile
+    grep -q '^/swapfile' /etc/fstab || echo '/swapfile none swap sw 0 0' >> /etc/fstab
+  fi
+}
+
+# Instala dependencias solo si cambió el package-lock.json
+npm_install() {
+  local hash
+  hash=$(sha256sum package-lock.json | cut -d' ' -f1)
+  if [ "$(cat node_modules/.lock-hash 2>/dev/null)" != "$hash" ]; then
+    npm ci --no-audit --no-fund
+    echo "$hash" > node_modules/.lock-hash
+  fi
+}
+SHELL
+
+# --------------------------------------------------
+# 1. Base de Datos: Debian + PostgreSQL
+# --------------------------------------------------
+DB_SCRIPT = <<'SHELL'
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -y -qq
+
+# El proyecto usa PostgreSQL: si quedó MariaDB de la versión anterior de este Vagrantfile, se elimina
+if dpkg -s mariadb-server >/dev/null 2>&1; then
+  echo "==> [db] Eliminando MariaDB/MySQL"
+  systemctl stop mariadb || true
+  apt-get purge -y -qq default-mysql-server mariadb-server || true
+  apt-get autoremove -y -qq
+fi
+
+echo "==> [db] Instalando PostgreSQL"
+apt-get install -y -qq postgresql git ufw
+
+sync_repo
+
+PG_VERSION=$(ls /etc/postgresql | sort -V | tail -1)
+PG_DIR=/etc/postgresql/$PG_VERSION/main
+
+echo "==> [db] Aceptando conexiones del backend ($BACKEND_IP)"
+cd /tmp
+sudo -u postgres psql -qc "ALTER SYSTEM SET listen_addresses = '*';"
+HBA="host    $DB_NAME    $DB_USER    $BACKEND_IP/32    scram-sha-256"
+grep -qF "$HBA" "$PG_DIR/pg_hba.conf" || echo "$HBA" >> "$PG_DIR/pg_hba.conf"
+systemctl enable postgresql
+systemctl restart postgresql
+
+echo "==> [db] Creando usuario y base de datos"
+if sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$DB_USER'" | grep -q 1; then
+  sudo -u postgres psql -qc "ALTER ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASSWORD';"
+else
+  sudo -u postgres psql -qc "CREATE ROLE $DB_USER LOGIN PASSWORD '$DB_PASSWORD';"
+fi
+if ! sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='$DB_NAME'" | grep -q 1; then
+  sudo -u postgres createdb -O "$DB_USER" "$DB_NAME"
+fi
+
+# Los scripts se ejecutan como el dueño de la base para que las tablas le pertenezcan
+export PGPASSWORD="$DB_PASSWORD"
+PSQL=(psql -h 127.0.0.1 -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -q)
+if [ "$("${PSQL[@]}" -tAc "SELECT to_regclass('users.role') IS NOT NULL")" = "t" ]; then
+  echo "==> [db] El esquema ya existe: no se vuelve a cargar"
+else
+  echo "==> [db] Cargando esquema y datos de prueba"
+  "${PSQL[@]}" -f "$REPO_DIR/db/01_schema.sql"
+  "${PSQL[@]}" -f "$REPO_DIR/db/02_seed.sql"
+fi
+
+echo "==> [db] Firewall: SSH + PostgreSQL solo desde el backend"
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow 22/tcp
+ufw delete allow from "$BACKEND_IP" to any port 3306 proto tcp >/dev/null 2>&1 || true
+ufw allow from "$BACKEND_IP" to any port 5432 proto tcp
+ufw --force enable
+
+"${PSQL[@]}" -c "\dt users.*"
+echo "==> [db] Listo"
+SHELL
+
+# --------------------------------------------------
+# 2. Backend: Ubuntu Server + Node.js
+# --------------------------------------------------
+BACKEND_SCRIPT = <<'SHELL'
+export DEBIAN_FRONTEND=noninteractive
+ensure_swap 1024
+
+echo "==> [backend] Instalando Node.js 22 y utilidades"
+apt-get update -y -qq
+apt-get install -y -qq curl ca-certificates git ufw postgresql-client
+if ! node -v 2>/dev/null | grep -q '^v22'; then
+  curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+  apt-get install -y -qq nodejs
+fi
+node -v
+id -u activate >/dev/null 2>&1 || useradd --system --no-create-home --shell /usr/sbin/nologin activate
+
+sync_repo
+APP_DIR=$REPO_DIR/backend
+cd "$APP_DIR"
+
+echo "==> [backend] Instalando dependencias"
+npm_install
+
+# Los secretos se generan una sola vez y se conservan entre redespliegues
+SECRETS=/etc/activate/secrets.env
+if [ ! -f "$SECRETS" ]; then
+  echo "==> [backend] Generando secreto JWT y claves de notificaciones push"
+  mkdir -p /etc/activate
+  VAPID_JSON=$(node_modules/.bin/web-push generate-vapid-keys --json)
+  {
+    echo "JWT_SECRET=$(openssl rand -hex 48)"
+    echo "VAPID_PUBLIC_KEY=$(node -e 'console.log(JSON.parse(process.argv[1]).publicKey)' "$VAPID_JSON")"
+    echo "VAPID_PRIVATE_KEY=$(node -e 'console.log(JSON.parse(process.argv[1]).privateKey)' "$VAPID_JSON")"
+  } > "$SECRETS"
+  chmod 600 "$SECRETS"
+fi
+
+cat > .env <<ENV
+PORT=$BACKEND_PORT
+NODE_ENV=production
+DATABASE_URL=postgres://$DB_USER:$DB_PASSWORD@$DB_HOST:5432/$DB_NAME
+JWT_EXPIRES_IN=1h
+BCRYPT_ROUNDS=12
+CORS_ORIGIN=*
+TRUST_PROXY=1
+MEDIA_UPLOAD_DIR=./uploads
+MEDIA_MAX_FILE_SIZE_MB=200
+APP_TIMEZONE=America/Bogota
+SCHEDULER_ENABLED=true
+CONSENT_REQUIRED=false
+FRONTEND_URL=$FRONTEND_URL
+SMTP_HOST=
+VAPID_SUBJECT=mailto:admin@pausas.com
+ENV
+cat "$SECRETS" >> .env
+chown root:activate .env
+chmod 640 .env
+mkdir -p uploads
+chown -R activate:activate uploads
+
+echo "==> [backend] Esperando a la base de datos en $DB_HOST:5432"
+for _ in $(seq 1 30); do
+  pg_isready -h "$DB_HOST" -p 5432 -q && break
+  sleep 2
+done
+pg_isready -h "$DB_HOST" -p 5432 || { echo "La VM db no responde: ejecuta 'vagrant up db'" >&2; exit 1; }
+
+echo "==> [backend] Registrando el servicio systemd"
+# Se ejecuta con tsx: el build de tsc deja imports ESM sin extensión que Node no resuelve
+cat > /etc/systemd/system/activate-backend.service <<UNIT
+[Unit]
+Description=ACTIVATE Pausas Saludables - API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=activate
+WorkingDirectory=$APP_DIR
+ExecStart=$APP_DIR/node_modules/.bin/tsx src/index.ts
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+systemctl daemon-reload
+systemctl enable activate-backend
+systemctl restart activate-backend
+
+echo "==> [backend] Firewall: SSH + API solo desde el frontend"
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow 22/tcp
+ufw delete allow from "$FRONTEND_IP" to any port 8000 proto tcp >/dev/null 2>&1 || true
+ufw allow from "$FRONTEND_IP" to any port "$BACKEND_PORT" proto tcp
+ufw --force enable
+
+echo "==> [backend] Comprobando /api/health"
+for _ in $(seq 1 30); do
+  if curl -fs "http://localhost:$BACKEND_PORT/api/health"; then
+    echo
+    echo "==> [backend] Listo"
+    exit 0
+  fi
+  sleep 2
+done
+echo "La API no respondió. Revisa: sudo journalctl -u activate-backend -n 50" >&2
+exit 1
+SHELL
+
+# --------------------------------------------------
+# 3. Frontend: CentOS Stream 9 + Nginx
+# --------------------------------------------------
+FRONTEND_SCRIPT = <<'SHELL'
+ensure_swap 2048
+
+echo "==> [frontend] Instalando Nginx, firewalld, git y Node.js 20"
+dnf install -y -q git nginx firewalld
+if ! node -v 2>/dev/null | grep -q '^v20'; then
+  { dnf module reset -y -q nodejs && dnf module enable -y -q nodejs:20 && dnf install -y -q nodejs npm; } \
+    || { curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && dnf install -y -q nodejs; }
+fi
+node -v
+
+sync_repo
+cd "$REPO_DIR/frontend"
+
+echo "==> [frontend] Instalando dependencias y compilando Angular (tarda unos minutos)"
+npm_install
+NODE_OPTIONS=--max-old-space-size=1536 NG_CLI_ANALYTICS=false npx ng build --configuration production
+
+echo "==> [frontend] Publicando en /usr/share/nginx/html"
+rm -rf /usr/share/nginx/html/*
+cp -r dist/activate/browser/. /usr/share/nginx/html/
+restorecon -R /usr/share/nginx/html 2>/dev/null || true
+
+echo "==> [frontend] Configurando Nginx (proxy /api -> $BACKEND_URL)"
+cat > /etc/nginx/nginx.conf <<'NGINX'
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+include /usr/share/nginx/modules/*.conf;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include      /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    access_log   /var/log/nginx/access.log;
+    sendfile     on;
+    gzip         on;
+    gzip_types   text/css application/javascript application/json image/svg+xml;
+
+    server {
+        listen      80 default_server;
+        listen      [::]:80 default_server;
+        server_name _;
+        root        /usr/share/nginx/html;
+        index       index.html;
+
+        # API y archivos subidos (videos, avatares) -> VM del backend
+        location /api/ {
+            proxy_pass           __BACKEND_URL__;
+            proxy_http_version   1.1;
+            proxy_set_header     Host              $host;
+            proxy_set_header     X-Real-IP         $remote_addr;
+            proxy_set_header     X-Forwarded-For   $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Forwarded-Proto $scheme;
+            client_max_body_size 200m;
+            proxy_read_timeout   300s;
+        }
+
+        # El service worker de las notificaciones push no debe quedar en caché
+        location = /sw-push.js {
+            add_header Cache-Control "no-cache";
+        }
+
+        # Rutas de Angular (SPA): cualquier ruta desconocida carga index.html
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }
+}
+NGINX
+sed -i "s#__BACKEND_URL__#$BACKEND_URL#" /etc/nginx/nginx.conf
+nginx -t
+
+# SELinux bloquea por defecto que Nginx abra conexiones hacia otra máquina
+if command -v getenforce >/dev/null && [ "$(getenforce)" != "Disabled" ]; then
+  setsebool -P httpd_can_network_connect 1
+fi
+
+echo "==> [frontend] Firewall: SSH + HTTP"
+systemctl enable --now firewalld
+firewall-cmd --quiet --permanent --add-service=http
+firewall-cmd --quiet --permanent --add-service=ssh
+firewall-cmd --quiet --reload
+
+systemctl enable nginx
+systemctl restart nginx
+
+echo "==> [frontend] Comprobando el proxy hacia el backend"
+curl -fs http://localhost/api/health && echo || echo "Aviso: el backend ($BACKEND_URL) todavía no responde; el frontend sí quedó publicado"
+echo "==> [frontend] Listo: http://localhost:8080  (o http://$FRONTEND_IP)"
+SHELL
+
+Vagrant.configure("2") do |config|
+  # El código no se comparte desde el anfitrión: cada VM lo clona de GitHub
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.box_check_update = false
+
+  repo_env = { "REPO_URL" => REPO_URL, "BRANCH" => BRANCH }
+
+  # --------------------------------------------------
+  # 1. Base de Datos: Debian (PostgreSQL)
+  # --------------------------------------------------
+  config.vm.define "db" do |db|
+    db.vm.box = "debian/bookworm64"
+    db.vm.hostname = "db-node"
+    db.vm.network "private_network", ip: DB_IP
+
+    db.vm.provider "virtualbox" do |vb|
+      vb.name = "lab-debian-db"
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+
+    db.vm.provision "shell", inline: COMMON + DB_SCRIPT, env: repo_env.merge(
+      "DB_NAME" => DB_NAME, "DB_USER" => DB_USER, "DB_PASSWORD" => DB_PASSWORD,
+      "BACKEND_IP" => BACKEND_IP
+    )
+  end
+
+  # --------------------------------------------------
+  # 2. Backend: Ubuntu Server (Node.js)
+  # --------------------------------------------------
+  config.vm.define "backend" do |backend|
+    backend.vm.box = "ubuntu/jammy64"
+    backend.vm.hostname = "backend-node"
+    backend.vm.network "private_network", ip: BACKEND_IP
+
+    backend.vm.provider "virtualbox" do |vb|
+      vb.name = "lab-ubuntu-backend"
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+
+    backend.vm.provision "shell", inline: COMMON + BACKEND_SCRIPT, env: repo_env.merge(
+      "DB_HOST" => DB_IP, "DB_NAME" => DB_NAME, "DB_USER" => DB_USER, "DB_PASSWORD" => DB_PASSWORD,
+      "BACKEND_PORT" => BACKEND_PORT, "FRONTEND_IP" => FRONTEND_IP,
+      "FRONTEND_URL" => "http://localhost:8080"
+    )
+  end
+
+  # --------------------------------------------------
+  # 3. Frontend: CentOS Stream 9 (Nginx)
+  # --------------------------------------------------
+  config.vm.define "frontend" do |frontend|
+    frontend.vm.box = "generic/centos9s"
+    frontend.vm.hostname = "frontend-node"
+    frontend.vm.network "private_network", ip: FRONTEND_IP
+
+    # Redirige el puerto 80 de la VM al 8080 de la máquina física. Además, localhost cuenta
+    # como "contexto seguro", así funcionan las notificaciones push sin HTTPS
+    frontend.vm.network "forwarded_port", guest: 80, host: 8080
+
+    frontend.vm.provider "virtualbox" do |vb|
+      vb.name = "lab-centos-frontend"
+      vb.memory = "2048" # compilar Angular con 1 GB se queda sin memoria
+      vb.cpus = 2
+    end
+
+    frontend.vm.provision "shell", inline: COMMON + FRONTEND_SCRIPT, env: repo_env.merge(
+      "BACKEND_URL" => "http://#{BACKEND_IP}:#{BACKEND_PORT}", "FRONTEND_IP" => FRONTEND_IP
+    )
+  end
+end
